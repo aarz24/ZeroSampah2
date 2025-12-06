@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { FaMedal, FaTrophy, FaGift, FaStar, FaLeaf } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import Image from "next/image";
-import { useUser } from "@clerk/nextjs";
 
 // Dummy rewards data
 const rewardsData = [
@@ -69,7 +68,7 @@ const availableRewards = [
     id: 2,
     title: "Set Peralatan Makan Bambu",
     description: "Set peralatan makan bambu ramah lingkungan",
-    points: 300,
+    points: 325,
     image: "/images/rewards/peralatan-bambu.jpg",
   },
   {
@@ -81,37 +80,99 @@ const availableRewards = [
   },
 ];
 
+// Tambahan hadiah (gambar placeholder — akan Anda isi nanti)
+const moreAvailableRewards = [
+  {
+    id: 4,
+    title: "Set Sedotan Stainless",
+    description: "Set sedotan stainless beserta sikat pembersih, bisa digunakan ulang",
+    points: 90,
+    // using user's provided JPEG placed in public/images/rewards/
+    image: "/images/rewards/sedotan-stainless.jpeg",
+  },
+  {
+    id: 5,
+    title: "Sabun Batang Organik",
+    description: "Sabun batang organik biodegradable, dibuat lokal",
+    points: 80,
+    image: "/images/rewards/soap-organic.jpg",
+  },
+  {
+    id: 6,
+    title: "Eco Notebook",
+    description: "Buku catatan terbuat dari kertas daur ulang",
+    points: 100,
+    // using user's photo (copy your file to public/images/rewards/notebook-eco.jpeg)
+    image: "/images/rewards/notebook-eco.jpeg",
+  },
+  {
+    id: 7,
+    title: "Lampu LED Rechargeable",
+    description: "Lampu LED isi ulang hemat energi untuk penggunaan rumah tangga",
+    points: 120,
+    image: "/images/rewards/led-rechargeable.jpg",
+  },
+  {
+    id: 8,
+    title: "Tanaman Hias Mini",
+    description: "Tanaman hias kecil untuk memperbaiki kualitas udara di rumah",
+    points: 125,
+    image: "/images/rewards/tanaman-hias.jpeg",
+  },
+  {
+    id: 9,
+    // replacement: Stainless lunchbox
+    title: "Kotak Makan Stainless (Bento)",
+    description: "Kotak makan stainless tahan lama untuk mengurangi penggunaan bungkus sekali pakai",
+    points: 300,
+    image: "/images/rewards/lunchbox-eco.webp",
+  },
+];
+
+// Gabungkan daftar dasar dan daftar tambahan
+const mergedAvailableRewards = [...availableRewards, ...moreAvailableRewards];
+
 export default function RewardsPage() {
-  const { user } = useUser();
   const [activeTab, setActiveTab] = useState("earned");
-  const [totalPoints, setTotalPoints] = useState(0);
+  const [totalPoints, setTotalPoints] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch user points
-  useEffect(() => {
-    const fetchUserPoints = async () => {
-      if (user?.id) {
-        try {
-          const res = await fetch(`/api/users/${user.id}/stats`);
-          if (res.ok) {
-            const stats = await res.json();
-            setTotalPoints(stats.points);
-          }
-        } catch (error) {
-          console.error("Error fetching user points:", error);
-        }
-      }
-      setIsLoading(false);
-    };
+  // Fetch user's points from server. We pull clerkId from localStorage userData if available.
+  const fetchPoints = async (clerkId?: string) => {
+    try {
+      const id = clerkId || JSON.parse(localStorage.getItem('userData') || 'null')?.clerkId;
+      if (!id) return;
+      const res = await fetch(`/api/rewards/points?userId=${encodeURIComponent(id)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (typeof data.points === 'number') setTotalPoints(data.points);
+    } catch (e) {
+      console.error('Failed to fetch points', e);
+    }
+  };
 
-    fetchUserPoints();
-  }, [user?.id]);
+  useEffect(() => {
+    // Initial fetch
+    fetchPoints();
+    // Poll every 8 seconds to pick up updates from collections/reports
+    const t = setInterval(() => fetchPoints(), 8000);
+    return () => clearInterval(t);
+  }, []);
 
   const getStatusLabel = (status: string) => {
     if (status === "completed") return "Selesai";
     if (status === "in-progress") return "Sedang Berlangsung";
     return status;
   };
+
+  // Simulate waiting for layout components to load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300); // Adjust this time as needed based on your actual layout load time
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (isLoading) {
     return (
@@ -157,7 +218,7 @@ export default function RewardsPage() {
           }`}
           onClick={() => setActiveTab("earned")}
         >
-          Hadiah Diperoleh
+          Misi Bulanan
         </button>
         <button
           className={`py-2 px-4 font-medium text-sm ${
@@ -211,7 +272,7 @@ export default function RewardsPage() {
       {/* Available Rewards */}
       {activeTab === "available" && (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {availableRewards.map((reward) => (
+          {mergedAvailableRewards.map((reward) => (
             <motion.div
               key={reward.id}
               initial={{ opacity: 0, y: 20 }}
