@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Trash, Package, Gift, Trophy, Home, Menu, X } from "lucide-react";
+import { Trash, Package, Gift, Trophy, Home, Menu, X, Calendar } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
@@ -26,7 +26,8 @@ export default function Sidebar({ children }: SidebarProps) {
       !pathname.includes('/dashboard') && 
       !pathname.includes('/collect') && 
       !pathname.includes('/rewards') && 
-      !pathname.includes('/leaderboard')) {
+      !pathname.includes('/leaderboard') &&
+      !pathname.includes('/events')) {
     return children;
   }
 
@@ -36,6 +37,7 @@ export default function Sidebar({ children }: SidebarProps) {
             { name: "Kumpulkan Sampah", icon: <Package className="w-5 h-5" />, link: "/collect" },
             { name: "Hadiah", icon: <Gift className="w-5 h-5" />, link: "/rewards" },
             { name: "Papan Peringkat", icon: <Trophy className="w-5 h-5" />, link: "/leaderboard" },
+            { name: "Event", icon: <Calendar className="w-5 h-5" />, link: "/events" },
   ];
 
   return (
@@ -55,26 +57,6 @@ export default function Sidebar({ children }: SidebarProps) {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className="fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 w-64 shadow-lg z-40"
       >
-        {/* Sidebar Header */}
-        <div className="px-6 py-6 border-b border-gray-100">
-            <motion.h2 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl font-bold text-gray-800"
-          >
-              ZeroSampah
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-1 text-sm text-gray-500"
-          >
-                  Kelola laporan sampah Anda
-          </motion.p>
-        </div>
-
         {/* Menu Items */}
         <nav className="p-4">
           <div className="space-y-2">

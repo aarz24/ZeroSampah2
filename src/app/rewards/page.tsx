@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaMedal, FaTrophy, FaGift, FaStar, FaLeaf } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 
 // Dummy rewards data
 const rewardsData = [
@@ -81,24 +82,36 @@ const availableRewards = [
 ];
 
 export default function RewardsPage() {
+  const { user } = useUser();
   const [activeTab, setActiveTab] = useState("earned");
-  const [totalPoints] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch user points
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      if (user?.id) {
+        try {
+          const res = await fetch(`/api/users/${user.id}/stats`);
+          if (res.ok) {
+            const stats = await res.json();
+            setTotalPoints(stats.points);
+          }
+        } catch (error) {
+          console.error("Error fetching user points:", error);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    fetchUserPoints();
+  }, [user?.id]);
 
   const getStatusLabel = (status: string) => {
     if (status === "completed") return "Selesai";
     if (status === "in-progress") return "Sedang Berlangsung";
     return status;
   };
-
-  // Simulate waiting for layout components to load
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 300); // Adjust this time as needed based on your actual layout load time
-
-    return () => clearTimeout(timer);
-  }, []);
 
   if (isLoading) {
     return (

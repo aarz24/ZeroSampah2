@@ -189,12 +189,21 @@ export default function Home() {
             viewport={{ once: true }}
             className="p-6 rounded-3xl border border-green-100 shadow-xl backdrop-blur-sm sm:p-8 lg:p-12 bg-white/80"
           >
-            <h2 className="mb-12 text-3xl font-bold text-center text-gray-900 sm:mb-16 sm:text-4xl">Dampak Global Kita</h2>
-              <div className="grid gap-8 sm:gap-12 sm:grid-cols-2 lg:grid-cols-4">
-                <ImpactCard title="Sampah Terkumpul" value="1,500 kg" icon={Recycle} delay={0.2} />
-                <ImpactCard title="Laporan Aktif" value="320" icon={MapPin} delay={0.4} />
-                <ImpactCard title="Hadiah Terdistribusi" value="12,450" icon={Coins} delay={0.6} />
-                <ImpactCard title="Offset Karbon" value="850 kg" icon={Leaf} delay={0.8} />
+            <div className="flex flex-col items-center gap-8">
+              <motion.a
+                href="/events"
+                whileTap={{ scale: 0.98 }}
+                className="px-6 py-3 text-lg font-medium text-white bg-green-700 rounded-full shadow-lg transition-all hover:bg-green-600 sm:px-8 sm:py-4 flex items-center gap-2"
+              >
+                Jelajahi Event Kerja Bakti
+                <ArrowRight className="w-5 h-5" />
+              </motion.a>
+              <img
+                src="/images/impact.jpg"
+                alt="Environmental Impact"
+                className="max-w-full h-auto rounded-xl shadow-lg"
+                style={{ maxHeight: '400px' }}
+              />
             </div>
           </motion.div>
         </div>

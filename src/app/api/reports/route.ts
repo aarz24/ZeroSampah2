@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createReport, getRecentReports } from '@/db/actions';
+import { createReport, getRecentReports, updateUserPoints, createTransaction } from '@/db/actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,8 +21,28 @@ export async function POST(req: Request) {
     console.log('POST /api/reports - Received body:', JSON.stringify(body, null, 2));
     const { userId, location, wasteType, amount, imageUrl, verificationResult } = body;
     console.log('POST /api/reports - Calling createReport with userId:', userId);
+    
+    // Create the report
     const report = await createReport(userId, location, wasteType, amount, imageUrl, verificationResult);
     console.log('POST /api/reports - Created report:', report);
+    
+    // Award points for reporting (e.g., 10 points per report)
+    if (report) {
+      const pointsForReport = 10;
+      await updateUserPoints(userId, pointsForReport);
+      
+      // Create transaction record
+      await createTransaction(
+        userId,
+        null,
+        pointsForReport,
+        'earned',
+        `Points earned for reporting waste (Report #${report.id})`
+      );
+      
+      console.log(`Awarded ${pointsForReport} points to user ${userId} for report #${report.id}`);
+    }
+    
     return NextResponse.json(report);
   } catch (err) {
     console.error('POST /api/reports error', err);

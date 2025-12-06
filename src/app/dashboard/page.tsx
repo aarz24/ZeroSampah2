@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Trash, 
   Package, 
@@ -14,7 +14,16 @@ import {
   Plus,
   ArrowRight,
   Loader2,
-  RefreshCw
+  RefreshCw,
+  FileText,
+  Recycle,
+  Coins,
+  Leaf,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  X,
+  Check
 } from "lucide-react";
 // Use server API endpoint for recent reports
 import { useRouter } from "next/navigation";
@@ -24,6 +33,61 @@ import { useUser } from "@clerk/nextjs";
 
 // Cache expiration time in milliseconds (5 minutes)
 const CACHE_EXPIRATION = 5 * 60 * 1000;
+
+const recyclingItems = {
+  plastic: {
+    name: "Plastik",
+    image: "/plastico.jpg",
+    description: "Plastik adalah salah satu bahan paling umum dalam kehidupan sehari-hari dan dapat memakan waktu ratusan tahun untuk terurai. Daur ulang yang tepat sangat penting untuk mengurangi dampak lingkungannya.",
+    steps: [
+      { title: "Cuci untuk menghilangkan sisa", detail: "Buang semua sisa dan cuci dengan air. Sabun tidak diperlukan, pastikan tidak ada sisa makanan.", image: "/plastic1.jpg" },
+      { title: "Pisahkan tutup dan label", detail: "Jika memungkinkan, pisahkan tutup dan label karena mungkin terbuat dari jenis plastik yang berbeda.", image: "/plastic2.jpeg" },
+      { title: "Hancurkan untuk mengurangi volume", detail: "Tekan untuk menghemat ruang. Botol dapat dihancurkan, tapi tetap jaga agar identifikasi material terlihat.", image: "/plastic3.jpg" },
+      { title: "Masukkan ke tempat sampah yang benar", detail: "Buang di tempat sampah khusus plastik. Periksa warna tempat sampah – biasanya merah untuk plastik.", image: "/plastic4.webp" }
+    ],
+    impact: "Plastik dapat memakan waktu hingga 450 tahun untuk terurai di alam. Dengan mendaur ulang, Anda membantu mengurangi polusi laut dan emisi gas rumah kaca.",
+    tips: ["Pilih produk dengan kemasan lebih sedikit", "Gunakan tas yang dapat digunakan ulang", "Hindari plastik sekali pakai", "Pilih kemasan yang dapat didaur ulang"]
+  },
+  electronics: {
+    name: "Elektronik",
+    image: "/eletronicos.jpg",
+    description: "Sampah elektronik mengandung bahan berharga serta zat beracun. Daur ulang yang tepat penting untuk melindungi lingkungan dan memulihkan bahan berharga.",
+    steps: [
+      { title: "Lepaskan baterai", detail: "Baterai harus didaur ulang secara terpisah karena mengandung bahan beracun. Cari titik pengumpulan khusus.", image: "/eletronics1.jpg" },
+      { title: "Hapus data pribadi", detail: "Untuk perangkat penyimpanan, backup dan hapus sepenuhnya data pribadi Anda.", image: "/eletronics2.jpeg" },
+      { title: "Temukan titik pengumpulan", detail: "Cari titik pengumpulan khusus elektronik. Banyak toko elektronik menawarkan program daur ulang.", image: "/eletronics3.jpeg" },
+      { title: "Serahkan dengan benar", detail: "Serahkan elektronik di titik pengumpulan resmi, di mana akan dibongkar dan didaur ulang dengan benar.", image: "/eletronics4.jpeg" }
+    ],
+    impact: "Sampah elektronik hanya 2% dari sampah TPA tapi menyumbang 70% sampah beracun. Daur ulang yang tepat mencegah kontaminasi tanah dan air.",
+    tips: ["Perpanjang umur perangkat", "Lakukan pemeliharaan preventif", "Donasikan peralatan yang masih berfungsi", "Teliti reputasi titik pengumpulan"]
+  },
+  paper: {
+    name: "Kertas",
+    image: "/papel.jpeg",
+    description: "Kertas adalah salah satu bahan yang paling banyak didaur ulang di dunia. Daur ulang membantu mengurangi deforestasi dan konsumsi air dalam produksi kertas baru.",
+    steps: [
+      { title: "Lepaskan bagian plastik atau logam", detail: "Bagian berlapis plastik atau logam, seperti staples harus dilepas sebelum didaur ulang.", image: "/paper1.jpg" },
+      { title: "Sobek untuk memudahkan transportasi", detail: "Menyobek kertas membantu mengoptimalkan penyimpanan dan transportasi untuk daur ulang.", image: "/paper2.jpg" },
+      { title: "Hindari kertas yang terkontaminasi", detail: "Kertas yang kotor dengan minyak atau makanan tidak dapat didaur ulang.", image: "/paper3.png" },
+      { title: "Masukkan ke tempat sampah biru", detail: "Buang kertas yang dapat didaur ulang di tempat sampah biru.", image: "/paper4.jpeg" }
+    ],
+    impact: "Setiap ton kertas daur ulang menghemat sekitar 10.000 liter air dan mengurangi kebutuhan penebangan pohon.",
+    tips: ["Gunakan kertas daur ulang", "Cetak dua sisi jika memungkinkan", "Gunakan kembali kertas sebelum dibuang", "Hindari pemborosan dalam catatan"]
+  },
+  organic: {
+    name: "Organik",
+    image: "/organico.jpg",
+    description: "Sampah organik, seperti sisa makanan dan kulit buah, dapat diubah menjadi kompos, mengurangi jumlah sampah yang dikirim ke TPA.",
+    steps: [
+      { title: "Pisahkan sampah organik", detail: "Pisahkan sisa buah, kulit sayuran, cangkang telur, dan ampas kopi untuk pengomposan.", image: "/organic1.webp" },
+      { title: "Hindari mencampur dengan plastik dan logam", detail: "Jaga sampah organik bebas dari kemasan plastik atau logam.", image: "/organic2.webp" },
+      { title: "Gunakan komposter rumah", detail: "Jika Anda punya ruang, komposter rumah dapat mengubah sampah organik Anda menjadi pupuk alami.", image: "/organic3.jpeg" },
+      { title: "Buang dengan benar di lokasi yang ditentukan", detail: "Jika Anda tidak membuat kompos, masukkan sampah organik ke tempat sampah coklat.", image: "/organic4.jpeg" }
+    ],
+    impact: "Pengomposan mengurangi emisi gas metana, salah satu kontributor utama efek rumah kaca, dan meningkatkan kualitas tanah.",
+    tips: ["Hindari pemborosan makanan", "Gunakan kulit dan batang dalam resep", "Gunakan sampah organik untuk kompos", "Simpan dengan benar untuk menghindari bau"]
+  }
+};
 
 interface UserData {
   name: string;
@@ -51,6 +115,32 @@ export default function DashboardPage() {
   const [recentReports, setRecentReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedRecycleItem, setSelectedRecycleItem] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  // Auto-cycle through steps when item is expanded
+  useEffect(() => {
+    if (expandedItem) {
+      const item = recyclingItems[expandedItem as keyof typeof recyclingItems];
+      const timer = setInterval(() => {
+        setCurrentStep((prev) => (prev + 1) % item.steps.length);
+      }, 2000);
+      return () => clearInterval(timer);
+    } else {
+      setCurrentStep(0);
+    }
+  }, [expandedItem]);
+
+  useEffect(() => {
+    if (selectedRecycleItem) {
+      const item = recyclingItems[selectedRecycleItem as keyof typeof recyclingItems];
+      const timer = setInterval(() => {
+        setCurrentStep((prev) => (prev + 1) % item.steps.length);
+      }, 5000);
+      return () => clearInterval(timer);
+    }
+  }, [selectedRecycleItem]);
 
   // Load user data from localStorage on client-side only
   useEffect(() => {
@@ -91,22 +181,28 @@ export default function DashboardPage() {
       const isCacheValid = cacheTimestamp && 
         (now - parseInt(cacheTimestamp)) < CACHE_EXPIRATION;
       
+      // Fetch user stats from database
+      if (user?.id) {
+        try {
+          const statsRes = await fetch(`/api/users/${user.id}/stats`);
+          if (statsRes.ok) {
+            const stats = await statsRes.json();
+            setUserStats({
+              points: stats.points,
+              reportsCount: stats.reportsCount,
+              rank: stats.rank,
+              impact: stats.impact
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user stats:", error);
+        }
+      }
+      
       // Use cached data if available, not expired, and not forcing refresh
       if (cachedData && isCacheValid && !forceRefresh) {
         const parsedReports = JSON.parse(cachedData);
         setRecentReports(parsedReports);
-        
-        // Update user stats based on cached reports
-        if (parsedReports.length > 0) {
-          setUserStats(prev => ({
-            ...prev,
-            reportsCount: parsedReports.length,
-            points: parsedReports.length * 10,
-            rank: parsedReports.length > 20 ? "Eco Master" : parsedReports.length > 10 ? "Eco Champion" : "Eco Warrior",
-            impact: parsedReports.length > 15 ? "Significant" : parsedReports.length > 5 ? "Positive" : "Growing"
-          }));
-        }
-        
         setIsLoading(false);
         return;
       }
@@ -127,17 +223,6 @@ export default function DashboardPage() {
       localStorage.setItem("recentReportsTimestamp", now.toString());
       
       setRecentReports(formattedReports as Report[]);
-      
-      // Update user stats based on reports
-      if (formattedReports.length > 0) {
-        setUserStats(prev => ({
-          ...prev,
-          reportsCount: reports.length,
-          points: reports.length * 10,
-          rank: reports.length > 20 ? "Eco Master" : reports.length > 10 ? "Eco Champion" : "Eco Warrior",
-          impact: reports.length > 15 ? "Significant" : reports.length > 5 ? "Positive" : "Growing"
-        }));
-      }
     } catch (error) {
       console.error("Error fetching recent reports:", error);
     } finally {
@@ -220,7 +305,17 @@ export default function DashboardPage() {
             <div className="flex justify-between items-center">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  Selamat datang kembali, {userName}! 🌱
+                  {("Selamat datang kembali, " + userName).split("").map((char, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.03, duration: 0.3 }}
+                      style={{ display: 'inline-block' }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </motion.span>
+                  ))}
                 </h1>
                 <p className="mt-2 text-lg text-gray-600">
                   Lacak dampak lingkungan dan kemajuan pengelolaan sampah Anda
@@ -410,7 +505,281 @@ export default function DashboardPage() {
               </motion.div>
             </div>
           </motion.div>
+
+
+
+          {/* Detail Modal */}
+          <AnimatePresence>
+            {selectedRecycleItem && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+                onClick={() => setSelectedRecycleItem(null)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  className="bg-white rounded-2xl max-w-4xl max-h-[90vh] overflow-y-auto w-full"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center z-10">
+                    <h2 className="text-2xl font-bold text-green-600">
+                      Cara Daur Ulang: {recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].name}
+                    </h2>
+                    <button
+                      onClick={() => {
+                        setSelectedRecycleItem(null);
+                        setCurrentStep(0);
+                      }}
+                      className="p-2 hover:bg-gray-100 rounded-full transition"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  </div>
+
+                  <div className="p-6">
+                    <p className="text-gray-600 mb-6">
+                      {recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].description}
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                      <div className="relative h-64 rounded-lg overflow-hidden">
+                        <img
+                          src={recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].image}
+                          alt={recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <div className="bg-green-50 rounded-xl p-6">
+                        <h3 className="text-xl font-semibold text-green-600 mb-3">Dampak Lingkungan</h3>
+                        <p className="text-gray-700 mb-4">
+                          {recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].impact}
+                        </p>
+                        <h4 className="font-medium text-green-600 mb-2">Tips Berguna:</h4>
+                        <ul className="list-disc list-inside text-gray-700 space-y-1">
+                          {recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].tips.map((tip, i) => (
+                            <li key={i}>{tip}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <h3 className="text-xl font-semibold text-green-600 mb-4">Langkah-langkah Daur Ulang</h3>
+                    <div className="space-y-6">
+                      {recyclingItems[selectedRecycleItem as keyof typeof recyclingItems].steps.map((step, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -50 }}
+                          animate={{
+                            opacity: currentStep === i ? 1 : 0.7,
+                            x: 0,
+                            scale: currentStep === i ? 1 : 0.98,
+                          }}
+                          transition={{ duration: 0.5 }}
+                          className="grid md:grid-cols-2 gap-4 items-center"
+                        >
+                          <div className="flex items-start">
+                            <div
+                              className={`flex-shrink-0 w-8 h-8 rounded-full ${
+                                currentStep === i ? "bg-green-500" : "bg-gray-200"
+                              } flex items-center justify-center mr-3 mt-1`}
+                            >
+                              {currentStep === i && (
+                                <Check className="text-white" size={20} />
+                              )}
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-green-600 mb-1">{step.title}</h4>
+                              <p className="text-gray-600 text-sm">{step.detail}</p>
+                            </div>
+                          </div>
+                          <div className="relative h-40 rounded-lg overflow-hidden">
+                            <img
+                              src={step.image}
+                              alt={step.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* EcoRecycle Guide Section - Added from eco-recycle-main */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mt-12"
+        >
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-green-600 mb-2">Panduan Daur Ulang EcoRecycle</h2>
+            <p className="text-xl text-blue-600">Pelajari cara mendaur ulang dengan benar</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Object.entries(recyclingItems).map(([key, item], idx) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.3 }}
+                className={`bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transition-all ${
+                  expandedItem === key ? 'ring-2 ring-green-500' : ''
+                }`}
+                onClick={() => setExpandedItem(expandedItem === key ? null : key)}
+              >
+                <div className="relative h-40">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-green-600">
+                      {item.name}
+                    </h3>
+                    <motion.div
+                      animate={{ rotate: expandedItem === key ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDown className="w-5 h-5 text-green-600" />
+                    </motion.div>
+                  </div>
+                  <p className="text-sm text-gray-600 min-h-[45px]">
+                    {item.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Expandable Content - Full Width Below All Cards */}
+          <AnimatePresence>
+            {expandedItem && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden mt-6"
+              >
+                <div className="bg-white rounded-xl shadow-lg p-8">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-2xl font-bold text-green-600">
+                      Cara Daur Ulang: {recyclingItems[expandedItem as keyof typeof recyclingItems].name}
+                    </h3>
+                    <button
+                      onClick={() => setExpandedItem(null)}
+                      className="p-2 hover:bg-gray-100 rounded-full transition"
+                    >
+                      <X className="w-6 h-6 text-gray-600" />
+                    </button>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-8 mb-8">
+                    {/* Environmental Impact */}
+                    <div className="bg-green-50 rounded-lg p-6">
+                      <h4 className="text-xl font-semibold text-green-600 mb-3">
+                        Dampak Lingkungan
+                      </h4>
+                      <p className="text-gray-700 mb-4">
+                        {recyclingItems[expandedItem as keyof typeof recyclingItems].impact}
+                      </p>
+                    </div>
+
+                    {/* Tips */}
+                    <div className="bg-blue-50 rounded-lg p-6">
+                      <h4 className="text-xl font-semibold text-blue-600 mb-3">
+                        Tips Berguna:
+                      </h4>
+                      <ul className="space-y-2">
+                        {recyclingItems[expandedItem as keyof typeof recyclingItems].tips.map((tip, i) => (
+                          <li key={i} className="flex items-start text-gray-700">
+                            <Check className="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <span>{tip}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Steps */}
+                  <div>
+                    <h4 className="text-xl font-semibold text-green-600 mb-6">
+                      Langkah-langkah Daur Ulang:
+                    </h4>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {recyclingItems[expandedItem as keyof typeof recyclingItems].steps.map((step, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -50 }}
+                          animate={{
+                            opacity: currentStep === i ? 1 : 0.6,
+                            x: 0,
+                            scale: currentStep === i ? 1 : 0.95,
+                          }}
+                          transition={{ duration: 0.5 }}
+                          className={`flex gap-4 rounded-lg p-4 transition-all duration-300 ${
+                            currentStep === i ? 'bg-green-50' : 'bg-gray-50'
+                          }`}
+                        >
+                          <div
+                            className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
+                              currentStep === i
+                                ? 'bg-green-500 text-white scale-110'
+                                : 'bg-gray-300 text-gray-600'
+                            }`}
+                          >
+                            {currentStep === i ? (
+                              <Check className="w-6 h-6" />
+                            ) : (
+                              <span>{i + 1}</span>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <h5 className={`font-semibold mb-2 transition-colors duration-300 ${
+                              currentStep === i ? 'text-green-600' : 'text-gray-900'
+                            }`}>
+                              {step.title}
+                            </h5>
+                            <p className={`text-sm mb-3 transition-colors duration-300 ${
+                              currentStep === i ? 'text-gray-700' : 'text-gray-500'
+                            }`}>
+                              {step.detail}
+                            </p>
+                            <div className={`w-full h-32 rounded-lg overflow-hidden transition-all duration-300 ${
+                              currentStep === i ? 'ring-2 ring-green-500' : ''
+                            }`}>
+                              <img
+                                src={step.image}
+                                alt={step.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );

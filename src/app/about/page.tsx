@@ -1,4 +1,6 @@
 // app/about/page.tsx
+'use client';
+
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import {
@@ -10,6 +12,7 @@ import {
   FaLightbulb,
   FaHandshake,
 } from 'react-icons/fa';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function AboutPage() {
   return (
@@ -60,22 +63,56 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
+      {/* Event Features Section with Animations */}
       <section className="px-4 py-16 bg-white md:px-8">
-        <div className="mx-auto max-w-6xl text-center">
-            <h2 className="mb-12 text-3xl font-bold text-green-700">Mengapa Memilih ZeroSampah</h2>
-
-          <div className="grid gap-8 mb-16 md:grid-cols-3">
-              <StatBlock value="85%" label="Peningkatan Efisiensi Daur Ulang" />
-              <StatBlock value="40%" label="Pengurangan Biaya Operasional" />
-              <StatBlock value="500+" label="Bisnis yang Mempercayai Solusi Kami" />
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-12 text-3xl font-bold text-center text-green-700">Fitur Event Kami</h2>
+          <div className="flex justify-center mb-8 -space-x-12">
+            <div className="flex items-center justify-center w-64">
+              <DotLottieReact
+                src="/animations/backyard-planting.json"
+                loop
+                autoplay
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
+            <div className="flex items-center justify-center w-64">
+              <DotLottieReact
+                src="/animations/young-family.json"
+                loop
+                autoplay
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
+            <div className="flex items-center justify-center w-64">
+              <DotLottieReact
+                src="/animations/rubbish-collection.json"
+                loop
+                autoplay
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
+            <div className="flex items-center justify-center w-64">
+              <DotLottieReact
+                src="/animations/warehouse-delivery.json"
+                loop
+                autoplay
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
+            <div className="flex items-center justify-center w-64">
+              <DotLottieReact
+                src="/animations/teamwork.json"
+                loop
+                autoplay
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </div>
           </div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-              <BenefitCard icon={<FaCheckCircle />} title="Teknologi Terbukti" description="Algoritme yang telah diuji di lapangan dengan hasil yang konsisten." />
-              <BenefitCard icon={<FaLightbulb />} title="Solusi Inovatif" description="Alat AI yang dapat beradaptasi dengan tantangan sampah baru." />
-              <BenefitCard icon={<FaHandshake />} title="Dukungan Terdedikasi" description="Bantuan 24/7 dan pembaruan rutin dari tim kami." />
-          </div>
+          <p className="text-center text-lg text-gray-700 max-w-3xl mx-auto">
+            Pengadaan kerja bakti lebih optimal dengan sistem event management yang terintegrasi. 
+            Atur jadwal, kelola peserta, dan lacak dampak lingkungan dari setiap kegiatan pembersihan komunitas.
+          </p>
         </div>
       </section>
 

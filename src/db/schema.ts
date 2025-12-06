@@ -69,3 +69,45 @@ export const Transactions = pgTable("transactions", {
   description: text("description"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
+
+// Events table
+export const Events = pgTable("events", {
+  id: serial("id").primaryKey(),
+  organizerId: text("organizer_id").references(() => Users.clerkId, { onDelete: 'cascade' }).notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  location: text("location").notNull(),
+  latitude: text("latitude"),
+  longitude: text("longitude"),
+  eventDate: timestamp("event_date", { withTimezone: true }).notNull(),
+  eventTime: text("event_time").notNull(),
+  wasteCategories: text("waste_categories").array(),
+  status: text("status").notNull().default("published"), // published, cancelled, completed
+  maxParticipants: integer("max_participants"),
+  rewardInfo: text("reward_info"), // e.g., "Makan siang gratis", "Goodie bag", "Sertifikat"
+  images: text("images").array(),
+  videos: text("videos").array(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+// Event Registrations table
+export const EventRegistrations = pgTable("event_registrations", {
+  id: serial("id").primaryKey(),
+  eventId: integer("event_id").references(() => Events.id, { onDelete: 'cascade' }).notNull(),
+  userId: text("user_id").references(() => Users.clerkId, { onDelete: 'cascade' }).notNull(),
+  qrCode: text("qr_code").notNull().unique(), // Unique QR code for this registration
+  registeredAt: timestamp("registered_at", { withTimezone: true }).defaultNow(),
+  status: text("status").notNull().default("registered"), // registered, cancelled
+});
+
+// Event Attendance table (verified check-ins)
+export const EventAttendance = pgTable("event_attendance", {
+  id: serial("id").primaryKey(),
+  eventId: integer("event_id").references(() => Events.id, { onDelete: 'cascade' }).notNull(),
+  userId: text("user_id").references(() => Users.clerkId, { onDelete: 'cascade' }).notNull(),
+  registrationId: integer("registration_id").references(() => EventRegistrations.id, { onDelete: 'cascade' }).notNull(),
+  verifiedBy: text("verified_by").references(() => Users.clerkId, { onDelete: 'set null' }), // Organizer who scanned
+  verifiedAt: timestamp("verified_at", { withTimezone: true }).defaultNow(),
+  qrCodeScanned: text("qr_code_scanned").notNull(), // The QR code data that was scanned
+});

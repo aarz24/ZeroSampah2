@@ -69,7 +69,8 @@ export default function Header() {
           <div className="hidden items-center space-x-8 md:flex">
             <NavLink href="/">Beranda</NavLink>
             <NavLink href="/about">Tentang</NavLink>
-            {userData && <NavLink href="/dashboard">Dasbor</NavLink>}
+            {userData && <NavLink href="/dashboard">Dashboard</NavLink>}
+            {userData && <NavLink href="/events">Event</NavLink>}
 
             {!isLoaded ? (
               <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
@@ -115,6 +116,7 @@ export default function Header() {
             <div className="py-4 mt-4 space-y-3 bg-white rounded-lg shadow-lg">
               <MobileNavLink href="/">Beranda</MobileNavLink>
               <MobileNavLink href="/dashboard">Dasbor</MobileNavLink>
+              <MobileNavLink href="/events">Event</MobileNavLink>
               <MobileNavLink href="/about">Tentang</MobileNavLink>
               {isSignedIn ? (
                 <div className="px-4 py-2">

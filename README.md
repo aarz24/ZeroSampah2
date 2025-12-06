@@ -19,6 +19,7 @@ Note: Replace placeholder values and sections below with your own details before
 - Leaderboard and rewards
 - Collection view and report details
 - API routes for reports, collections, rewards, notifications, chat, and webhooks
+ - Community Cleanup Events (Browse, Detail, Create, Dashboard)
 
 ## Screenshots
 - Home: `home.png`
@@ -54,6 +55,42 @@ Embed in Markdown if you prefer hosted images later.
    npm run dev
 
 The app runs by default on http://localhost:3000
+
+## Community Cleanup Events — User Flows
+
+**QR Code Verification System:**
+- After registering for an event, participants receive a unique QR code
+- QR codes are displayed in-app and can be screenshotted
+- Event organizers use built-in scanner to verify attendance on-site
+- Only verified attendees receive rewards (prevents fake registrations)
+- System tracks: registration → physical attendance → reward eligibility
+
+- **Discover & Join:**
+   - Pengguna membuka `Leaderboard` lalu scroll ke bagian "Aksi Bersih Komunitas" dan klik "Lihat semua" (`/events`).
+   - Di halaman `Events Browse` (`/events`), pilih kartu acara dan buka detail (`/events/[id]`).
+   - Klik "Gabung Acara" untuk mendaftar (UI mock; integrasi backend dapat ditambahkan di tahap berikutnya).
+
+- **Create New Event:**
+   - Pengguna buka `Buat Acara` (`/events/create`).
+   - Isi form: judul, lokasi, tanggal, waktu, deskripsi, kategori sampah.
+   - Klik "Terbitkan Acara" untuk membuat event (UI mock; koneksi DB/Drizzle dapat ditambahkan).
+
+- **Organizer Manage Event:**
+   - Pengguna buka `Dashboard Saya` (`/events/dashboard`).
+   - Lihat daftar acara yang diselenggarakan dan diikuti, klik "Kelola" untuk masuk ke detail.
+   - Aksi lanjut (edit, batalkan, lihat peserta) dapat ditambahkan pada tahap integrasi.
+
+## Routes Added
+- `/events` — Browse/Discovery
+- `/events/[id]` — Detail
+- `/events/create` — Create Event
+- `/events/dashboard` — User Dashboard
+
+## Next Steps (Integration)
+- Buat schema Drizzle untuk `events`, `event_participants` di `src/db/schema.ts`.
+- Tambahkan actions di `src/db/actions.ts` untuk CRUD event dan join.
+- Lindungi routes form dengan auth (middleware) bila diperlukan.
+- Hubungkan tombol "Gabung" ke action server.
 
 ### Build
 - Production build:

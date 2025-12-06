@@ -225,6 +225,12 @@ export default function ReportPage() {
       const result = await response.json();
 
       if (!response.ok) {
+        // Handle rate limit error specifically
+        if (response.status === 429 || result.error?.message?.includes("Resource exhausted")) {
+          throw new Error(
+            "Batas penggunaan API tercapai. Silakan tunggu beberapa menit dan coba lagi, atau lanjutkan tanpa verifikasi AI."
+          );
+        }
         throw new Error(
           `API Error: ${result.error?.message || "Unknown error"}`
         );

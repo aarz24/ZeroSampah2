@@ -254,6 +254,8 @@ export default function LeaderboardPage() {
           </div>
         </div>
       )}
+
+      {/* Leaderboard page ends here */}
     </div>
   );
 }

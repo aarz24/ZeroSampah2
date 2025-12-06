@@ -1,5 +1,5 @@
 import db from './index';
-import { Users, Reports, Rewards, CollectedWastes, Notifications, Transactions } from './schema';
+import { Users, Reports, Rewards, CollectedWastes, Notifications, Transactions, Events, EventRegistrations, EventAttendance } from './schema';
 import { eq, sql, and, desc } from 'drizzle-orm';
 
 // Define a type for verification result
@@ -146,6 +146,24 @@ export async function updateRewardPoints(userId: string, pointsToAdd: number) {
   }
 }
 
+export async function updateUserPoints(userId: string, pointsToAdd: number) {
+  try {
+    const [updatedUser] = await db
+      .update(Users)
+      .set({ 
+        points: sql`${Users.points} + ${pointsToAdd}`,
+        updatedAt: new Date()
+      })
+      .where(eq(Users.clerkId, userId))
+      .returning()
+      .execute();
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user points:", error);
+    return null;
+  }
+}
+
 export async function createCollectedWaste(reportId: number, collectorId: string, comments?: string) {
   try {
     const [collectedWaste] = await db
@@ -215,6 +233,28 @@ export async function getPendingReports() {
     return await db.select().from(Reports).where(eq(Reports.status, "pending")).execute();
   } catch (error) {
     console.error("Error fetching pending reports:", error);
+    return [];
+  }
+}
+
+export async function getLeaderboard(limit: number = 100) {
+  try {
+    const users = await db
+      .select({
+        clerkId: Users.clerkId,
+        fullName: Users.fullName,
+        email: Users.email,
+        points: Users.points,
+        profileImage: Users.profileImage,
+      })
+      .from(Users)
+      .orderBy(desc(Users.points))
+      .limit(limit)
+      .execute();
+    
+    return users;
+  } catch (error) {
+    console.error("Error fetching leaderboard:", error);
     return [];
   }
 }
@@ -311,7 +351,7 @@ export async function saveReward(userId: string, amount: number) {
       .execute();
     
     // Create a transaction for this reward
-    await createTransaction(userId, 'earned_collect', amount, 'Points earned for collecting waste');
+    await createTransaction(userId, null, amount, 'earned', 'Points earned for collecting waste');
 
     return reward;
   } catch (error) {
@@ -461,11 +501,23 @@ export async function getAvailableRewards(userId: string) {
   }
 }
 
-export async function createTransaction(userId: string, type: 'earned_report' | 'earned_collect' | 'redeemed', amount: number, description: string) {
+export async function createTransaction(
+  userId: string, 
+  rewardId: number | null, 
+  pointsUsed: number, 
+  transactionType: 'earned' | 'redeemed',
+  description: string
+) {
   try {
     const [transaction] = await db
       .insert(Transactions)
-      .values({ userId, type, amount, description })
+      .values({ 
+        userId, 
+        rewardId,
+        pointsUsed,
+        transactionType,
+        description 
+      })
       .returning()
       .execute();
     return transaction;
@@ -529,6 +581,249 @@ export async function getReportById(reportId: number) {
     return report;
   } catch (error) {
     console.error("Error fetching report by ID:", error);
+    throw error;
+  }
+}
+
+// ============ EVENT ACTIONS ============
+
+// Create a new event
+export async function createEvent(data: {
+  organizerId: string;
+  title: string;
+  description?: string;
+  location: string;
+  latitude?: string;
+  longitude?: string;
+  eventDate: Date;
+  eventTime: string;
+  wasteCategories?: string[];
+  maxParticipants?: number;
+  rewardInfo?: string;
+  images?: string[];
+  videos?: string[];
+}) {
+  try {
+    const [event] = await db.insert(Events).values(data).returning();
+    return event;
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
+  }
+}
+
+// Get all published events
+export async function getPublishedEvents() {
+  try {
+    const events = await db
+      .select({
+        event: Events,
+        organizer: Users,
+      })
+      .from(Events)
+      .leftJoin(Users, eq(Events.organizerId, Users.clerkId))
+      .where(eq(Events.status, 'published'))
+      .orderBy(desc(Events.eventDate));
+    
+    return events;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+}
+
+// Get event by ID with organizer info
+export async function getEventById(eventId: number) {
+  try {
+    const [event] = await db
+      .select({
+        event: Events,
+        organizer: Users,
+      })
+      .from(Events)
+      .leftJoin(Users, eq(Events.organizerId, Users.clerkId))
+      .where(eq(Events.id, eventId));
+    
+    if (!event) return null;
+    return event;
+  } catch (error) {
+    console.error("Error fetching event by ID:", error);
+    throw error;
+  }
+}
+
+// Register user for an event
+export async function registerForEvent(eventId: number, userId: string) {
+  try {
+    // Check if already registered
+    const existing = await db
+      .select()
+      .from(EventRegistrations)
+      .where(and(
+        eq(EventRegistrations.eventId, eventId),
+        eq(EventRegistrations.userId, userId)
+      ));
+    
+    if (existing.length > 0) {
+      return { success: false, message: 'Already registered', registration: existing[0] };
+    }
+
+    // Generate unique QR code data
+    const qrCode = `EVENT:${eventId}:${userId}:${Date.now()}`;
+    
+    const [registration] = await db
+      .insert(EventRegistrations)
+      .values({ eventId, userId, qrCode })
+      .returning();
+    
+    return { success: true, registration };
+  } catch (error) {
+    console.error("Error registering for event:", error);
+    throw error;
+  }
+}
+
+// Get user's registration for an event
+export async function getUserEventRegistration(eventId: number, userId: string) {
+  try {
+    const [registration] = await db
+      .select()
+      .from(EventRegistrations)
+      .where(and(
+        eq(EventRegistrations.eventId, eventId),
+        eq(EventRegistrations.userId, userId),
+        eq(EventRegistrations.status, 'registered')
+      ));
+    
+    return registration || null;
+  } catch (error) {
+    console.error("Error fetching user registration:", error);
+    throw error;
+  }
+}
+
+// Verify attendance (scan QR code)
+export async function verifyAttendance(data: {
+  eventId: number;
+  userId: string;
+  qrCodeScanned: string;
+  verifiedBy: string;
+}) {
+  try {
+    // Validate QR format
+    const parts = data.qrCodeScanned.split(':');
+    if (parts[0] !== 'EVENT' || parts[1] !== data.eventId.toString() || parts[2] !== data.userId) {
+      throw new Error('Invalid QR code');
+    }
+
+    // Get registration
+    const [registration] = await db
+      .select()
+      .from(EventRegistrations)
+      .where(and(
+        eq(EventRegistrations.eventId, data.eventId),
+        eq(EventRegistrations.userId, data.userId),
+        eq(EventRegistrations.qrCode, data.qrCodeScanned)
+      ));
+    
+    if (!registration) {
+      throw new Error('Registration not found');
+    }
+
+    // Check if already verified
+    const existing = await db
+      .select()
+      .from(EventAttendance)
+      .where(and(
+        eq(EventAttendance.eventId, data.eventId),
+        eq(EventAttendance.userId, data.userId)
+      ));
+    
+    if (existing.length > 0) {
+      return { success: false, message: 'Already verified', alreadyVerified: true };
+    }
+
+    // Get user name for response
+    const [user] = await db
+      .select()
+      .from(Users)
+      .where(eq(Users.clerkId, data.userId));
+
+    // Create attendance record
+    const [attendance] = await db
+      .insert(EventAttendance)
+      .values({
+        eventId: data.eventId,
+        userId: data.userId,
+        registrationId: registration.id,
+        verifiedBy: data.verifiedBy,
+        qrCodeScanned: data.qrCodeScanned,
+      })
+      .returning();
+    
+    return { success: true, attendance, userName: user?.fullName || 'User' };
+  } catch (error) {
+    console.error("Error verifying attendance:", error);
+    throw error;
+  }
+}
+
+// Get verified attendees for an event
+export async function getEventAttendees(eventId: number) {
+  try {
+    const attendees = await db
+      .select({
+        attendance: EventAttendance,
+        user: Users,
+      })
+      .from(EventAttendance)
+      .leftJoin(Users, eq(EventAttendance.userId, Users.clerkId))
+      .where(eq(EventAttendance.eventId, eventId))
+      .orderBy(desc(EventAttendance.verifiedAt));
+    
+    return attendees;
+  } catch (error) {
+    console.error("Error fetching event attendees:", error);
+    throw error;
+  }
+}
+
+// Get user's registered events
+export async function getUserRegisteredEvents(userId: string) {
+  try {
+    const registrations = await db
+      .select({
+        registration: EventRegistrations,
+        event: Events,
+      })
+      .from(EventRegistrations)
+      .leftJoin(Events, eq(EventRegistrations.eventId, Events.id))
+      .where(and(
+        eq(EventRegistrations.userId, userId),
+        eq(EventRegistrations.status, 'registered')
+      ))
+      .orderBy(desc(Events.eventDate));
+    
+    return registrations;
+  } catch (error) {
+    console.error("Error fetching user registered events:", error);
+    throw error;
+  }
+}
+
+// Get user's organized events
+export async function getUserOrganizedEvents(userId: string) {
+  try {
+    const events = await db
+      .select()
+      .from(Events)
+      .where(eq(Events.organizerId, userId))
+      .orderBy(desc(Events.eventDate));
+    
+    // Return in the same structure as registered events for consistency
+    return events.map(event => ({ event }));
+  } catch (error) {
+    console.error("Error fetching user organized events:", error);
     throw error;
   }
 }
