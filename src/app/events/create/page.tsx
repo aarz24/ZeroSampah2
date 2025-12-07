@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import toast from 'react-hot-toast';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import Map from '@/components/Map';
-import { Geocoder } from '@mapbox/search-js-react';
+import dynamic from 'next/dynamic';
+
+const Map = dynamic(() => import('@/components/Map'), { ssr: false });
 
 export default function CreateEventPage() {
   const router = useRouter();
