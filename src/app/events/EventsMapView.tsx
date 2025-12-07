@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Map, { MapMarker } from '@/components/Map';
+import dynamic from 'next/dynamic';
+import type { MapMarker } from '@/components/Map';
+
+const Map = dynamic(() => import('@/components/Map'), { ssr: false });
 
 type Event = {
   event: {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-type LatLng = { lat: number; lng: number };
+export type LatLng = { lat: number; lng: number };
 
 export type MapMarker = {
   position: LatLng;

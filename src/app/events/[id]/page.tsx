@@ -2,11 +2,12 @@
 
 import { use, useState, useEffect } from 'react';
 import { notFound, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import QRCodeDisplay from '@/components/QRCodeDisplay';
-import QRScanner from '@/components/QRScanner';
 import { QrCode, ScanLine } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
+const QRScanner = dynamic(() => import('@/components/QRScanner'), { ssr: false });
 
 interface EventData {
   event: {
