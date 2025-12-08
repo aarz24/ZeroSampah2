@@ -709,7 +709,7 @@ export default function ReportPage() {
 
         {/* Recent Reports Section */}
         <div className="mt-16">
-          <h2 className="mb-8 text-3xl font-bold text-gray-900">
+          <h2 className="mb-8 text-3xl font-bold text-green-600">
             Laporan Terbaru
           </h2>
           <div className="overflow-hidden bg-white rounded-2xl shadow-lg">
