@@ -6,6 +6,8 @@ import { toast } from "react-hot-toast";
 import { Report } from "@/lib/types";
 import Loader from "@/components/Loader";
 import Image from "next/image";
+import Lottie from "lottie-react";
+import rubbishCollectionAnimation from "@/../public/animations/rubbish-collection.json";
 
 // Types
 interface UserData {
@@ -475,14 +477,10 @@ export default function ReportPage() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="px-4 py-12 mx-auto max-w-6xl sm:px-6 lg:px-8">
         {/* Header Section */}
-        <div className="mb-16 text-center">
-          <h1 className="mb-6 text-4xl font-bold text-gray-900">
+        <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
+          <h1 className="text-4xl font-bold">
             Laporkan Sampah
           </h1>
-          <p className="mx-auto max-w-2xl text-xl text-gray-600">
-            Bantu kami menjaga kebersihan lingkungan dengan melaporkan sampah di daerah Anda.
-            Kontribusi Anda sangat berarti.
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-12">

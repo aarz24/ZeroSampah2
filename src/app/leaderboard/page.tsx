@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { FaMedal, FaTrophy, FaCrown, FaLeaf, FaUser } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import Image from "next/image";
+import Lottie from "lottie-react";
+import trophyAnimation from "@/../trophy.json";
 
 // Dummy leaderboard data
 const leaderboardData = [
@@ -133,21 +135,16 @@ export default function LeaderboardPage() {
 
   return (
     <div className="container p-12 mx-auto animate-fadeIn">
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold text-gray-800">Papan Peringkat</h1>
-        <p className="text-gray-600">Lihat peringkat Anda dibandingkan juara ramah lingkungan lainnya</p>
-      </div>
-
       {/* User Rank Summary Card */}
       <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="mb-1 text-xl font-semibold">Peringkat Anda</h2>
-            <p className="text-4xl font-bold">#{userRank}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-4xl font-bold">#{userRank}</p>
+              <Lottie animationData={trophyAnimation} loop={true} className="w-12 h-12" />
+            </div>
             <p className="mt-2 text-sm opacity-80">Anda memiliki {userPoints} poin</p>
-          </div>
-          <div className="p-4 bg-white bg-opacity-20 rounded-full">
-            <FaTrophy className="text-3xl" />
           </div>
         </div>
       </div>

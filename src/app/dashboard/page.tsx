@@ -266,7 +266,7 @@ export default function DashboardPage() {
       title: "Total Poin",
       value: userStats.points,
       icon: Award,
-      color: "bg-green-500",
+      color: "bg-pink-500",
       description: "Skor kontribusi lingkungan Anda"
     },
     {
@@ -300,11 +300,11 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-8 bg-white rounded-2xl border border-gray-100 shadow-lg"
+            className="p-6 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg"
           >
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold">
                   {("Selamat datang kembali, " + userName).split("").map((char, i) => (
                     <motion.span
                       key={i}
@@ -317,13 +317,13 @@ export default function DashboardPage() {
                     </motion.span>
                   ))}
                 </h1>
-                <p className="mt-2 text-lg text-gray-600">
+                <p className="mt-2 text-lg">
                   Lacak dampak lingkungan dan kemajuan pengelolaan sampah Anda
                 </p>
               </div>
               <Link 
                 href="/report"
-                className="flex gap-2 items-center px-6 py-3 text-white bg-green-600 rounded-xl shadow-lg transition-colors duration-300 hover:bg-green-700 hover:shadow-xl"
+                className="flex gap-2 items-center px-6 py-3 font-semibold text-green-600 bg-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
               >
                 <Plus className="w-5 h-5" />
                 <span>Laporan Baru</span>
@@ -622,7 +622,7 @@ export default function DashboardPage() {
           className="mt-12"
         >
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-green-600 mb-2">Panduan Daur Ulang EcoRecycle</h2>
+            <h2 className="text-3xl font-bold text-green-600 mb-2">Panduan Daur Ulang ZeroSampah</h2>
             <p className="text-xl text-blue-600">Pelajari cara mendaur ulang dengan benar</p>
           </div>
 

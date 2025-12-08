@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { FaMedal, FaTrophy, FaGift, FaStar, FaLeaf } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import Image from "next/image";
+import Lottie from "lottie-react";
+import coinStackAnimation from "@/../coin-stack.json";
 
 // Dummy rewards data
 const rewardsData = [
@@ -184,20 +186,15 @@ export default function RewardsPage() {
 
   return (
     <div className="container p-12 mx-auto animate-fadeIn">
-      <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold text-gray-800">Hadiah Anda</h1>
-        <p className="text-gray-600">Lacak pencapaian ramah lingkungan Anda dan tukarkan hadiah</p>
-      </div>
-
       {/* Points Summary Card */}
       <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="mb-1 text-xl font-semibold">Total Poin</h2>
-            <p className="text-4xl font-bold">{totalPoints}</p>
-          </div>
-          <div className="p-4 bg-white bg-opacity-20 rounded-full">
-            <FaTrophy className="text-3xl" />
+            <div className="flex items-center gap-2">
+              <p className="text-4xl font-bold">{totalPoints}</p>
+              <Lottie animationData={coinStackAnimation} loop={true} className="w-12 h-12" />
+            </div>
           </div>
         </div>
         <div className="mt-4">

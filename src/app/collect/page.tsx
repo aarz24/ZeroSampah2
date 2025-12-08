@@ -169,7 +169,18 @@ export default function CollectPage() {
       try {
         setLoading(true);
         const res = await fetch('/api/tasks');
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
         const fetchedTasks = await res.json();
+        
+        if (!Array.isArray(fetchedTasks)) {
+          console.error('Invalid response format:', fetchedTasks);
+          throw new Error('Invalid response format');
+        }
+        
         const mappedTasks = fetchedTasks.map((task: FetchedTask) => ({
           id: task.id,
           userId: task.userId,
@@ -185,7 +196,8 @@ export default function CollectPage() {
         setTasks(mappedTasks);
       } catch (error: unknown) {
         console.error("Error fetching tasks:", error);
-        toast.error("Failed to load tasks. Please try again.");
+        toast.error("Failed to load tasks. Please refresh the page.");
+        setTasks([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
@@ -401,22 +413,24 @@ export default function CollectPage() {
         </div>
       ) : (
         <div className="mx-auto max-w-5xl">
-          <div className="flex flex-col mb-8 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="mb-4 text-3xl font-bold text-gray-900 sm:mb-0">
-              Tugas Pengumpulan Sampah
-            </h1>
+          <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h1 className="text-3xl font-bold">
+                Tugas Pengumpulan Sampah
+              </h1>
 
-            <div className="relative w-full max-w-md">
-              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                <Search className="w-5 h-5 text-gray-400" />
+              <div className="relative w-full max-w-md">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <Search className="w-5 h-5 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Cari berdasarkan area..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="py-2 pr-4 pl-10 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                />
               </div>
-              <input
-                type="text"
-                placeholder="Cari berdasarkan area..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="py-2 pr-4 pl-10 w-full text-sm bg-white rounded-lg border border-gray-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
-              />
             </div>
           </div>
 
