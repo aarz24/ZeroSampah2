@@ -135,121 +135,255 @@ export default function LeaderboardPage() {
 
   return (
     <div className="container p-12 mx-auto animate-fadeIn">
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8 text-center"
+      >
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+          🏆 Papan Peringkat
+        </h1>
+        <p className="text-gray-600">Lihat peringkat pengguna teratas dan pencapaian mereka</p>
+      </motion.div>
+
       {/* User Rank Summary Card */}
-      <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="mb-1 text-xl font-semibold">Peringkat Anda</h2>
-            <div className="flex items-center gap-2">
-              <p className="text-4xl font-bold">#{userRank}</p>
-              <Lottie animationData={trophyAnimation} loop={true} className="w-12 h-12" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="relative overflow-hidden p-6 mb-8 text-white bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 rounded-2xl shadow-xl"
+      >
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl transform translate-x-32 -translate-y-32" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl transform -translate-x-32 translate-y-32" />
+        </div>
+        
+        <div className="relative flex justify-between items-center">
+          <div className="flex-1">
+            <h2 className="mb-1 text-xl font-semibold opacity-90">Peringkat Anda</h2>
+            <div className="flex items-center gap-3">
+              <motion.p 
+                className="text-5xl font-bold"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.2 }}
+              >
+                #{userRank}
+              </motion.p>
+              <Lottie animationData={trophyAnimation} loop={true} className="w-16 h-16" />
             </div>
-            <p className="mt-2 text-sm opacity-80">Anda memiliki {userPoints} poin</p>
+            <p className="mt-2 text-sm opacity-90 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              Anda memiliki <span className="font-bold">{userPoints} poin</span>
+            </p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Time Period Filter */}
-      <div className="flex overflow-x-auto pb-2 mb-6 space-x-2">
-        {timePeriods.map((period) => (
-          <button
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="flex overflow-x-auto pb-2 mb-6 space-x-3"
+      >
+        {timePeriods.map((period, index) => (
+          <motion.button
             key={period.id}
             onClick={() => setActivePeriod(period.id)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-md ${
               activePeriod === period.id
-                ? "bg-green-500 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-200"
+                : "bg-white text-gray-700 hover:bg-gray-50 hover:shadow-lg"
             }`}
           >
             {period.label}
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
       {/* Leaderboard Table */}
-      <div className="overflow-hidden bg-white rounded-xl shadow-md">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="overflow-hidden bg-white rounded-2xl shadow-xl border border-gray-100"
+      >
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
               <tr>
-                <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                <th className="px-6 py-4 text-xs font-bold tracking-wider text-left text-gray-700 uppercase">
                   Peringkat
                 </th>
-                <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                <th className="px-6 py-4 text-xs font-bold tracking-wider text-left text-gray-700 uppercase">
                   Pengguna
                 </th>
-                <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                <th className="px-6 py-4 text-xs font-bold tracking-wider text-left text-gray-700 uppercase">
                   Poin
                 </th>
-                <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                <th className="px-6 py-4 text-xs font-bold tracking-wider text-left text-gray-700 uppercase">
                   Pencapaian
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {leaderboardData.map((user) => (
+            <tbody className="bg-white divide-y divide-gray-100">
+              {leaderboardData.map((user, index) => (
                 <motion.tr
                   key={user.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: user.id * 0.05 }}
-                  className="hover:bg-gray-50"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ 
+                    backgroundColor: "rgba(16, 185, 129, 0.05)",
+                    transition: { duration: 0.2 }
+                  }}
+                  className={`transition-all duration-300 ${
+                    user.rank <= 3 ? "bg-gradient-to-r from-yellow-50/50 to-transparent" : ""
+                  }`}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <span className="text-lg font-semibold">{user.rank}</span>
-                      <span className="ml-2">{user.badge}</span>
+                  <td className="px-6 py-5 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: index * 0.05 + 0.2, type: "spring" }}
+                        className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-lg ${
+                          user.rank === 1
+                            ? "bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-200"
+                            : user.rank === 2
+                            ? "bg-gradient-to-br from-gray-300 to-gray-500 text-white shadow-lg shadow-gray-200"
+                            : user.rank === 3
+                            ? "bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-lg shadow-amber-200"
+                            : "bg-gradient-to-br from-green-100 to-emerald-100 text-green-700"
+                        }`}
+                      >
+                        {user.rank}
+                      </motion.div>
+                      <motion.span 
+                        className="text-2xl"
+                        animate={user.rank <= 3 ? { 
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 10, -10, 0]
+                        } : {}}
+                        transition={{ 
+                          duration: 2,
+                          repeat: Infinity,
+                          repeatDelay: 3
+                        }}
+                      >
+                        {user.badge}
+                      </motion.span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 w-10 h-10 relative">
+                  <td className="px-6 py-5 whitespace-nowrap">
+                    <div className="flex items-center gap-4">
+                      <motion.div 
+                        className="flex-shrink-0 w-12 h-12 relative ring-2 ring-green-100 rounded-full"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.2 }}
+                      >
                         <Image
                           className="rounded-full"
                           src={user.avatar}
                           alt={user.name}
                           fill
-                          sizes="40px"
+                          sizes="48px"
                         />
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
+                      </motion.div>
+                      <div>
+                        <div className="text-sm font-bold text-gray-900">
                           {user.name}
                         </div>
+                        {user.rank <= 3 && (
+                          <div className="text-xs text-green-600 font-medium">
+                            Top {user.rank} 🌟
+                          </div>
+                        )}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.points}</div>
+                  <td className="px-6 py-5 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <span className="text-base font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                        {user.points.toLocaleString()}
+                      </span>
+                    </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{user.achievements}</div>
+                  <td className="px-6 py-5 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
+                      <div className="px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full">
+                        <span className="text-sm font-bold text-green-700">
+                          {user.achievements}
+                        </span>
+                      </div>
+                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
                   </td>
                 </motion.tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
 
       {/* Your Position (if not in top 10) */}
       {userRank > 10 && (
-        <div className="p-4 mt-6 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 w-10 h-10">
-                <div className="flex justify-center items-center w-10 h-10 bg-green-100 rounded-full">
-                  <FaUser className="text-green-500" />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="relative overflow-hidden p-6 mt-8 bg-gradient-to-r from-gray-50 to-green-50 rounded-2xl border-2 border-green-200 shadow-lg"
+        >
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-green-200 rounded-full blur-3xl opacity-30 transform translate-x-16 -translate-y-16" />
+          
+          <div className="relative flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <motion.div 
+                className="flex-shrink-0 w-14 h-14 ring-4 ring-green-200 rounded-full"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+              >
+                <div className="flex justify-center items-center w-full h-full bg-gradient-to-br from-green-400 to-emerald-500 rounded-full shadow-lg">
+                  <FaUser className="text-white text-xl" />
+                </div>
+              </motion.div>
+              <div>
+                <div className="text-base font-bold text-gray-900 flex items-center gap-2">
+                  You
+                  <span className="px-2 py-0.5 text-xs bg-green-500 text-white rounded-full">
+                    #{userRank}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-600 flex items-center gap-1">
+                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  {userPoints} points
                 </div>
               </div>
-              <div className="ml-4">
-                <div className="text-sm font-medium text-gray-900">You</div>
-                <div className="text-xs text-gray-500">Rank #{userRank}</div>
-              </div>
             </div>
-            <div className="text-sm font-medium text-gray-900">{userPoints} points</div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg"
+            >
+              Keep Going! 🚀
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Leaderboard page ends here */}

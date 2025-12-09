@@ -266,28 +266,32 @@ export default function DashboardPage() {
       title: "Total Poin",
       value: userStats.points,
       icon: Award,
-      color: "bg-pink-500",
+      gradient: "from-pink-500 via-rose-500 to-pink-600",
+      iconBg: "bg-gradient-to-br from-pink-400 to-pink-600",
       description: "Skor kontribusi lingkungan Anda"
     },
     {
       title: "Laporan Dikirim",
       value: userStats.reportsCount,
       icon: Trash,
-      color: "bg-blue-500",
+      gradient: "from-blue-500 via-cyan-500 to-blue-600",
+      iconBg: "bg-gradient-to-br from-blue-400 to-blue-600",
       description: "Total laporan sampah yang dikirim"
     },
     {
       title: "Peringkat Saat Ini",
       value: userStats.rank,
       icon: TrendingUp,
-      color: "bg-purple-500",
+      gradient: "from-purple-500 via-violet-500 to-purple-600",
+      iconBg: "bg-gradient-to-br from-purple-400 to-purple-600",
       description: "Status pejuang lingkungan Anda saat ini"
     },
     {
       title: "Dampak Lingkungan",
       value: userStats.impact,
-      icon: Users,
-      color: "bg-orange-500",
+      icon: Leaf,
+      gradient: "from-green-500 via-emerald-500 to-green-600",
+      iconBg: "bg-gradient-to-br from-green-400 to-green-600",
       description: "Jejak lingkungan positif Anda"
     },
   ];
@@ -340,20 +344,64 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="p-6 bg-white rounded-2xl border border-gray-100 shadow-lg transition-shadow duration-300 hover:shadow-xl"
+              whileHover={{ 
+                y: -8, 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+              className="group relative overflow-hidden p-6 bg-white rounded-2xl border border-gray-100 shadow-lg transition-all duration-300 hover:shadow-2xl"
             >
-              <div className="flex justify-between items-center mb-4">
-                <div className={`p-3 rounded-xl ${stat.color}`}>
-                  <stat.icon className="w-6 h-6 text-white" />
+              {/* Animated background gradient */}
+              <motion.div
+                className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
+                initial={{ scale: 0, opacity: 0 }}
+                whileHover={{ scale: 1.5, opacity: 0.05 }}
+                transition={{ duration: 0.5 }}
+              />
+              
+              {/* Content */}
+              <div className="relative z-10">
+                <div className="flex justify-between items-start mb-4">
+                  <motion.div 
+                    className={`p-3 rounded-xl ${stat.iconBg} shadow-md`}
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </motion.div>
+                  <div className="text-right">
+                    <span className={`text-xs font-semibold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
+                      {stat.title}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-sm font-medium text-gray-500">{stat.title}</span>
+                
+                <motion.p 
+                  className="mb-2 text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent"
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: index * 0.1 + 0.2 }}
+                >
+                  {stat.value}
+                </motion.p>
+                
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {stat.description}
+                </p>
+                
+                {/* Decorative corner accent */}
+                <motion.div
+                  className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-gradient-to-br ${stat.gradient} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity duration-300`}
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{ 
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                />
               </div>
-              <p className="mb-2 text-3xl font-bold text-gray-900">
-                {stat.value}
-              </p>
-              <p className="text-sm text-gray-500">
-                {stat.description}
-              </p>
             </motion.div>
           ))}
         </div>
