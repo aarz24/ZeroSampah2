@@ -10,32 +10,52 @@ export default async function EventsBrowsePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Jelajahi Aksi Bersih Komunitas</h1>
-              <p className="text-gray-600 mt-1">Bergabunglah dengan gerakan peduli lingkungan di sekitar Anda</p>
-            </div>
-            <div className="flex gap-3">
-              <Link 
-                href="/events/create" 
-                className="px-5 py-2.5 text-white bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 shadow-lg shadow-green-500/30 transition-all flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Buat Acara
-              </Link>
-              <Link 
-                href="/events/dashboard" 
-                className="px-5 py-2.5 text-green-700 bg-green-50 rounded-lg border-2 border-green-200 font-semibold hover:bg-green-100 transition-all flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                Dashboard Saya
-              </Link>
+      <div className="bg-gradient-to-b from-white via-green-50 to-white border-b border-green-100">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="rounded-3xl bg-gradient-to-br from-green-600 via-emerald-600 to-lime-500 text-white shadow-2xl border border-white/20 px-6 py-7 md:px-10">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-4 w-full">
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold tracking-wide rounded-full bg-white/15 border border-white/20 backdrop-blur">
+                  <span className="w-2 h-2 rounded-full bg-lime-300 animate-ping" />
+                  Komunitas Peduli
+                </span>
+                <h1 className="text-3xl md:text-4xl font-bold leading-tight">
+                  Jelajahi Aksi Bersih Komunitas
+                </h1>
+                <div className="flex flex-wrap gap-2 text-sm font-semibold text-white/90">
+                  <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">Koordinasi Relawan</span>
+                  <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">Laporan Real-time</span>
+                  <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">Reward Transparan</span>
+                </div>
+              </div>
+              <div className="w-full lg:max-w-sm bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur">
+                <div className="text-xs font-semibold uppercase tracking-wide text-white/70 mb-3">
+                  Panel Aksi Cepat
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Link 
+                    href="/events/create" 
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-green-700 font-semibold shadow-lg shadow-black/10 hover:-translate-y-0.5 transition"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Buat Acara
+                  </Link>
+                  <Link 
+                    href="/events/dashboard" 
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/40 text-white font-semibold bg-white/15 hover:bg-white/25 transition"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Dashboard Saya
+                  </Link>
+                </div>
+                <p className="mt-4 text-xs text-white/80 leading-relaxed">
+                  Simpan agenda aksi bersih, atur tim lapangan, dan pantau progres semua acara di satu tempat.
+                </p>
+              </div>
             </div>
           </div>
         </div>
