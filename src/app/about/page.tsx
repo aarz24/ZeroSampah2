@@ -51,14 +51,25 @@ export default function AboutPage() {
       </section>
 
       {/* Features Section */}
-      <section className="px-4 py-16 bg-green-50 md:px-8">
-        <div className="mx-auto max-w-6xl text-center">
-            <h2 className="mb-12 text-3xl font-bold text-green-700">Fitur Utama Kami</h2>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              <FeatureCard icon={<FaRobot />} title="Pemisahan Berbasis AI" description="Algoritme cerdas memisahkan material sampah secara otomatis berdasarkan jenisnya." />
-              <FeatureCard icon={<FaChartLine />} title="Analitik Cerdas" description="Mengoptimalkan rute dan penggunaan sumber daya dengan data real-time." />
-              <FeatureCard icon={<FaRecycle />} title="Optimisasi Daur Ulang" description="Meningkatkan proses daur ulang dengan sistem pemulihan yang cerdas." />
-              <FeatureCard icon={<FaLeaf />} title="Dampak Lingkungan" description="Melacak jejak karbon dan sasaran keberlanjutan." />
+      <section className="relative px-4 py-20 bg-gradient-to-br from-green-50 via-white to-emerald-50 md:px-8">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 -left-12 w-60 h-60 bg-green-200 rounded-full blur-3xl opacity-60"></div>
+          <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-70"></div>
+        </div>
+        <div className="relative mx-auto max-w-6xl text-center">
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-sm font-semibold text-green-700 bg-white border border-green-100 rounded-full shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            Teknologi & Dampak
+          </span>
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">Fitur Utama Kami</h2>
+          <p className="mx-auto mb-14 max-w-3xl text-lg text-gray-600">
+            Dari pemrosesan berbasis AI hingga pelacakan dampak, ZeroSampah menghadirkan ekosistem lengkap yang membantu komunitas mengelola sampah dengan cara yang lebih cerdas, transparan, dan memberi penghargaan.
+          </p>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <FeatureCard icon={<FaRobot />} title="Pemisahan Berbasis AI" description="Algoritme cerdas memisahkan material sampah secara otomatis berdasarkan jenisnya." />
+            <FeatureCard icon={<FaChartLine />} title="Analitik Cerdas" description="Mengoptimalkan rute dan penggunaan sumber daya dengan data real-time." />
+            <FeatureCard icon={<FaRecycle />} title="Optimisasi Daur Ulang" description="Meningkatkan proses daur ulang dengan sistem pemulihan yang cerdas." />
+            <FeatureCard icon={<FaLeaf />} title="Dampak Lingkungan" description="Melacak jejak karbon dan sasaran keberlanjutan." />
           </div>
         </div>
       </section>
@@ -136,10 +147,23 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
-    <div className="p-6 text-center bg-white rounded-lg shadow-md transition hover:shadow-lg">
-      <div className="mb-4 text-4xl text-green-600">{icon}</div>
-      <h3 className="mb-2 text-xl font-semibold text-green-700">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+    <div className="group relative h-full p-6 text-left bg-white/90 rounded-2xl border border-white/60 shadow-xl backdrop-blur transition-all hover:-translate-y-1 hover:shadow-2xl">
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 bg-gradient-to-br from-green-100/80 via-white to-transparent blur-xl transition-opacity" />
+      <div className="relative flex flex-col gap-4">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-green-100 via-emerald-100 to-white text-green-600 text-3xl shadow-inner">
+          {icon}
+        </div>
+        <div>
+          <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
+          <p className="text-gray-600 leading-relaxed">{description}</p>
+        </div>
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600">
+          Jelajahi fitur
+          <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M13 5l7 7-7 7" />
+          </svg>
+        </span>
+      </div>
     </div>
   );
 }

@@ -142,8 +142,12 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gradient-to-b from-white to-green-50 sm:py-24 lg:py-32">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <section className="relative py-16 overflow-hidden bg-gradient-to-b from-white via-green-50 to-emerald-50 sm:py-24 lg:py-32">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-32 -right-10 w-72 h-72 bg-emerald-100 rounded-full blur-3xl opacity-70"></div>
+          <div className="absolute -bottom-32 -left-5 w-80 h-80 bg-green-200 rounded-full blur-3xl opacity-60"></div>
+        </div>
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 relative">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -151,30 +155,40 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Kenapa Memilih ZeroSampah?</h2>
-            <p className="mx-auto mb-12 max-w-2xl text-lg text-gray-600 sm:mb-16 sm:text-xl">
-                Platform kami menggabungkan keberlanjutan dan teknologi untuk menciptakan pengalaman
-                yang memberi penghargaan bagi semua yang terlibat dalam pengelolaan sampah.
+            <span className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-sm font-semibold text-green-700 bg-white shadow-sm rounded-full border border-green-100">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              Komunitas Hijau Modern
+            </span>
+            <h2 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
+              Kenapa <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-500 to-lime-500">Memilih ZeroSampah?</span>
+            </h2>
+            <p className="mx-auto mb-12 max-w-3xl text-lg text-gray-600 sm:mb-16 sm:text-xl">
+              Platform kami memadukan keberlanjutan, AI, dan sistem apresiasi yang membuat setiap aksi ramah lingkungan terasa mudah dan bermakna.
             </p>
+            <div className="flex flex-wrap justify-center gap-3 mb-12 text-sm font-semibold text-green-700">
+              <span className="px-4 py-1 rounded-full bg-white shadow border border-green-100">Pengelolaan Sampah Pintar</span>
+              <span className="px-4 py-1 rounded-full bg-white shadow border border-green-100">Reward Token & Insentif</span>
+              <span className="px-4 py-1 rounded-full bg-white shadow border border-green-100">Jangkauan Komunitas Nasional</span>
+            </div>
           </motion.div>
           <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
               icon={Leaf}
-                title="Solusi Ramah Lingkungan"
-                description="Berkontribusi pada keberlanjutan lingkungan melalui sistem pengelolaan sampah inovatif kami."
-              delay={0.2}
+              title="Solusi Ramah Lingkungan"
+              description="Berkontribusi pada keberlanjutan lingkungan melalui sistem pengelolaan sampah inovatif kami."
+              delay={0.1}
             />
             <FeatureCard
               icon={Coins}
-                title="Sistem Hadiah"
-                description="Dapatkan token dan hadiah untuk partisipasi aktif Anda dalam inisiatif pengelolaan sampah."
-              delay={0.4}
+              title="Sistem Hadiah"
+              description="Dapatkan token dan hadiah untuk partisipasi aktif Anda dalam inisiatif pengelolaan sampah."
+              delay={0.25}
             />
             <FeatureCard
               icon={Users}
-                title="Dampak Komunitas"
-                description="Bergabunglah dengan jaringan orang-orang peduli lingkungan yang terus berkembang untuk membuat perubahan nyata."
-              delay={0.6}
+              title="Dampak Komunitas"
+              description="Bergabunglah dengan jaringan orang-orang peduli lingkungan yang terus berkembang untuk membuat perubahan nyata."
+              delay={0.4}
             />
           </div>
         </div>
@@ -263,13 +277,14 @@ function FeatureCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.5 }}
-      whileHover={{ y: -5 }}
-      className="flex flex-col items-center p-8 rounded-xl border border-green-100 shadow-lg backdrop-blur-sm transition-all bg-white/80 hover:shadow-xl"
+      whileHover={{ y: -8, scale: 1.01 }}
+      className="group relative flex flex-col items-center p-8 rounded-2xl border border-white/60 shadow-xl backdrop-blur bg-white/90 hover:border-green-200"
     >
-      <div className="p-4 mb-6 rounded-full bg-green-100/80">
+      <div className="absolute inset-x-0 -top-1 h-1 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-green-500 via-emerald-500 to-lime-400 rounded-full transition-opacity" />
+      <div className="p-5 mb-6 rounded-2xl bg-gradient-to-br from-green-100 via-emerald-100 to-white shadow-inner">
         <Icon className="w-8 h-8 text-green-600" />
       </div>
-      <h3 className="mb-4 text-2xl font-semibold text-gray-900">{title}</h3>
+      <h3 className="mb-3 text-2xl font-semibold text-gray-900 text-center">{title}</h3>
       <p className="leading-relaxed text-center text-gray-600">{description}</p>
     </motion.div>
   );
