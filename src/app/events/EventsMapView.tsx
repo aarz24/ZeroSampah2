@@ -21,6 +21,8 @@ type Event = {
     rewardInfo: string | null;
     status: string;
     maxParticipants: number | null;
+    images: string[] | null;
+    videos: string[] | null;
   };
   organizer: {
     fullName: string | null;
@@ -43,6 +45,7 @@ export default function EventsMapView({ events }: { events: Event[] }) {
       lng: parseFloat(ev.event.longitude!),
     },
     title: `${ev.event.title}\n📍 ${ev.event.location}\n📅 ${ev.event.eventDate ? new Date(ev.event.eventDate).toLocaleDateString('id-ID') : '-'} • ${ev.event.eventTime}`,
+    imageUrl: ev.event.images && ev.event.images.length > 0 ? ev.event.images[0] : undefined,
   }));
 
   // Calculate center of the map (average of all coordinates)
@@ -136,17 +139,15 @@ export default function EventsMapView({ events }: { events: Event[] }) {
             </div>
           ) : (
             <div>
-              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
+              <div className="p-6 bg-gradient-to-br from-green-100 via-emerald-50 to-white border-b-2 border-green-200/60">
+                <div className="flex items-center gap-5">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/30 border-2 border-white">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Events Map</h3>
-                    <p className="text-sm text-gray-600">
-                      Showing {eventsWithCoords.length} event{eventsWithCoords.length !== 1 ? 's' : ''} with location data
+                    <h3 className="text-2xl font-bold text-gray-800">Peta Acara Komunitas</h3>
+                    <p className="text-base text-gray-600 mt-1">
+                      Menampilkan <span className="font-bold text-green-600">{eventsWithCoords.length} acara</span> dengan data lokasi yang valid.
                     </p>
                   </div>
                 </div>
@@ -154,42 +155,42 @@ export default function EventsMapView({ events }: { events: Event[] }) {
               <Map center={mapCenter} zoom={12} height={600} markers={markers} />
               
               {/* Event list below map */}
-              <div className="p-6 bg-gray-50 border-t border-gray-200">
-                <h4 className="font-bold text-gray-900 mb-4">Events on Map:</h4>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
+              <div className="bg-gradient-to-b from-gray-50 via-white to-gray-50 p-6 border-t-2 border-gray-100">
+                <h4 className="text-xl font-bold text-gray-800 mb-5 flex items-center gap-3">
+                  <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6c0 1.887.813 3.56 2.067 4.715L10 18.34l3.933-5.625A5.969 5.969 0 0016 8a6 6 0 00-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z" /></svg>
+                  Daftar Acara di Peta
+                </h4>
+                <div className="space-y-4 max-h-[30rem] overflow-y-auto pr-2">
                   {eventsWithCoords.map((ev, idx) => {
-                    const eventDate = ev.event.eventDate ? new Date(ev.event.eventDate).toLocaleDateString('id-ID') : '-';
+                    const eventDate = ev.event.eventDate ? new Date(ev.event.eventDate).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric'}) : '-';
                     return (
                       <Link 
                         key={ev.event.id}
                         href={`/events/${ev.event.id}`}
-                        className="block bg-white rounded-lg border border-gray-200 p-4 hover:border-green-300 hover:shadow-md transition-all"
+                        className="group block bg-white rounded-2xl border border-gray-200/80 p-5 shadow-lg shadow-gray-500/5 hover:border-green-300 hover:shadow-green-500/20 hover:-translate-y-1 transition-all duration-300"
                       >
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-green-700 text-sm">
+                        <div className="flex items-center gap-5">
+                          <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl flex items-center justify-center flex-shrink-0 font-extrabold text-green-700 text-xl border-2 border-white shadow-md">
                             {idx + 1}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h5 className="font-bold text-gray-900 mb-1 line-clamp-1">{ev.event.title}</h5>
-                            <div className="text-sm text-gray-600 space-y-1">
-                              <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
+                            <h5 className="font-bold text-lg text-gray-800 group-hover:text-green-600 transition-colors mb-1.5 line-clamp-1">{ev.event.title}</h5>
+                            <div className="text-sm text-gray-500 space-y-2">
+                              <div className="flex items-center gap-2 font-medium">
+                                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg>
                                 <span className="line-clamp-1">{ev.event.location}</span>
                               </div>
-                              <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <span>{eventDate} • {ev.event.eventTime}</span>
+                              <div className="flex items-center gap-2 font-medium">
+                                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>
+                                <span>{eventDate} • {ev.event.eventTime} WIB</span>
                               </div>
                             </div>
                           </div>
-                          <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
+                          <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-green-100 group-hover:text-green-600 transition-colors">
+                            <svg className="w-6 h-6 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
                         </div>
                       </Link>
                     );

@@ -8,6 +8,7 @@ export type LatLng = { lat: number; lng: number };
 export type MapMarker = {
   position: LatLng;
   title?: string;
+  imageUrl?: string;
 };
 
 export default function Map({
@@ -71,8 +72,34 @@ export default function Map({
             .addTo(map);
 
           if (m.title) {
-            const popup = new mapboxgl.Popup({ offset: 25 })
-              .setHTML(`<div style="padding: 8px; max-width: 200px; white-space: pre-wrap;">${m.title}</div>`);
+            const popupHTML = `
+              <div style="width: 220px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+                ${m.imageUrl ? `
+                  <img 
+                    src="${m.imageUrl}" 
+                    alt="Event Image" 
+                    style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px 8px 0 0; display: block;"
+                  />
+                ` : ''}
+                <div style="padding: 12px;">
+                  <div style="font-weight: 700; font-size: 16px; color: #1f2937; margin-bottom: 8px; line-height: 1.2; white-space: normal;">${m.title.split('\n')[0]}</div>
+                  <div style="font-size: 13px; color: #4b5563; white-space: normal; display: flex; align-items: flex-start; gap: 6px;">
+                    <svg style="width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                    <span>${m.title.split('\n')[1]?.substring(2)}</span>
+                  </div>
+                  <div style="font-size: 13px; color: #4b5563; white-space: normal; display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+                    <svg style="width: 16px; height: 16px; flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                    <span>${m.title.split('\n')[2]?.substring(2)}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+
+            const popup = new mapboxgl.Popup({ 
+              offset: 35,
+              closeButton: false,
+              className: 'event-popup' // Add a class for custom styling
+            }).setHTML(popupHTML);
             marker.setPopup(popup);
           }
 

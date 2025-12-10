@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getPublishedEvents } from '@/db/actions';
 import EventsMapView from './EventsMapView';
 
@@ -67,10 +68,13 @@ export default async function EventsBrowsePage() {
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-64 md:h-auto overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50">
-                <img
+                <Image
                   src="/images/event-hero.jpeg"
                   alt="Community Cleanup"
                   className="w-full h-full object-cover"
+                  width={600}
+                  height={400}
+                  priority
                 />
               </div>
               <div className="p-8 md:p-10 flex flex-col justify-center">

@@ -6,6 +6,7 @@ import { useUser } from '@clerk/nextjs';
 import toast from 'react-hot-toast';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import dynamic from 'next/dynamic';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const Map = dynamic(() => import('@/components/Map'), { ssr: false });
 
@@ -373,18 +374,20 @@ export default function CreateEventPage() {
                   </label>
                   <div className="mb-3">
                     <Geocoder
-                      accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''}
-                      options={{
-                        language: 'id',
-                        country: 'ID',
-                        proximity: '106.8456,-6.2088' // Jakarta center
-                      }}
-                      onRetrieve={(result) => {
-                        const [lng, lat] = result.geometry.coordinates;
+                      mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''}
+                      onSelected={(result: any) => {
+                        const [lng, lat] = result.center;
                         setCoordinates({ lat, lng });
-                        setFormData({ ...formData, location: result.properties.full_address || result.properties.place_name });
+                        setFormData({ ...formData, location: result.place_name });
                         toast.success('Lokasi ditemukan!');
                       }}
+                      viewport={{}}
+                      hideOnSelect={true}
+                      queryParams={{
+                        country: 'id',
+                        proximity: '106.8456,-6.2088' // Jakarta center
+                      }}
+                      position="top-left"
                     />
                   </div>
                 </div>
