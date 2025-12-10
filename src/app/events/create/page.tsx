@@ -370,30 +370,6 @@ export default function CreateEventPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cari Lokasi
-                  </label>
-                  <div className="mb-3">
-                    <Geocoder
-                      mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''}
-                      onSelected={(result: any) => {
-                        const [lng, lat] = result.center;
-                        setCoordinates({ lat, lng });
-                        setFormData({ ...formData, location: result.place_name });
-                        toast.success('Lokasi ditemukan!');
-                      }}
-                      viewport={{}}
-                      hideOnSelect={true}
-                      queryParams={{
-                        country: 'id',
-                        proximity: '106.8456,-6.2088' // Jakarta center
-                      }}
-                      position="top-left"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Pilih Lokasi di Peta <span className="text-red-500">*</span>
                   </label>
                   <p className="text-xs text-gray-500 mb-3 flex items-center gap-1">
