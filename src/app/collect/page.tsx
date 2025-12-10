@@ -892,6 +892,7 @@ export default function CollectPage() {
             </div>
           </div>
         </div>
+      </div>
       )}
     </div>
   );
