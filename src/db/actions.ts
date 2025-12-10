@@ -320,10 +320,6 @@ export async function getWasteCollectionTasks(limit: number = 20) {
       .orderBy(desc(Reports.createdAt))
       .execute();
 
-    console.log('getWasteCollectionTasks - Fetched', tasks.length, 'reports from DB');
-    console.log('getWasteCollectionTasks - Report IDs:', tasks.map(t => t.id));
-    console.log('getWasteCollectionTasks - Report statuses:', tasks.map(t => ({ id: t.id, status: t.status })));
-
     return tasks.map(task => ({
       ...task,
       // Preserve full ISO timestamp for reliable ordering on client

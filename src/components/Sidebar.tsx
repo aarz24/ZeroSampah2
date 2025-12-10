@@ -55,10 +55,18 @@ export default function Sidebar({ children }: SidebarProps) {
         initial={{ x: -280 }}
         animate={{ x: isOpen ? 0 : -280 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 w-64 shadow-lg z-40"
+        className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-gradient-to-b from-emerald-50 via-white to-green-50 border-r border-emerald-100/70 shadow-xl shadow-emerald-100/80 z-40"
       >
         {/* Menu Items */}
-        <nav className="p-4">
+        <nav className="h-full px-4 pt-6 pb-28">
+          <div className="mb-5 px-2">
+            <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.22em] text-emerald-700/80 uppercase">
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 text-xs font-bold">
+                ●
+              </span>
+              Navigasi Utama
+            </p>
+          </div>
           <div className="space-y-2">
             {menuItems.map((item, index) => (
               <motion.div
@@ -69,24 +77,24 @@ export default function Sidebar({ children }: SidebarProps) {
               >
                 <Link href={item.link} className="block">
                   <div
-                    className={`flex items-center p-3 rounded-xl transition-all duration-300 
+                    className={`group flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 
                       ${pathname === item.link 
-                        ? 'bg-green-50 text-green-700 shadow-sm' 
-                        : 'text-gray-600 hover:bg-gray-50 hover:shadow-sm'}`}
+                        ? 'bg-gradient-to-r from-emerald-600/10 via-emerald-500/5 to-lime-500/10 border-emerald-200 text-emerald-800 shadow-md shadow-emerald-100' 
+                        : 'bg-white/60 border-transparent text-gray-600 hover:bg-emerald-50/80 hover:border-emerald-100 hover:text-emerald-700 hover:shadow-sm'}`}
                   >
-                    <div className={`${
-                      pathname === item.link 
-                        ? 'text-green-600 bg-green-100 p-3 rounded-xl' 
-                        : 'text-gray-400 bg-gray-100 p-3 rounded-xl group-hover:text-green-500 group-hover:bg-green-50'
-                    } transition-all duration-300`}>
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300 
+                      ${pathname === item.link 
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-300' 
+                        : 'bg-gray-100 text-gray-400 group-hover:bg-emerald-100 group-hover:text-emerald-700'
+                    }`}>
                       {item.icon}
                     </div>
-                    <span className="ml-4 font-medium">{item.name}</span>
+                    <span className="ml-1 text-sm font-semibold tracking-tight">{item.name}</span>
                     
                     {pathname === item.link && (
                       <motion.div
                         layoutId="activeIndicator"
-                        className="ml-auto w-2 h-2 bg-green-500 rounded-full"
+                        className="ml-auto h-6 w-1 rounded-full bg-gradient-to-b from-emerald-500 to-lime-400"
                       />
                     )}
                   </div>

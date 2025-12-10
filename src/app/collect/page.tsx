@@ -74,7 +74,6 @@ interface FetchedTask {
 
 export default function CollectPage() {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -87,10 +86,6 @@ export default function CollectPage() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [verificationDetails, setVerificationDetails] = useState<VerificationDetails | null>(null);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const getDaysAgo = (date: Date) => {
     const now = new Date();
@@ -177,7 +172,6 @@ export default function CollectPage() {
         const fetchedTasks = await res.json();
         
         if (!Array.isArray(fetchedTasks)) {
-          console.error('Invalid response format:', fetchedTasks);
           throw new Error('Invalid response format');
         }
         
@@ -195,7 +189,6 @@ export default function CollectPage() {
         }));
         setTasks(mappedTasks);
       } catch (error: unknown) {
-        console.error("Error fetching tasks:", error);
         toast.error("Failed to load tasks. Please refresh the page.");
         setTasks([]); // Set empty array on error
       } finally {
@@ -407,12 +400,7 @@ export default function CollectPage() {
 
   return (
     <div className="p-4 min-h-screen bg-gray-50 sm:p-6 lg:p-8">
-      {!isClient ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader />
-        </div>
-      ) : (
-        <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl">
           <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <h1 className="text-3xl font-bold">
@@ -662,7 +650,6 @@ export default function CollectPage() {
             </div>
           )}
         </div>
-      )}
 
       {selectedTask && (
         <div className="flex fixed inset-0 z-50 justify-center items-center p-4 animate-fadeIn">

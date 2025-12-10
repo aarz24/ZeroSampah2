@@ -34,8 +34,6 @@ const dummyTasks = [
 export async function GET() {
   try {
     const tasks = await getWasteCollectionTasks();
-    console.log('GET /api/tasks - Returning', tasks.length, 'tasks');
-    console.log('GET /api/tasks - Task IDs:', tasks.map(t => t.id));
     return NextResponse.json(tasks);
   } catch (err: any) {
     console.error('GET /api/tasks error', err);
