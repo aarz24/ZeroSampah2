@@ -16,6 +16,8 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import Image from "next/image";
+import Lottie from "lottie-react";
+import litterAnimation from "@/../Litter.json";
 
 // Use secure server-side proxy endpoint for Gemini API instead of exposing the key in client bundles
 
@@ -399,16 +401,43 @@ export default function CollectPage() {
   };
 
   return (
-    <div className="p-4 min-h-screen bg-gray-50 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-5xl">
-          <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <h1 className="text-3xl font-bold">
-                Tugas Pengumpulan Sampah
-              </h1>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-emerald-50">
+      {/* Decorative Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-green-200/30 to-emerald-300/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-gradient-to-br from-lime-200/20 to-green-200/30 rounded-full blur-3xl" />
+      </div>
 
-              <div className="relative w-full max-w-md">
-                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+      <div className="relative p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto max-w-5xl">
+          {/* Header Section */}
+          <div className="relative overflow-hidden p-6 md:p-8 mb-8 text-white bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 rounded-3xl shadow-2xl">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+              <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-2xl" />
+            </div>
+            <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="flex items-center gap-4 md:gap-6">
+                {/* Lottie Animation Logo */}
+                <div className="w-16 h-16 md:w-24 md:h-24 flex-shrink-0 bg-white/20 backdrop-blur-sm rounded-2xl p-2 overflow-hidden">
+                  <Lottie
+                    animationData={litterAnimation}
+                    loop={true}
+                    autoplay={true}
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                </div>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-extrabold mb-1">
+                    Tugas Pengumpulan Sampah
+                  </h1>
+                  <p className="text-green-100 text-sm md:text-base">Bantu bersihkan lingkungan dengan mengumpulkan sampah</p>
+                </div>
+              </div>
+
+              {/* Search Bar */}
+              <div className="relative w-full lg:w-80">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                   <Search className="w-5 h-5 text-gray-400" />
                 </div>
                 <input
@@ -416,7 +445,7 @@ export default function CollectPage() {
                   placeholder="Cari berdasarkan area..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="py-2 pr-4 pl-10 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                  className="w-full py-3 pr-4 pl-12 text-sm text-gray-900 bg-white/95 backdrop-blur-sm rounded-2xl border-2 border-white/50 focus:border-green-300 focus:outline-none focus:ring-4 focus:ring-white/20 shadow-lg placeholder:text-gray-400 transition-all"
                 />
               </div>
             </div>
@@ -893,6 +922,7 @@ export default function CollectPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

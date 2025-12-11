@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { MapPin, Upload, CheckCircle, Package } from "lucide-react";
+import { MapPin, Upload, CheckCircle, Package, Camera, Sparkles, FileImage, ExternalLink, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Report } from "@/lib/types";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
-import rubbishCollectionAnimation from "@/../public/animations/rubbish-collection.json";
+import noteAnimation from "@/../Note.json";
 
 // Types
 interface UserData {
@@ -474,39 +474,75 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <div className="px-4 py-12 mx-auto max-w-6xl sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-emerald-50">
+      {/* Decorative Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-green-200/30 to-emerald-300/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 right-20 w-96 h-96 bg-gradient-to-br from-lime-200/20 to-green-200/30 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative px-4 py-12 mx-auto max-w-5xl sm:px-6 lg:px-8">
         {/* Header Section */}
-        <div className="p-6 mb-8 text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl shadow-lg">
-          <h1 className="text-4xl font-bold">
-            Laporkan Sampah
-          </h1>
+        <div className="relative overflow-hidden p-6 md:p-8 mb-10 text-white bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 rounded-3xl shadow-2xl">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-400/20 rounded-full blur-2xl" />
+          </div>
+          <div className="relative flex items-center gap-4 md:gap-6">
+            {/* Lottie Animation Logo */}
+            <div className="w-20 h-20 md:w-28 md:h-28 flex-shrink-0 bg-white/20 backdrop-blur-sm rounded-2xl p-2 overflow-hidden">
+              <Lottie
+                animationData={noteAnimation}
+                loop={true}
+                autoplay={true}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-4xl font-extrabold mb-1 md:mb-2">
+                Laporkan Sampah
+              </h1>
+              <p className="text-green-100 text-sm md:text-lg">Bantu menjaga lingkungan dengan melaporkan sampah di sekitar Anda</p>
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-12">
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Image Upload Card */}
-          <div className="p-8 bg-white rounded-2xl shadow-lg">
-            <div className="mb-8">
-              <h2 className="mb-3 text-2xl font-semibold text-gray-800">
-                Unggah Foto Sampah
-              </h2>
-              <p className="text-gray-600">
-                Ambil foto yang jelas dari sampah untuk membantu kami menganalisisnya secara akurat
-              </p>
+          <div className="relative overflow-hidden p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-green-100">
+            {/* Card Header */}
+            <div className="flex items-start gap-4 mb-8">
+              <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl">
+                <Camera className="w-7 h-7 text-green-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                  Unggah Foto Sampah
+                </h2>
+                <p className="text-gray-600">
+                  Ambil foto yang jelas dari sampah untuk membantu kami menganalisisnya secara akurat
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {/* Upload Area */}
               <div className="relative group">
-                <div className="flex justify-center px-8 py-12 bg-gray-50 rounded-xl border-2 border-gray-300 border-dashed transition-all duration-300 group-hover:border-green-500 group-hover:bg-gray-100">
+                <div className="flex justify-center px-8 py-16 bg-gradient-to-br from-gray-50 to-green-50/50 rounded-2xl border-2 border-dashed border-green-300/50 transition-all duration-300 group-hover:border-green-500 group-hover:bg-green-50/50 group-hover:shadow-lg">
                   <div className="space-y-4 text-center">
-                    <Upload className="mx-auto w-20 h-20 text-gray-400 transition-colors duration-300 group-hover:text-green-500" />
-                    <div className="flex flex-col items-center text-sm text-gray-600">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-green-400/20 rounded-full blur-xl scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <FileImage className="relative mx-auto w-16 h-16 text-green-400 transition-all duration-300 group-hover:text-green-500 group-hover:scale-110" />
+                    </div>
+                    <div className="flex flex-col items-center">
                       <label
                         htmlFor="waste-image"
-                        className="relative mb-2 font-medium text-green-600 rounded-md cursor-pointer hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2"
+                        className="relative mb-3 px-6 py-3 font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full cursor-pointer hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                       >
-                        <span>Unggah file</span>
+                        <span className="flex items-center gap-2">
+                          <Upload className="w-5 h-5" />
+                          Unggah file
+                        </span>
                         <input
                           id="waste-image"
                           name="waste-image"
@@ -517,8 +553,11 @@ export default function ReportPage() {
                         />
                       </label>
                       <p className="text-gray-500">atau seret dan jatuhkan</p>
-                      <p className="mt-2 text-xs text-gray-400">
-                        PNG, JPG, GIF hingga 10MB
+                      <p className="mt-3 text-sm text-gray-400 flex items-center gap-2">
+                        <span className="px-2 py-1 bg-gray-100 rounded text-xs font-medium">PNG</span>
+                        <span className="px-2 py-1 bg-gray-100 rounded text-xs font-medium">JPG</span>
+                        <span className="px-2 py-1 bg-gray-100 rounded text-xs font-medium">GIF</span>
+                        <span className="text-gray-400">hingga 10MB</span>
                       </p>
                     </div>
                   </div>
@@ -527,8 +566,9 @@ export default function ReportPage() {
 
               {/* Preview Area */}
               {preview && (
-                <div className="overflow-hidden mt-8 rounded-xl border border-gray-200 shadow-lg">
-                  <div className="relative bg-white aspect-video">
+                <div className="relative overflow-hidden rounded-2xl border-2 border-green-200 shadow-xl group">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative bg-gray-100 aspect-video">
                     <Image
                       src={preview}
                       alt="Waste preview"
@@ -536,6 +576,11 @@ export default function ReportPage() {
                       width={800}
                       height={600}
                     />
+                  </div>
+                  <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700 shadow-lg">
+                      Foto siap dianalisis
+                    </span>
                   </div>
                 </div>
               )}
@@ -545,19 +590,22 @@ export default function ReportPage() {
                 type="button"
                 onClick={handleVerify}
                 disabled={!file || verificationStatus === "verifying"}
-                className={`w-full flex items-center justify-center gap-3 px-8 py-4 text-lg font-medium rounded-xl transition-all duration-300 ${
+                className={`w-full flex items-center justify-center gap-3 px-8 py-5 text-lg font-semibold rounded-2xl transition-all duration-300 ${
                   !file
                     ? "text-gray-400 bg-gray-100 cursor-not-allowed"
-                    : "text-white bg-green-600 shadow-lg cursor-pointer hover:shadow-xl"
-                } ${verificationStatus === "verifying" ? "hover:bg-green-600 cursor-not-allowed" : "hover:bg-green-700"}`}
+                    : "text-white bg-gradient-to-r from-green-500 via-green-500 to-emerald-500 shadow-xl shadow-green-500/25 cursor-pointer hover:shadow-2xl hover:shadow-green-500/30 hover:-translate-y-0.5"
+                } ${verificationStatus === "verifying" ? "cursor-not-allowed" : ""}`}
               >
-                    {verificationStatus === "verifying" ? (
+                {verificationStatus === "verifying" ? (
                   <>
                     <Loader />
                     <span>Menganalisis Sampah...</span>
                   </>
                 ) : (
-                  <span>Analisis Sampah</span>
+                  <>
+                    <Sparkles className="w-6 h-6" />
+                    <span>Analisis Sampah</span>
+                  </>
                 )}
               </button>
             </div>
@@ -565,31 +613,35 @@ export default function ReportPage() {
 
           {/* Analysis Results Card */}
           {verificationStatus === "success" && verificationResult && (
-            <div className="p-8 bg-white rounded-2xl shadow-lg">
-              <div className="flex items-start space-x-6">
+            <div className="relative overflow-hidden p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl shadow-xl border border-green-200">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-green-200/30 rounded-full blur-3xl" />
+              <div className="relative flex items-start gap-6">
                 <div className="flex-shrink-0">
-                  <div className="p-3 bg-green-100 rounded-full">
-                    <CheckCircle className="w-10 h-10 text-green-600" />
+                  <div className="p-4 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl shadow-lg">
+                    <CheckCircle className="w-8 h-8 text-white" />
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="mb-6 text-2xl font-semibold text-gray-900">
+                  <h3 className="mb-2 text-2xl font-bold text-gray-900">
                     Analisis Selesai
                   </h3>
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                    <div className="p-6 bg-gray-50 rounded-xl border border-gray-100">
-                      <p className="mb-2 text-sm font-medium text-gray-500">
-                        Jenis Sampah
-                      </p>
-                      <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-gray-600 mb-6">Sampah berhasil diidentifikasi oleh AI</p>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="p-5 bg-white rounded-2xl border border-green-100 shadow-md">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full" />
+                        <p className="text-sm font-medium text-gray-500">Jenis Sampah</p>
+                      </div>
+                      <p className="text-xl font-bold text-gray-900">
                         {verificationResult.wasteType}
                       </p>
                     </div>
-                    <div className="p-6 bg-gray-50 rounded-xl border border-gray-100">
-                      <p className="mb-2 text-sm font-medium text-gray-500">
-                        Jumlah
-                      </p>
-                      <p className="text-lg font-semibold text-gray-900">
+                    <div className="p-5 bg-white rounded-2xl border border-green-100 shadow-md">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full" />
+                        <p className="text-sm font-medium text-gray-500">Perkiraan Jumlah</p>
+                      </div>
+                      <p className="text-xl font-bold text-gray-900">
                         {verificationResult.amount}
                       </p>
                     </div>
@@ -600,119 +652,139 @@ export default function ReportPage() {
           )}
 
           {/* Location Details Card */}
-          <div className="p-8 bg-white rounded-2xl shadow-lg">
-            <h2 className="mb-8 text-2xl font-semibold text-gray-800">
-              Detail Lokasi
-            </h2>
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              {/* Location Input */}
-              <div className="space-y-4">
-                <label
-                  htmlFor="location"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Lokasi (URL Google Maps)
-                </label>
-                <div className="flex gap-3">
-                  <input
-                    type="url"
-                    id="location"
-                    name="location"
-                    value={newReport.location}
-                    onChange={handleInputChange}
-                    required
-                    className="flex-1 px-4 py-3 rounded-xl border border-gray-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    placeholder="Tempel URL lokasi Google Maps"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      window.open("https://www.google.com/maps", "_blank")
-                    }
-                    className="flex gap-2 items-center px-6 py-3 text-green-700 bg-green-100 rounded-xl transition-colors duration-300 cursor-pointer hover:bg-green-200"
-                  >
-                    <MapPin className="w-5 h-5" />
-                    <span>Buka Maps</span>
-                  </button>
-                </div>
-                <p className="text-sm text-gray-500">
-                  Klik 'Buka Maps' untuk menemukan lokasi Anda, lalu bagikan dan salin
-                  URL
-                </p>
+          <div className="relative overflow-hidden p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-green-100">
+            {/* Card Header */}
+            <div className="flex items-start gap-4 mb-8">
+              <div className="p-3 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl">
+                <MapPin className="w-7 h-7 text-emerald-600" />
               </div>
-
-              {/* Waste Details */}
-              <div className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="type"
-                    className="block mb-2 text-sm font-medium text-gray-700"
-                  >
-                    Jenis Sampah
-                  </label>
-                  <input
-                    type="text"
-                    id="type"
-                    name="type"
-                    value={newReport.type}
-                    onChange={handleInputChange}
-                    required
-                    className="px-4 py-3 w-full text-gray-700 bg-gray-50 rounded-xl border border-gray-300"
-                    placeholder="Jenis sampah terverifikasi"
-                    readOnly
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="amount"
-                    className="block mb-2 text-sm font-medium text-gray-700"
-                  >
-                    Perkiraan Jumlah
-                  </label>
-                  <input
-                    type="text"
-                    id="amount"
-                    name="amount"
-                    value={newReport.amount}
-                    onChange={handleInputChange}
-                    required
-                    className="px-4 py-3 w-full text-gray-700 bg-gray-50 rounded-xl border border-gray-300"
-                    placeholder="Jumlah terverifikasi"
-                    readOnly
-                  />
-                </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                  Detail Lokasi
+                </h2>
+                <p className="text-gray-600">Tentukan lokasi sampah dengan Google Maps</p>
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting || !verificationResult}
-              className={`w-full mt-10 flex items-center justify-center gap-3 px-8 py-4 text-lg font-medium rounded-xl transition-all duration-300 ${
-                !verificationResult
-                  ? "text-gray-400 bg-gray-100 cursor-not-allowed"
-                  : "text-white bg-green-600 shadow-lg cursor-pointer hover:bg-green-700 hover:shadow-xl"
-              }`}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader />
-                  <span>Mengirim Laporan...</span>
-                </>
-              ) : (
-                "Kirim Laporan"
-              )}
-            </button>
+            <div className="space-y-8">
+              {/* Location Input */}
+              <div className="space-y-3">
+                <label htmlFor="location" className="block text-sm font-semibold text-gray-700">
+                  Lokasi (URL Google Maps)
+                </label>
+                <div className="flex gap-3">
+                  <div className="relative flex-1">
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      type="url"
+                      id="location"
+                      name="location"
+                      value={newReport.location}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-gray-200 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/20 focus:border-green-500 placeholder:text-gray-400"
+                      placeholder="Tempel URL lokasi Google Maps"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => window.open("https://www.google.com/maps", "_blank")}
+                    className="flex items-center gap-2 px-6 py-4 font-semibold text-green-700 bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl transition-all duration-300 cursor-pointer hover:from-green-200 hover:to-emerald-200 hover:shadow-lg"
+                  >
+                    <ExternalLink className="w-5 h-5" />
+                    <span>Buka Maps</span>
+                  </button>
+                </div>
+                <p className="text-sm text-gray-500 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                  Klik &apos;Buka Maps&apos; untuk menemukan lokasi Anda, lalu bagikan dan salin URL
+                </p>
+              </div>
+
+              {/* Waste Details Grid */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="space-y-3">
+                  <label htmlFor="type" className="block text-sm font-semibold text-gray-700">
+                    Jenis Sampah
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="type"
+                      name="type"
+                      value={newReport.type}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-4 text-gray-700 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20"
+                      placeholder="Jenis sampah terverifikasi"
+                      readOnly
+                    />
+                    {newReport.type && (
+                      <CheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <label htmlFor="amount" className="block text-sm font-semibold text-gray-700">
+                    Perkiraan Jumlah
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      id="amount"
+                      name="amount"
+                      value={newReport.amount}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-4 text-gray-700 bg-gray-50 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20"
+                      placeholder="Jumlah terverifikasi"
+                      readOnly
+                    />
+                    {newReport.amount && (
+                      <CheckCircle className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isSubmitting || !verificationResult}
+                className={`w-full flex items-center justify-center gap-3 px-8 py-5 text-lg font-semibold rounded-2xl transition-all duration-300 ${
+                  !verificationResult
+                    ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                    : "text-white bg-gradient-to-r from-green-500 via-green-500 to-emerald-500 shadow-xl shadow-green-500/25 cursor-pointer hover:shadow-2xl hover:shadow-green-500/30 hover:-translate-y-0.5"
+                }`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader />
+                    <span>Mengirim Laporan...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-6 h-6" />
+                    <span>Kirim Laporan</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
 
         {/* Recent Reports Section */}
-        <div className="mt-16">
-          <h2 className="mb-8 text-3xl font-bold text-green-600">
-            Laporan Terbaru
-          </h2>
-          <div className="overflow-hidden bg-white rounded-2xl shadow-lg">
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl">
+              <Package className="w-6 h-6 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Laporan Terbaru
+            </h2>
+          </div>
+          <div className="overflow-hidden bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-green-100">
             <div className="max-h-[480px] overflow-y-auto">
               {isLoadingReports
                 ? renderLoadingState()
