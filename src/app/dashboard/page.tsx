@@ -414,14 +414,15 @@ export default function DashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             className="p-6 bg-white rounded-2xl border border-gray-100 shadow-lg"
           >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Aktivitas Terbaru
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900">
+                <FileText className="w-6 h-6 text-emerald-600" />
+                <span>Aktivitas Terbaru</span>
               </h2>
-              <div className="flex gap-4 items-center">
+              <div className="flex items-center gap-3">
                 <button 
                   onClick={handleRefresh}
-                  className="flex gap-1 items-center text-sm font-medium text-green-600 hover:text-green-700"
+                  className="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-emerald-600 transition-colors"
                   disabled={isRefreshing}
                 >
                   {isRefreshing ? (
@@ -433,43 +434,51 @@ export default function DashboardPage() {
                 </button>
                 <Link 
                   href="/reports"
-                  className="flex gap-1 items-center text-sm font-medium text-green-600 hover:text-green-700"
+                  className="flex items-center gap-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-lime-500 rounded-full px-4 py-2 shadow-md hover:shadow-lg transition-all"
                 >
-                  Lihat Semua
+                  <span>Lihat Semua</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
             <div className="space-y-4">
               {isLoading ? (
-                <div className="flex justify-center items-center py-8">
-                  <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
+                <div className="flex items-center justify-center py-10">
+                  <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
+                  <p className="ml-3 text-sm font-medium text-gray-500">Memuat aktivitas...</p>
                 </div>
               ) : recentReports.length > 0 ? (
                 recentReports.map((report, index) => (
                   <motion.div
                     key={report.id}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center p-4 bg-gray-50 rounded-xl transition-colors duration-300 hover:bg-gray-100"
+                    transition={{ delay: index * 0.06 }}
+                    className="group flex items-center gap-4 p-4 bg-gray-50/80 rounded-2xl border border-gray-100 hover:border-emerald-200 hover:bg-white transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-emerald-100/70"
                   >
-                    <div className="flex-shrink-0">
-                      <MapPin className="w-5 h-5 text-green-500" />
+                    <div className="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-500 transition-all">
+                      <Recycle className="w-5 h-5" />
                     </div>
-                    <div className="flex-1 ml-4">
-                      <p className="text-sm font-medium text-gray-900">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 line-clamp-1 group-hover:text-emerald-700 transition-colors">
                         {report.wasteType}
                       </p>
-                      <p className="text-xs text-gray-500">
-                        {new Date(report.createdAt || new Date()).toLocaleDateString()}
+                      <p className="mt-1 text-xs text-gray-500 flex items-center gap-2">
+                        <Calendar className="w-3 h-3 text-gray-400" />
+                        <span>
+                          {new Date(report.createdAt || new Date()).toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </span>
                       </p>
                     </div>
-                      <a 
+                    <a 
                       href={report.location}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex gap-1 items-center text-sm text-green-600 hover:text-green-700 hover:underline"
+                      className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-3 py-2 shadow-sm transition-all group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 group-hover:shadow-lg group-hover:shadow-emerald-200/80"
                     >
                       <MapPin className="w-4 h-4" />
                       <span>Lihat Lokasi</span>
@@ -477,17 +486,16 @@ export default function DashboardPage() {
                   </motion.div>
                 ))
               ) : (
-                <div className="py-8 text-center">
-                  <Package className="mx-auto mb-4 w-12 h-12 text-gray-400" />
-                  <p className="text-gray-500">
-                    Tidak ada aktivitas terbaru untuk ditampilkan
-                  </p>
+                <div className="py-10 text-center border-2 border-dashed border-gray-200 rounded-2xl">
+                  <Package className="mx-auto mb-4 w-12 h-12 text-gray-300" />
+                  <p className="mb-1 text-sm font-semibold text-gray-700">Belum ada aktivitas terbaru</p>
+                  <p className="mb-5 text-xs text-gray-500">Mulai dengan melaporkan titik sampah pertama Anda.</p>
                   <Link 
                     href="/report"
-                    className="inline-flex gap-2 items-center mt-4 text-sm font-medium text-green-600 hover:text-green-700"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-lime-500 rounded-full px-5 py-2.5 shadow-md hover:shadow-lg transition-all"
                   >
-                    Buat laporan pertama Anda
-                    <ArrowRight className="w-4 h-4" />
+                    <Plus className="w-4 h-4" />
+                    <span>Buat Laporan Sampah</span>
                   </Link>
                 </div>
               )}
@@ -500,54 +508,58 @@ export default function DashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             className="p-6 bg-white rounded-2xl border border-gray-100 shadow-lg"
           >
-            <h2 className="mb-6 text-xl font-semibold text-gray-900">
-              Dampak Lingkungan
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-3 mb-6">
+              <Leaf className="w-6 h-6 text-emerald-600" />
+              Dampak Lingkungan Anda
             </h2>
             <div className="space-y-6">
               <motion.div 
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex justify-between items-center p-4 bg-green-50 rounded-xl transition-colors duration-300 hover:bg-green-100"
+                className="flex items-center p-5 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl border-2 border-white shadow-lg shadow-emerald-100/80"
               >
-                <div className="flex items-center">
-                  <Package className="mr-3 w-5 h-5 text-green-500" />
-                  <span className="text-sm font-medium text-gray-900">
-                    Sampah Terkumpul
-                  </span>
+                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-emerald-500 to-green-500 text-white rounded-xl shadow-md">
+                  <Recycle className="w-6 h-6" />
                 </div>
-                <span className="text-sm font-semibold text-green-600">
-                  {userStats.reportsCount * 5}kg
+                <div className="flex-1 ml-4">
+                  <p className="font-semibold text-gray-800">Sampah Terkumpul</p>
+                  <p className="text-sm text-gray-500">Estimasi total dari laporan</p>
+                </div>
+                <span className="text-lg font-bold text-emerald-600">
+                  {userStats.reportsCount * 5} kg
                 </span>
               </motion.div>
               <motion.div 
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="flex justify-between items-center p-4 bg-blue-50 rounded-xl transition-colors duration-300 hover:bg-blue-100"
+                className="flex items-center p-5 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-2xl border-2 border-white shadow-lg shadow-cyan-100/80"
               >
-                <div className="flex items-center">
-                  <BarChart className="mr-3 w-5 h-5 text-blue-500" />
-                  <span className="text-sm font-medium text-gray-900">
-                    Offset Karbon
-                  </span>
+                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-cyan-500 to-blue-500 text-white rounded-xl shadow-md">
+                  <BarChart className="w-6 h-6" />
                 </div>
-                <span className="text-sm font-semibold text-blue-600">
-                  {userStats.reportsCount * 2.5}kg
+                <div className="flex-1 ml-4">
+                  <p className="font-semibold text-gray-800">Jejak Karbon Ditekan</p>
+                  <p className="text-sm text-gray-500">Pengurangan emisi CO₂</p>
+                </div>
+                <span className="text-lg font-bold text-cyan-600">
+                  {userStats.reportsCount * 2.5} kg
                 </span>
               </motion.div>
               <motion.div 
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex justify-between items-center p-4 bg-purple-50 rounded-xl transition-colors duration-300 hover:bg-purple-100"
+                className="flex items-center p-5 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl border-2 border-white shadow-lg shadow-violet-100/80"
               >
-                <div className="flex items-center">
-                  <Calendar className="mr-3 w-5 h-5 text-purple-500" />
-                  <span className="text-sm font-medium text-gray-900">
-                    Hari Aktif
-                  </span>
+                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gradient-to-br from-violet-500 to-purple-500 text-white rounded-xl shadow-md">
+                  <Calendar className="w-6 h-6" />
                 </div>
-                <span className="text-sm font-semibold text-purple-600">
+                <div className="flex-1 ml-4">
+                  <p className="font-semibold text-gray-800">Total Hari Aktif</p>
+                  <p className="text-sm text-gray-500">Berpartisipasi dalam aksi</p>
+                </div>
+                <span className="text-lg font-bold text-violet-600">
                   {Math.ceil(userStats.reportsCount * 1.5)}
                 </span>
               </motion.div>
