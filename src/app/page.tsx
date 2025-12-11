@@ -1,7 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Leaf, Recycle, Users, Coins, MapPin } from 'lucide-react'
+import { ArrowRight, Leaf, Users, Coins, Sparkles } from 'lucide-react'
+import { FlipWords } from '@/components/ui/flip-words'
 import AnimatedGlobe from '@/components/AnimatedGlobe'
 import Footer from '@/components/Footer'
 import { Chatbot } from '@/components/Chatbot'
@@ -38,7 +39,62 @@ export default function Home() {
   return (
     <div className="pt-10 min-h-screen bg-gradient-to-b from-green-50 to-white">
       {/* Hero Section */}
-      <section className="relative min-h-screen">
+      <section className="relative min-h-screen overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-green-200/40 to-emerald-300/30 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1, 1.2, 1],
+              x: [0, 30, 0],
+              y: [0, -20, 0]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-40 right-20 w-96 h-96 bg-gradient-to-br from-emerald-200/30 to-lime-200/40 rounded-full blur-3xl"
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              x: [0, -40, 0],
+              y: [0, 30, 0]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-1/2 left-1/3 w-64 h-64 bg-gradient-to-br from-lime-100/30 to-green-200/20 rounded-full blur-2xl"
+            animate={{ 
+              scale: [1, 1.3, 1],
+              rotate: [0, 180, 360]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          />
+        </div>
+
+        {/* Floating Particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-green-400/60 rounded-full"
+              style={{
+                left: `${15 + i * 15}%`,
+                top: `${20 + (i % 3) * 25}%`
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.3, 0.8, 0.3],
+                scale: [1, 1.5, 1]
+              }}
+              transition={{
+                duration: 3 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
+
         <motion.div 
           className="hidden absolute z-50 left-106 lg:block top-22"
           initial={{ opacity: 0, x: -20 }}
@@ -56,36 +112,108 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="p-4 text-left from-green-50 to-white rounded-3xl backdrop-blur-sm sm:p-6 lg:p-8"
             >
-              <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="inline-block px-3 py-1.5 mb-6 text-sm font-medium rounded-full border border-green-200 sm:px-4 sm:py-2 sm:mb-8 text-green-950 bg-green-200/80"
+              {/* Animated Badge */}
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-sm font-semibold rounded-full border border-green-300/50 sm:px-5 sm:py-2.5 sm:mb-8 text-green-800 bg-gradient-to-r from-green-100/90 via-emerald-100/90 to-lime-100/90 backdrop-blur-sm shadow-lg shadow-green-200/50"
               >
-                🌱 Ayo Gabung Revolusi Hijau
-              </motion.span>
-              <h1 className="mb-4 text-3xl font-bold tracking-tight text-green-900 sm:mb-6 sm:text-4xl lg:text-6xl">
-                Lingkungan Kita{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">Untuk Kita Semua</span>
-              </h1>
-              <p className="mb-6 max-w-xl text-lg text-green-800 sm:mb-8 sm:text-xl">
-                  Bergabung dengan platform inovatif kami yang memberi penghargaan untuk pengelolaan sampah berkelanjutan.
-                  Laporkan, kumpulkan, dan dapatkan hadiah sambil membuat planet kita lebih bersih.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
+                <motion.span
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  🌱
+                </motion.span>
+                <span className="bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent font-bold">
+                  Ayo Gabung Revolusi Hijau
+                </span>
+                <Sparkles className="w-4 h-4 text-green-500 animate-pulse" />
+              </motion.div>
+
+              {/* Main Heading with FlipWords */}
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="mb-4 text-3xl font-extrabold tracking-tight sm:mb-6 sm:text-4xl lg:text-6xl"
+              >
+                <span className="text-green-900">Lingkungan Kita</span>
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-emerald-400 to-lime-500">
+                  Untuk{" "}
+                </span>
+                <FlipWords 
+                  words={["Kita Semua", "Masa Depan", "Bumi Hijau", "Generasi"]} 
+                  duration={2500}
+                  className="!text-emerald-500 font-extrabold"
+                />
+              </motion.h1>
+
+              {/* Description */}
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="mb-6 max-w-xl text-lg leading-relaxed text-green-800/90 sm:mb-8 sm:text-xl"
+              >
+                Bergabung dengan platform inovatif kami yang memberi penghargaan untuk 
+                <span className="font-semibold text-green-700"> pengelolaan sampah berkelanjutan</span>.
+                Laporkan, kumpulkan, dan dapatkan hadiah sambil membuat planet kita lebih bersih.
+              </motion.p>
+
+              {/* Action Buttons */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.6 }}
+                className="flex flex-col gap-4 sm:flex-row"
+              >
                 <motion.button 
                   onClick={handleGetStarted}
-                  className="flex justify-center items-center cursor-pointer hover:bg-green-600 px-4 py-2.5 text-base font-medium text-white bg-green-700 rounded-full shadow-lg transition-all sm:px-6 sm:py-3 sm:text-lg"
+                  whileHover={{ scale: 1.02, boxShadow: "0 20px 40px -10px rgba(34, 197, 94, 0.4)" }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative flex justify-center items-center cursor-pointer px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 rounded-full shadow-xl shadow-green-500/30 transition-all duration-300 sm:px-8 sm:py-4 sm:text-lg overflow-hidden"
                 >
-                    {isSignedIn ? "Ke Dashboard" : "Mulai"}
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-green-500 via-emerald-400 to-lime-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span className="relative flex items-center gap-2">
+                    {isSignedIn ? "Ke Dashboard" : "Mulai Sekarang"}
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </motion.button>
-                <motion.button 
-                  className="flex justify-center items-center cursor-pointer hover:bg-green-100 px-5 py-2.5 text-base font-medium text-green-600 rounded-full border-2 border-green-500 transition-all sm:px-6 sm:py-3 sm:text-lg"
+                <motion.a 
+                  href="/about"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group flex justify-center items-center cursor-pointer px-6 py-3 text-base font-semibold text-green-700 bg-white/80 backdrop-blur-sm rounded-full border-2 border-green-200 hover:border-green-400 hover:bg-green-50 transition-all duration-300 shadow-lg sm:px-8 sm:py-4 sm:text-lg"
                 >
-                    Pelajari Lebih Lanjut
-                </motion.button>
-              </div>
+                  <Leaf className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                  Pelajari Lebih Lanjut
+                </motion.a>
+              </motion.div>
+
+              {/* Trust Indicators */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1, duration: 0.6 }}
+                className="mt-8 pt-6 border-t border-green-200/50"
+              >
+                <div className="flex flex-wrap items-center gap-4 text-sm text-green-700">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <span>1000+ Pengguna Aktif</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                    <span>50+ Kota</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-lime-500 rounded-full animate-pulse" />
+                    <span>10,000+ Laporan</span>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Right Images */}
