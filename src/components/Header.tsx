@@ -58,49 +58,57 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 right-0 left-0 z-50 py-3 border-b border-gray-100 shadow-sm backdrop-blur-sm bg-white/90">
+    <header className="fixed top-0 right-0 left-0 z-50 py-4 border-b border-emerald-100/70 shadow-lg shadow-emerald-100/60 backdrop-blur-xl bg-gradient-to-r from-white/90 via-emerald-50/80 to-white/90">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <nav className="flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-1">
-            <Leaf className="w-10 h-10 text-green-700" />
-            <span className="text-[22px] font-bold tracking-tight text-gray-900">ZeroSampah</span>
+        <nav className="flex items-center justify-between gap-6">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="p-3 rounded-2xl bg-white text-emerald-600 shadow-lg shadow-emerald-200/60 transition-transform duration-300 group-hover:-translate-y-0.5">
+              <Leaf className="w-6 h-6" />
+            </div>
+            <div className="leading-tight">
+              <p className="text-[18px] font-bold tracking-tight text-gray-900">ZeroSampah</p>
+            </div>
           </Link>
 
-          <div className="hidden items-center space-x-8 md:flex">
-            <NavLink href="/">Beranda</NavLink>
-            <NavLink href="/about">Tentang</NavLink>
-            {userData && <NavLink href="/dashboard">Dashboard</NavLink>}
-            {userData && <NavLink href="/events">Event</NavLink>}
+          <div className="hidden items-center gap-4 md:flex">
+            <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-full border border-emerald-100 bg-white/70 shadow-sm">
+              <NavLink href="/">Beranda</NavLink>
+              <NavLink href="/about">Tentang</NavLink>
+              {userData && <NavLink href="/dashboard">Dashboard</NavLink>}
+              {userData && <NavLink href="/events">Event</NavLink>}
+            </div>
 
             {!isLoaded ? (
-              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
+              <div className="w-10 h-10 rounded-full bg-emerald-100 animate-pulse" />
             ) : !isSignedIn ? (
               <button
                 onClick={handleLogin}
-                className="flex items-center px-5 py-2 text-sm font-medium text-white bg-green-800 rounded-full transition-all duration-200 cursor-pointer hover:bg-green-700 hover:shadow-md"
+                className="inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-emerald-600 to-lime-500 shadow-lg shadow-emerald-200/70 transition-all duration-200 hover:shadow-emerald-300"
               >
-                Log in
+                Mulai Gabung
               </button>
             ) : (
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "w-10 h-10",
-                  },
-                }}
-              />
+              <div className="p-1 rounded-full bg-white/70 border border-emerald-100 shadow-sm">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-10 h-10",
+                    },
+                  }}
+                />
+              </div>
             )}
           </div>
 
           <button
-            className="p-2 rounded-full transition-colors duration-200 md:hidden hover:bg-gray-100"
+            className="p-2 rounded-full border border-emerald-100/60 bg-white/80 text-emerald-700 transition-colors duration-200 md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-900" />
+              <X className="w-6 h-6" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-900" />
+              <Menu className="w-6 h-6" />
             )}
           </button>
         </nav>
@@ -113,7 +121,7 @@ export default function Header() {
             transition={{ duration: 0.2 }}
             className="md:hidden"
           >
-            <div className="py-4 mt-4 space-y-3 bg-white rounded-lg shadow-lg">
+            <div className="py-4 mt-4 space-y-3 rounded-2xl border border-emerald-100 bg-white/90 shadow-xl">
               <MobileNavLink href="/">Beranda</MobileNavLink>
               <MobileNavLink href="/dashboard">Dasbor</MobileNavLink>
               <MobileNavLink href="/events">Event</MobileNavLink>
@@ -131,9 +139,9 @@ export default function Header() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="px-6 py-2.5 mx-4 w-[calc(100%-2rem)] text-white bg-green-600 rounded-full transition-all duration-200 hover:bg-green-700 hover:shadow-md"
+                  className="px-6 py-2.5 mx-4 w-[calc(100%-2rem)] text-white bg-gradient-to-r from-emerald-600 to-lime-500 rounded-full font-semibold transition-all duration-200 hover:shadow-lg"
                 >
-                  Log in
+                  Mulai Gabung
                 </button>
               )}
             </div>
@@ -157,13 +165,15 @@ function NavLink({
   return (
     <Link
       href={href}
-      className={`text-sm font-medium transition-colors relative ${
-        isActive ? "text-green-600" : "text-gray-600 hover:text-green-600"
+      className={`relative px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
+        isActive
+          ? "text-emerald-900 bg-white shadow-md shadow-emerald-100"
+          : "text-slate-500 hover:text-emerald-700 hover:bg-white/70"
       }`}
     >
       {children}
       {isActive && (
-        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-green-600 rounded-full"></span>
+        <span className="absolute inset-0 rounded-full border border-emerald-200/70 pointer-events-none"></span>
       )}
     </Link>
   );
@@ -182,8 +192,10 @@ function MobileNavLink({
   return (
     <Link
       href={href}
-      className={`block px-4 py-2 text-base font-medium transition-colors ${
-        isActive ? "text-green-600 bg-green-50" : "text-gray-900 hover:text-green-600 hover:bg-gray-50"
+      className={`block px-4 py-2.5 text-base font-semibold rounded-xl border transition-all ${
+        isActive
+          ? "text-emerald-800 bg-emerald-50 border-emerald-100"
+          : "text-gray-800 border-transparent hover:bg-emerald-50/70 hover:border-emerald-100"
       }`}
     >
       {children}
