@@ -31,6 +31,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Report } from "@/lib/types";
 import { useUser } from "@clerk/nextjs";
+import Lottie from "lottie-react";
+import fallenLeaf from "../../../public/animations/fallen-leaf.json";
+import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
+import fallenLeaf2 from "../../../public/animations/fallen-leaf-2.json";
+import fallenLeaf3 from "../../../public/animations/fallen-leaf-3.json";
 
 // Cache expiration time in milliseconds (5 minutes)
 const CACHE_EXPIRATION = 5 * 60 * 1000;
@@ -324,6 +329,57 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             className="relative overflow-hidden p-5 sm:p-8 md:p-10 text-white bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 rounded-2xl sm:rounded-3xl shadow-2xl shadow-green-500/25"
           >
+            {/* Fallen Leaf Animations - Decorative Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {/* Top row */}
+              <div className="absolute -top-8 -left-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              <div className="absolute -top-6 left-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+              <div className="absolute -top-4 left-1/2 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf2} loop={true} />
+              </div>
+              <div className="absolute -top-8 right-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf3} loop={true} />
+              </div>
+              <div className="absolute -top-6 -right-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              
+              {/* Middle row */}
+              <div className="absolute top-1/2 -translate-y-1/2 -left-6 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-32 sm:w-40 h-32 sm:h-40 opacity-15">
+                <Lottie animationData={fallenLeaf2} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 right-1/4 w-32 sm:w-40 h-32 sm:h-40 opacity-15">
+                <Lottie animationData={fallenLeaf3} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 -right-6 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              
+              {/* Bottom row */}
+              <div className="absolute -bottom-8 -left-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+              <div className="absolute -bottom-6 left-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf2} loop={true} />
+              </div>
+              <div className="absolute -bottom-4 left-1/2 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf3} loop={true} />
+              </div>
+              <div className="absolute -bottom-8 right-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              <div className="absolute -bottom-6 -right-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+            </div>
+            
             {/* Decorative background elements */}
             <div className="absolute top-0 right-0 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-32 sm:w-48 md:w-64 h-32 sm:h-48 md:h-64 bg-white/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
