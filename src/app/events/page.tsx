@@ -1,7 +1,7 @@
 import { getPublishedEvents } from '@/db/actions';
 import EventsMapView from './EventsMapView';
 import EventHeroAnimation from './EventHeroAnimation';
-import PanelAksiCepat from './PanelAksiCepat';
+import EventsHeader from './EventsHeader';
 
 export const metadata = { title: 'Cleanup Events' };
 
@@ -13,35 +13,7 @@ export default async function EventsBrowsePage() {
       {/* Header */}
       <div className="bg-gradient-to-b from-white via-green-50/50 to-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-green-600 via-emerald-500 to-teal-500 text-white shadow-2xl shadow-green-500/25 px-4 sm:px-8 py-6 sm:py-10 md:px-12">
-            {/* Decorative background elements */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
-              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
-            </div>
-            
-            {/* Floating particles */}
-            <div className="absolute top-[15%] left-[5%] w-2 h-2 bg-white/30 rounded-full animate-pulse" />
-            <div className="absolute top-[33%] left-[25%] w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
-            <div className="absolute top-[51%] left-[45%] w-2 h-2 bg-white/25 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-[69%] left-[65%] w-2 h-2 bg-white/30 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
-            <div className="absolute top-[87%] left-[85%] w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
-            
-            <div className="relative flex flex-col gap-5 sm:gap-8 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex-1">
-                <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight tracking-tight" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
-                  Jelajahi Aksi Bersih Komunitas
-                </h1>
-              </div>
-              
-              {/* Panel Aksi Cepat with Rocket Animation */}
-              <PanelAksiCepat />
-            </div>
-            
-            {/* Bottom gradient line */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400/50 via-white/30 to-yellow-400/50" />
-          </div>
+          <EventsHeader />
         </div>
       </div>
 

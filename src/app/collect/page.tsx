@@ -19,6 +19,10 @@ import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
 import litterAnimation from "@/../Litter.json";
+import fallenLeaf from "../../../public/animations/fallen-leaf.json";
+import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
+import fallenLeaf2 from "../../../public/animations/fallen-leaf-2.json";
+import fallenLeaf3 from "../../../public/animations/fallen-leaf-3.json";
 
 // Use secure server-side proxy endpoint for Gemini API instead of exposing the key in client bundles
 
@@ -418,6 +422,52 @@ export default function CollectPage() {
             transition={{ duration: 0.5 }}
             className="relative overflow-hidden p-8 md:p-10 mb-10 text-white bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 rounded-3xl shadow-2xl shadow-green-500/25"
           >
+            {/* Fallen Leaf Animations - Decorative Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute -top-8 -left-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              <div className="absolute -top-6 left-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+              <div className="absolute -top-4 left-1/2 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf2} loop={true} />
+              </div>
+              <div className="absolute -top-8 right-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf3} loop={true} />
+              </div>
+              <div className="absolute -top-6 -right-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 -left-6 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 left-1/4 w-32 sm:w-40 h-32 sm:h-40 opacity-15">
+                <Lottie animationData={fallenLeaf2} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 right-1/4 w-32 sm:w-40 h-32 sm:h-40 opacity-15">
+                <Lottie animationData={fallenLeaf3} loop={true} />
+              </div>
+              <div className="absolute top-1/2 -translate-y-1/2 -right-6 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              <div className="absolute -bottom-8 -left-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+              <div className="absolute -bottom-6 left-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf2} loop={true} />
+              </div>
+              <div className="absolute -bottom-4 left-1/2 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf3} loop={true} />
+              </div>
+              <div className="absolute -bottom-8 right-1/4 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
+                <Lottie animationData={fallenLeaf} loop={true} />
+              </div>
+              <div className="absolute -bottom-6 -right-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
+                <Lottie animationData={fallenLeaf1} loop={true} />
+              </div>
+            </div>
+            
             {/* Decorative background elements */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
               <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
