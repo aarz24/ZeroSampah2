@@ -356,19 +356,7 @@ export default function Home() {
                   </h3>
                 </div>
                 
-                {/* CTA Button */}
-                <motion.a
-                  href="/events"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-2xl shadow-xl shadow-green-500/30 transition-all hover:shadow-2xl hover:shadow-green-500/40"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>
-                  Jelajahi Event Kerja Bakti
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </motion.a>
-                
-                {/* Image with enhanced styling */}
+                {/* Image with enhanced styling and embedded button */}
                 <div className="relative w-full max-w-4xl">
                   <div className="absolute -inset-4 bg-gradient-to-r from-green-400/20 via-emerald-400/20 to-teal-400/20 rounded-3xl blur-2xl" />
                   <div className="relative overflow-hidden rounded-2xl border-4 border-white shadow-2xl">
@@ -379,7 +367,19 @@ export default function Home() {
                       style={{ maxHeight: '450px' }}
                     />
                     {/* Image overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    
+                    {/* Embedded CTA Button */}
+                    <motion.a
+                      href="/events"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="absolute bottom-6 left-1/2 -translate-x-1/2 group inline-flex items-center gap-3 px-6 py-3 text-lg font-bold text-white bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-xl shadow-2xl shadow-black/30 backdrop-blur-sm border border-white/20 transition-all hover:shadow-3xl hover:from-green-500 hover:via-emerald-500 hover:to-teal-500"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" /></svg>
+                      Jelajahi Event Kerja Bakti
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </motion.a>
                   </div>
                 </div>
               </div>
