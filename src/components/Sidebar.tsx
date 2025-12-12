@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Trash, Package, Gift, Trophy, Home, Menu, X, Calendar } from "lucide-react";
 import Link from "next/link";
@@ -14,7 +14,16 @@ interface SidebarProps {
 export default function Sidebar({ children }: SidebarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const { isSignedIn, isLoaded } = useUser();
+
+  // Detect desktop screen size
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   // Don't show sidebar if not signed in or still loading
   if (!isLoaded || !isSignedIn) {
@@ -52,8 +61,8 @@ export default function Sidebar({ children }: SidebarProps) {
 
       {/* Sidebar */}
       <motion.aside
-        initial={{ x: -280 }}
-        animate={{ x: isOpen ? 0 : -280 }}
+        initial={{ x: isDesktop ? 0 : -280 }}
+        animate={{ x: (isDesktop || isOpen) ? 0 : -280 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className="fixed left-0 top-14 sm:top-16 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] w-56 sm:w-64 bg-gradient-to-b from-emerald-50 via-white to-green-50 border-r border-emerald-100/70 shadow-xl shadow-emerald-100/80 z-40"
       >
@@ -123,7 +132,7 @@ export default function Sidebar({ children }: SidebarProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className={`flex-1 ${isOpen ? 'ml-56 sm:ml-64 lg:ml-64' : 'ml-0'} w-full transition-all duration-300`}
+        className={`flex-1 ${(isDesktop || isOpen) ? 'ml-56 sm:ml-64' : 'ml-0'} lg:ml-64 w-full transition-all duration-300`}
       >
         <div className="w-full">
           {children}
