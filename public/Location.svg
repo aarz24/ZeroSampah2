@@ -1,0 +1,31 @@
+<svg width="300" height="410" viewBox="0 0 300 410" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Map background -->
+  <g opacity="0.15">
+    <path d="M208.561 184.951L185.311 281.711L176.029 22.161L279.15-24.549L208.561 184.951Z" fill="#46EC77"/>
+    <path d="M254.051 195.541L284.16-115.069L241.871-129.309L234.02-64.999L103.391-14.809L30.811-110.769L-20.699-99.689L72.301 11.261L138.17 300.311L9.82 398.631L-408.721-147.589L-408.721-67.349L-289.779 92.921L-408.721 92.921L-408.721 139.081L-250.119 139.081L-136.76 418.687L-268.875 518.628L-213.298 557.589L21.357 455.894L21.357 455.894L46.561 444.971L229.9 235.501L408.621 352.731L408.721 297.311L254.051 195.541Z" fill="#46EC77"/>
+  </g>
+  
+  <!-- Animated location pin (simplified red pin) -->
+  <g transform="translate(150, 205)">
+    <!-- Pin body -->
+    <ellipse cx="0" cy="-70" rx="50" ry="52" fill="#FE3456" opacity="0.9"/>
+    <!-- Pin shadow -->
+    <ellipse cx="0" cy="60" rx="20" ry="8" fill="#000000" opacity="0.15"/>
+    <!-- Pin point -->
+    <path d="M-25,-20 L0,80 L25,-20 Q25,-40 20,-50 Q10,-65 0,-70 Q-10,-65 -20,-50 Q-25,-40 -25,-20 Z" fill="#FE3456"/>
+    <!-- Inner circle -->
+    <circle cx="0" cy="-70" r="25" fill="white" opacity="0.3"/>
+  </g>
+  
+  <!-- Decorative animated dots -->
+  <circle cx="175" cy="165" r="4" fill="#46EC77" opacity="0.6"/>
+  <circle cx="180" cy="125" r="6" fill="#FE3456" opacity="0.5"/>
+  
+  <!-- Decorative stars -->
+  <g transform="translate(133, 227)" opacity="0.4">
+    <path d="M0,-40 L10,-10 L40,-10 L15,10 L25,40 L0,20 L-25,40 L-15,10 L-40,-10 L-10,-10 Z" fill="#46EC77"/>
+  </g>
+  <g transform="translate(239, 132)" opacity="0.3">
+    <path d="M0,-30 L7.5,-7.5 L30,-7.5 L11.25,7.5 L18.75,30 L0,15 L-18.75,30 L-11.25,7.5 L-30,-7.5 L-7.5,-7.5 Z" fill="#020202"/>
+  </g>
+</svg>
