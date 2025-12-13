@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Set max duration for Vercel serverless function
-export const maxDuration = 30; // seconds (max for hobby plan is 10, but you can try requesting more)
+// Set max duration for Vercel serverless function (60 seconds for image analysis)
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   if (!GEMINI_API_KEY) {
@@ -14,9 +14,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
-    // Add timeout to the fetch request
+    // Add timeout to the fetch request (60 seconds for local/full minute)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000); // 25 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
     
     const res = await fetch(url, {
       method: 'POST',
@@ -45,8 +45,8 @@ export async function POST(request: Request) {
     // Handle timeout specifically
     if (err instanceof Error && err.name === 'AbortError') {
       return NextResponse.json({ 
-        error: 'Request timeout - AI analysis took too long',
-        details: 'Please try with a smaller image or try again later'
+        error: 'Request timeout - AI analysis took too long (>60s)',
+        details: 'Please try with a smaller image or simpler request'
       }, { status: 504 });
     }
     
