@@ -4,6 +4,7 @@ A waste reporting, collection, and rewards web application. Users can submit was
 
 Note: Replace placeholder values and sections below with your own details before publishing.
 
+
 ## Tech Stack
 - Next.js (App Router) + TypeScript
 - Tailwind CSS
