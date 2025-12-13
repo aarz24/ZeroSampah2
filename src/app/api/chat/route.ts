@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Set max duration for Vercel serverless function
+export const maxDuration = 300;
+
 // This is a placeholder for the actual Gemini API integration
 // You'll need to add your Gemini API key and implement the actual API calls
 

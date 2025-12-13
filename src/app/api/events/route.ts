@@ -8,6 +8,8 @@ import {
 } from '@/db/actions';
 import { auth } from '@clerk/nextjs/server';
 
+export const maxDuration = 300;
+
 // GET - Fetch published events or user's events
 export async function GET(request: Request) {
   try {
