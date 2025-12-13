@@ -6,12 +6,16 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 export const maxDuration = 300;
 
 export async function POST(request: Request) {
+  console.log('Gemini API called, key present:', !!GEMINI_API_KEY);
+  
   if (!GEMINI_API_KEY) {
     return NextResponse.json({ error: 'GEMINI_API_KEY not configured' }, { status: 500 });
   }
 
   try {
     const body = await request.json();
+    console.log('Request body received, contents length:', body.contents?.length);
+    
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
     // Add timeout to the fetch request (295 seconds, buffer before maxDuration)
@@ -28,6 +32,8 @@ export async function POST(request: Request) {
     clearTimeout(timeoutId);
 
     const json = await res.json();
+    
+    console.log('Gemini response status:', res.status);
     
     // Log error details for debugging
     if (!res.ok) {
