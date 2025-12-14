@@ -7,15 +7,6 @@ import rocketAnimation from "@/../Rocket.json";
 export default function PanelAksiCepat() {
   return (
     <div className="relative w-full lg:max-w-md bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl shadow-black/10 overflow-hidden">
-      {/* Rocket Animation Background */}
-      <div className="absolute -right-6 sm:-right-8 -bottom-6 sm:-bottom-8 w-28 sm:w-40 h-28 sm:h-40 opacity-20 pointer-events-none">
-        <Lottie
-          animationData={rocketAnimation}
-          loop={true}
-          autoplay={true}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
       
       {/* Content */}
       <div className="relative z-10">
@@ -30,8 +21,8 @@ export default function PanelAksiCepat() {
             href="/events/create" 
             className="group relative flex-1 inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-white text-green-700 font-bold shadow-xl shadow-black/15 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 overflow-hidden text-sm sm:text-base"
           >
-            {/* Mini rocket on button */}
-            <div className="absolute -right-2 -top-2 w-10 sm:w-12 h-10 sm:h-12 opacity-10 pointer-events-none">
+            {/* Mini rocket on button - Foreground */}
+            <div className="absolute -right-1 -top-1 w-8 sm:w-10 h-8 sm:h-10 z-20">
               <Lottie
                 animationData={rocketAnimation}
                 loop={true}
@@ -50,8 +41,8 @@ export default function PanelAksiCepat() {
             href="/events/dashboard" 
             className="group relative flex-1 inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl border-2 border-white/40 text-white font-bold bg-white/10 hover:bg-white/20 hover:-translate-y-1 transition-all duration-300 overflow-hidden text-sm sm:text-base"
           >
-            {/* Mini rocket on button */}
-            <div className="absolute -right-2 -top-2 w-10 sm:w-12 h-10 sm:h-12 opacity-10 pointer-events-none">
+            {/* Mini rocket on button - Foreground */}
+            <div className="absolute -right-1 -top-1 w-8 sm:w-10 h-8 sm:h-10 z-20">
               <Lottie
                 animationData={rocketAnimation}
                 loop={true}

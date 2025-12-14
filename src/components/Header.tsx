@@ -62,11 +62,54 @@ export default function Header() {
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between gap-4 sm:gap-6">
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
-            <div className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white text-emerald-600 shadow-lg shadow-emerald-200/60 transition-transform duration-300 group-hover:-translate-y-0.5">
-              <Leaf className="w-5 h-5 sm:w-6 sm:h-6" />
+            {/* Leaf logo with circular blinking effect */}
+            <div className="relative">
+              {/* Outer pulsing ring */}
+              <motion.div
+                className="absolute -inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-400 to-green-500 opacity-60"
+                animate={{ 
+                  scale: [1, 1.15, 1],
+                  opacity: [0.6, 0.2, 0.6]
+                }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+              {/* Secondary pulsing ring for enhanced effect */}
+              <motion.div
+                className="absolute -inset-0.5 rounded-xl sm:rounded-2xl border-2 border-emerald-400/50"
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  opacity: [0.8, 0.3, 0.8]
+                }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+              />
+              <motion.div 
+                className="relative p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-300/60 transition-transform duration-300 group-hover:-translate-y-0.5 overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {/* Shimmer effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", repeatDelay: 1 }}
+                />
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Leaf className="w-5 h-5 sm:w-6 sm:h-6 relative z-10" />
+                </motion.div>
+              </motion.div>
             </div>
-            <div className="leading-tight">
-              <p className="text-[16px] sm:text-[18px] font-bold tracking-tight text-gray-900">ZeroSampah</p>
+            <div className="leading-tight flex items-center">
+              <motion.span
+                className="text-[16px] sm:text-[18px] font-bold tracking-tight bg-gradient-to-r from-emerald-700 via-green-600 to-emerald-700 bg-clip-text text-transparent"
+                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                style={{ backgroundSize: "200% 200%" }}
+              >
+                ZeroSampah
+              </motion.span>
             </div>
           </Link>
 

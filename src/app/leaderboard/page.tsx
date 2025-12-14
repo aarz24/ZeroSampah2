@@ -7,6 +7,7 @@ import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
 import trophyAnimation from "@/../trophy.json";
+import coinAnimation from "@/../coin.json";
 import fallenLeaf from "../../../public/animations/fallen-leaf.json";
 import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
 import fallenLeaf2 from "../../../public/animations/fallen-leaf-2.json";
@@ -269,9 +270,9 @@ export default function LeaderboardPage() {
               className="flex flex-col items-start md:items-end gap-2 sm:gap-3"
             >
               <div className="flex items-center gap-2 sm:gap-3 bg-white/20 backdrop-blur-sm px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl border border-white/20">
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
+                <div className="w-10 h-10 sm:w-12 sm:h-12">
+                  <Lottie animationData={coinAnimation} loop={true} className="w-full h-full" />
+                </div>
                 <span className="text-xl sm:text-2xl md:text-3xl font-bold">{userPoints}</span>
                 <span className="text-sm sm:text-lg font-semibold text-green-100">poin</span>
               </div>
@@ -282,7 +283,6 @@ export default function LeaderboardPage() {
                 className="text-base sm:text-lg md:text-xl font-bold text-yellow-200"
                 style={{ textShadow: '0 2px 10px rgba(0,0,0,0.2)' }}
               >
-                Keep Going! 🚀
               </motion.div>
             </motion.div>
           </div>
@@ -338,67 +338,42 @@ export default function LeaderboardPage() {
                 <th className="px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold tracking-wider text-left text-gray-700 uppercase">
                   Poin
                 </th>
-                <th className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-xs font-bold tracking-wider text-left text-gray-700 uppercase">
-                  Pencapaian
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {leaderboardData.map((user, index) => (
                 <motion.tr
                   key={user.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  whileHover={{ 
-                    backgroundColor: "rgba(16, 185, 129, 0.05)",
-                    transition: { duration: 0.2 }
-                  }}
-                  className={`transition-all duration-300 ${
-                    user.rank <= 3 ? "bg-gradient-to-r from-yellow-50/50 to-transparent" : ""
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: index * 0.03 }}
+                  className={`transition-colors duration-200 hover:bg-gray-50/80 ${
+                    user.rank <= 3 ? "bg-gradient-to-r from-amber-50/30 to-transparent" : ""
                   }`}
                 >
                   <td className="px-3 sm:px-6 py-3 sm:py-5 whitespace-nowrap">
                     <div className="flex items-center gap-2 sm:gap-3">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: index * 0.05 + 0.2, type: "spring" }}
+                      <div
                         className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full font-bold text-sm sm:text-lg ${
                           user.rank === 1
-                            ? "bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-200"
+                            ? "bg-gradient-to-br from-amber-400 to-amber-500 text-white shadow-sm"
                             : user.rank === 2
-                            ? "bg-gradient-to-br from-gray-300 to-gray-500 text-white shadow-lg shadow-gray-200"
+                            ? "bg-gradient-to-br from-gray-400 to-gray-500 text-white shadow-sm"
                             : user.rank === 3
-                            ? "bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-lg shadow-amber-200"
-                            : "bg-gradient-to-br from-green-100 to-emerald-100 text-green-700"
+                            ? "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-sm"
+                            : "bg-green-100 text-green-700"
                         }`}
                       >
                         {user.rank}
-                      </motion.div>
-                      <motion.span 
-                        className="text-2xl"
-                        animate={user.rank <= 3 ? { 
-                          scale: [1, 1.2, 1],
-                          rotate: [0, 10, -10, 0]
-                        } : {}}
-                        transition={{ 
-                          duration: 2,
-                          repeat: Infinity,
-                          repeatDelay: 3
-                        }}
-                      >
+                      </div>
+                      <span className="text-xl opacity-80">
                         {user.badge}
-                      </motion.span>
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap">
                     <div className="flex items-center gap-4">
-                      <motion.div 
-                        className="flex-shrink-0 w-12 h-12 relative ring-2 ring-green-100 rounded-full"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.2 }}
-                      >
+                      <div className="flex-shrink-0 w-12 h-12 relative ring-2 ring-gray-100 rounded-full">
                         <Image
                           className="rounded-full"
                           src={user.avatar}
@@ -406,14 +381,14 @@ export default function LeaderboardPage() {
                           fill
                           sizes="48px"
                         />
-                      </motion.div>
+                      </div>
                       <div>
-                        <div className="text-sm font-bold text-gray-900">
+                        <div className="text-sm font-semibold text-gray-800">
                           {user.name}
                         </div>
                         {user.rank <= 3 && (
-                          <div className="text-xs text-green-600 font-medium">
-                            Top {user.rank} 🌟
+                          <div className="text-xs text-gray-500 font-medium">
+                            Top {user.rank}
                           </div>
                         )}
                       </div>
@@ -421,24 +396,12 @@ export default function LeaderboardPage() {
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
-                      <span className="text-base font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                      <span className="text-base font-semibold text-gray-700">
                         {user.points.toLocaleString()}
                       </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
-                      <div className="px-3 py-1 bg-gradient-to-r from-green-100 to-emerald-100 rounded-full">
-                        <span className="text-sm font-bold text-green-700">
-                          {user.achievements}
-                        </span>
-                      </div>
-                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
                     </div>
                   </td>
                 </motion.tr>
@@ -484,12 +447,6 @@ export default function LeaderboardPage() {
                 </div>
               </div>
             </div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg"
-            >
-              Keep Going! 🚀
-            </motion.div>
           </div>
         </motion.div>
       )}

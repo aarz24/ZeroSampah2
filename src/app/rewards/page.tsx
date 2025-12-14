@@ -6,7 +6,7 @@ import { FaMedal, FaTrophy, FaGift, FaStar, FaLeaf, FaLightbulb, FaAward, FaUser
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
-import coinStackAnimation from "@/../coin-stack.json";
+import coinAnimation from "@/../coin.json";
 import fallenLeaf from "../../../public/animations/fallen-leaf.json";
 import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
 import fallenLeaf2 from "../../../public/animations/fallen-leaf-2.json";
@@ -286,7 +286,7 @@ export default function RewardsPage() {
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                 className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0 bg-white/20 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-3 shadow-xl shadow-black/10 border border-white/20 overflow-hidden"
               >
-                <Lottie animationData={coinStackAnimation} loop={true} className="w-full h-full" />
+                <Lottie animationData={coinAnimation} loop={true} className="w-full h-full" />
               </motion.div>
               
               <div>
@@ -503,7 +503,7 @@ export default function RewardsPage() {
 
       {/* Available Rewards */}
       {activeTab === "available" && (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           {mergedAvailableRewards.map((reward, index) => (
             <motion.div
               key={reward.id}
@@ -515,10 +515,10 @@ export default function RewardsPage() {
                 scale: 1.02,
                 transition: { duration: 0.3 }
               }}
-              className="group relative overflow-hidden bg-white rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl"
+              className="group relative overflow-hidden bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl"
             >
               {/* Image Container */}
-              <div className="relative overflow-hidden h-56">
+              <div className="relative overflow-hidden h-40 sm:h-56">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.4 }}
@@ -540,15 +540,15 @@ export default function RewardsPage() {
                 
                 {/* Points Badge - Floating */}
                 <motion.div 
-                  className="absolute top-3 right-3 px-4 py-2 rounded-full backdrop-blur-md bg-white/90 shadow-lg"
+                  className="absolute top-2 right-2 sm:top-3 sm:right-3 px-2.5 py-1 sm:px-4 sm:py-2 rounded-full backdrop-blur-md bg-white/90 shadow-lg"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="flex items-center gap-1.5">
-                    <svg className="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="flex items-center gap-1 sm:gap-1.5">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
-                    <span className="text-sm font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    <span className="text-xs sm:text-sm font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                       {reward.points} pt
                     </span>
                   </div>
@@ -559,25 +559,25 @@ export default function RewardsPage() {
                   <motion.div
                     initial={{ scale: 0, x: 20 }}
                     animate={{ scale: 1, x: 0 }}
-                    className="absolute top-3 left-3 px-3 py-1 rounded-full backdrop-blur-md bg-green-500/90 shadow-lg"
+                    className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full backdrop-blur-md bg-green-500/90 shadow-lg"
                   >
-                    <span className="text-xs font-bold text-white">✓ Tersedia</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-white">✓ Tersedia</span>
                   </motion.div>
                 )}
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors leading-tight">
+              <div className="p-4 sm:p-6">
+                <h3 className="text-base sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-green-600 transition-colors leading-tight">
                   {reward.title}
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed mb-5 min-h-[40px]">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-3 sm:mb-5 min-h-[32px] sm:min-h-[40px]">
                   {reward.description}
                 </p>
                 
                 {/* Action Button */}
                 <motion.button 
-                  className={`w-full py-3 px-4 rounded-xl font-bold text-white transition-all duration-300 shadow-md hover:shadow-xl ${
+                  className={`w-full py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base text-white transition-all duration-300 shadow-md hover:shadow-xl ${
                     totalPoints >= reward.points 
                       ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700" 
                       : "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed"
@@ -587,15 +587,15 @@ export default function RewardsPage() {
                   whileTap={totalPoints >= reward.points ? { scale: 0.98 } : {}}
                 >
                   {totalPoints >= reward.points ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       Tukarkan Sekarang
                     </span>
                   ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                       Butuh {reward.points - totalPoints} poin lagi
@@ -606,7 +606,7 @@ export default function RewardsPage() {
 
               {/* Decorative corner accent */}
               <motion.div
-                className="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 opacity-10 blur-3xl group-hover:opacity-20 transition-opacity duration-300"
+                className="absolute -right-6 -bottom-6 sm:-right-8 sm:-bottom-8 w-28 h-28 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 opacity-10 blur-3xl group-hover:opacity-20 transition-opacity duration-300"
                 animate={{ 
                   scale: [1, 1.2, 1],
                 }}

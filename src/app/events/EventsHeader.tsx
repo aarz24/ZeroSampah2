@@ -6,6 +6,7 @@ import fallenLeaf from '../../../public/animations/fallen-leaf.json';
 import fallenLeaf1 from '../../../public/animations/fallen-leaf-1.json';
 import fallenLeaf2 from '../../../public/animations/fallen-leaf-2.json';
 import fallenLeaf3 from '../../../public/animations/fallen-leaf-3.json';
+import rocketAnimation from '@/../Rocket.json';
 
 export default function EventsHeader() {
   return (
@@ -71,7 +72,16 @@ export default function EventsHeader() {
       <div className="absolute top-[87%] left-[85%] w-2 h-2 bg-white/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       
       <div className="relative flex flex-col gap-5 sm:gap-8 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex-1">
+        <div className="flex-1 flex items-center gap-3 sm:gap-4">
+          {/* Rocket Animation */}
+          <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
+            <Lottie
+              animationData={rocketAnimation}
+              loop={true}
+              autoplay={true}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight tracking-tight" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
             Jelajahi Aksi Bersih Komunitas
           </h1>

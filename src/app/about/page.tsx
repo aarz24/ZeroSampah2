@@ -13,7 +13,6 @@ import {
   FaUsers,
   FaMapMarkerAlt,
   FaAward,
-  FaBrain,
   FaGlobeAmericas,
   FaCheckCircle,
   FaArrowRight,
@@ -34,13 +33,6 @@ export default function AboutPage() {
         </div>
 
         <div className="relative text-center max-w-5xl mx-auto">
-          {/* Badge */}
-          <span className="inline-flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 mb-6 sm:mb-8 text-xs sm:text-sm font-semibold text-green-700 bg-white/90 backdrop-blur-sm border border-green-200/50 rounded-full shadow-lg shadow-green-100/50">
-            <FaBrain className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-            <span>Teknologi Masa Depan</span>
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-500 animate-pulse" />
-          </span>
-
           {/* Main Heading */}
           <h1 className="mb-6 sm:mb-8 text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight">
             <span className="text-gray-900">Revolusi Manajemen Sampah</span>
