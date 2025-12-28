@@ -217,7 +217,7 @@ export default function CollectPage() {
 
   const handleVerify = async () => {
     if (!file || !selectedTask) {
-      toast.error("Please upload a verification image.");
+      toast.error("Silakan unggah gambar verifikasi.");
       return;
     }
 
@@ -338,12 +338,12 @@ export default function CollectPage() {
               await fetch('/api/notifications', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.clerkId, message: `You earned 50 points for successfully collecting waste at ${selectedTask.location}!`, type: 'reward' }),
+                body: JSON.stringify({ userId: user.clerkId, message: `Anda mendapatkan 50 poin karena berhasil mengumpulkan sampah di ${selectedTask.location}!`, type: 'reward' }),
               });
 
               setVerificationStatus("success");
               setVerificationResult(collectedWaste);
-              toast.success("Collection verified successfully! You earned 50 points!");
+              toast.success("Pengumpulan berhasil diverifikasi! Anda mendapatkan 50 poin!");
 
               setTasks((prevTasks) =>
                 prevTasks.map((task) =>
@@ -359,16 +359,16 @@ export default function CollectPage() {
               );
             } else {
               setVerificationStatus("failure");
-              toast.error("Failed to update report status. Please try again.");
+              toast.error("Gagal memperbarui status laporan. Silakan coba lagi.");
             }
           } else {
             setVerificationStatus("failure");
-            toast.error("Failed to verify collection. Please try again.");
+            toast.error("Gagal memverifikasi pengumpulan. Silakan coba lagi.");
           }
         } else {
           setVerificationStatus("failure");
           toast.error(
-            "Verification failed. The images don&apos;t match or the waste hasn&apos;t been fully cleaned."
+            "Verifikasi gagal. Gambar tidak cocok atau sampah belum sepenuhnya dibersihkan."
           );
         }
       } else {
@@ -376,7 +376,7 @@ export default function CollectPage() {
       }
     } catch (error) {
       console.error("Error during verification:", error);
-      toast.error("Failed to verify collection. Please try again.");
+      toast.error("Gagal memverifikasi pengumpulan. Silakan coba lagi.");
       setVerificationStatus("failure");
     }
   };

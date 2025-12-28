@@ -277,7 +277,7 @@ export default function ReportPage() {
       console.log("Parsed Result:", parsedResult);
 
       if (parsedResult.imageType === false) {
-        toast.error("Please upload an image related to waste.");
+        toast.error("Silakan unggah gambar yang berkaitan dengan sampah.");
         setVerificationStatus("idle");
         return;
       }
@@ -309,12 +309,12 @@ export default function ReportPage() {
       } else {
         console.error("Invalid verification result:", parsedResult);
         setVerificationStatus("failure");
-        toast.error("Could not analyze the waste image properly");
+        toast.error("Gambar sampah tidak dapat dianalisis dengan benar");
       }
     } catch (error) {
       console.error("Error parsing or verifying waste:", error);
       setVerificationStatus("failure");
-      toast.error("Failed to verify waste image");
+      toast.error("Gagal memverifikasi gambar sampah");
     }
   };
 
@@ -322,7 +322,7 @@ export default function ReportPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationStatus !== "success" || !userData || !verificationResult) {
-      toast.error("Please verify the waste before submitting or log in.");
+      toast.error("Silakan verifikasi sampah sebelum mengirim atau login terlebih dahulu.");
       return;
     }
 
@@ -363,13 +363,13 @@ export default function ReportPage() {
       setVerificationResult(null);
 
       toast.success(
-        `Report submitted successfully! You've earned points for reporting waste.`
+        `Laporan berhasil dikirim! Anda mendapatkan poin karena telah melaporkan sampah.`
       );
 
       router.push("/dashboard");
     } catch (error) {
       console.error("Error submitting report:", error);
-      toast.error("Failed to submit report. Please try again.");
+      toast.error("Gagal mengirim laporan. Silakan coba lagi.");
     } finally {
       setIsSubmitting(false);
     }

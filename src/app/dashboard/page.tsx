@@ -115,8 +115,8 @@ export default function DashboardPage() {
   const [userStats, setUserStats] = useState<UserStats>({
     points: 0,
     reportsCount: 0,
-    rank: "Eco Warrior",
-    impact: "Positive"
+    rank: "Elite",
+    impact: "Positif"
   });
   const [recentReports, setRecentReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -179,7 +179,12 @@ export default function DashboardPage() {
           id: user.id
         };
         setUserData(newUserData);
-        localStorage.setItem("userData", JSON.stringify(newUserData));
+        // Safely cache user data; ignore storage quota errors
+        try {
+          localStorage.setItem("userData", JSON.stringify(newUserData));
+        } catch (err) {
+          console.warn("localStorage setItem failed for userData:", err);
+        }
       }
     }
   }, [user]);
@@ -197,8 +202,15 @@ export default function DashboardPage() {
       setIsLoading(true);
       
       // Check if we have cached data and it's not expired
-      const cachedData = localStorage.getItem("recentReports");
-      const cacheTimestamp = localStorage.getItem("recentReportsTimestamp");
+      let cachedData: string | null = null;
+      let cacheTimestamp: string | null = null;
+      try {
+        cachedData = localStorage.getItem("recentReports");
+        cacheTimestamp = localStorage.getItem("recentReportsTimestamp");
+      } catch (err) {
+        // Access to storage might be blocked; ignore cache in that case
+        console.warn("localStorage getItem failed:", err);
+      }
       
       const now = new Date().getTime();
       const isCacheValid = cacheTimestamp && 
@@ -224,10 +236,15 @@ export default function DashboardPage() {
       
       // Use cached data if available, not expired, and not forcing refresh
       if (cachedData && isCacheValid && !forceRefresh) {
-        const parsedReports = JSON.parse(cachedData);
-        setRecentReports(parsedReports);
-        setIsLoading(false);
-        return;
+        try {
+          const parsedReports = JSON.parse(cachedData);
+          setRecentReports(parsedReports);
+          setIsLoading(false);
+          return;
+        } catch (err) {
+          console.warn("Failed to parse cached recentReports:", err);
+          // fall through to fetch fresh data
+        }
       }
       
       // Fetch fresh data from the server API
@@ -242,8 +259,18 @@ export default function DashboardPage() {
       }));
       
       // Cache the formatted reports
-      localStorage.setItem("recentReports", JSON.stringify(formattedReports));
-      localStorage.setItem("recentReportsTimestamp", now.toString());
+      // Safely cache the formatted reports; if quota exceeded, skip caching
+      try {
+        localStorage.setItem("recentReports", JSON.stringify(formattedReports));
+        localStorage.setItem("recentReportsTimestamp", now.toString());
+      } catch (err) {
+        console.warn("localStorage quota exceeded or unavailable; skipping cache:", err);
+        try {
+          // Attempt to free space for our keys only
+          localStorage.removeItem("recentReports");
+          localStorage.removeItem("recentReportsTimestamp");
+        } catch {}
+      }
       
       setRecentReports(formattedReports as Report[]);
     } catch (error) {
@@ -303,7 +330,7 @@ export default function DashboardPage() {
     },
     {
       title: "Peringkat Saat Ini",
-      value: userStats.rank,
+      value: userStats.rank === "Eco Warrior" ? "Elite" : userStats.rank,
       icon: TrendingUp,
       gradient: "from-purple-500 via-violet-500 to-purple-600",
       iconBg: "bg-gradient-to-br from-purple-400 to-purple-600",
@@ -311,7 +338,7 @@ export default function DashboardPage() {
     },
     {
       title: "Dampak Lingkungan",
-      value: userStats.impact,
+      value: userStats.impact === "Positive" ? "Positif" : userStats.impact,
       icon: Leaf,
       gradient: "from-blue-500 via-cyan-500 to-blue-600",
       iconBg: "bg-gradient-to-br from-blue-400 to-cyan-600",
