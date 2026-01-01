@@ -614,6 +614,40 @@ export default function ReportPage() {
           <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
             <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-6 sm:mb-8">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 flex flex-col justify-around opacity-[0.12]">
+                  {/* Multiple rows scrolling at different speeds */}
+                  {[0, 1, 2].map((row) => (
+                    <div
+                      key={row}
+                      className="flex gap-8 whitespace-nowrap"
+                      style={{
+                        animation: `scroll-left ${12 + row * 4}s linear infinite`,
+                        animationDelay: `${row * -2}s`,
+                      }}
+                    >
+                      {/* Duplicate icons for seamless loop */}
+                      {[...Array(2)].map((_, setIndex) => (
+                        <div key={setIndex} className="flex gap-8">
+                          {Array.from({ length: 16 }).map((_, i) => (
+                            <Camera
+                              key={i}
+                              className={`flex-shrink-0 text-emerald-500 ${
+                                i % 3 === 0 ? "w-5 h-5" : i % 3 === 1 ? "w-4 h-4" : "w-6 h-6"
+                              }`}
+                              style={{
+                                transform: `rotate(${((i * 25) % 45) - 22}deg)`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Content */}
               <div className="relative flex items-start gap-3 sm:gap-4">
                 <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-green-50 rounded-xl sm:rounded-2xl border border-emerald-200/60 shadow-sm">
                   <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-700" />
@@ -625,6 +659,17 @@ export default function ReportPage() {
                   </p>
                 </div>
               </div>
+
+              <style jsx>{`
+                @keyframes scroll-left {
+                  0% {
+                    transform: translateX(0);
+                  }
+                  100% {
+                    transform: translateX(-50%);
+                  }
+                }
+              `}</style>
             </div>
 
             <div className="space-y-4 sm:space-y-6">
@@ -757,6 +802,40 @@ export default function ReportPage() {
           <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
             <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-6 sm:mb-8">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 flex flex-col justify-around opacity-[0.12]">
+                  {/* Multiple rows scrolling at different speeds */}
+                  {[0, 1, 2].map((row) => (
+                    <div
+                      key={row}
+                      className="flex gap-8 whitespace-nowrap"
+                      style={{
+                        animation: `scroll-left ${12 + row * 4}s linear infinite`,
+                        animationDelay: `${row * -2}s`,
+                      }}
+                    >
+                      {/* Duplicate icons for seamless loop */}
+                      {[...Array(2)].map((_, setIndex) => (
+                        <div key={setIndex} className="flex gap-8">
+                          {Array.from({ length: 16 }).map((_, i) => (
+                            <MapPin
+                              key={i}
+                              className={`flex-shrink-0 text-emerald-500 ${
+                                i % 3 === 0 ? "w-5 h-5" : i % 3 === 1 ? "w-4 h-4" : "w-6 h-6"
+                              }`}
+                              style={{
+                                transform: `rotate(${((i * 25) % 45) - 22}deg)`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Content */}
               <div className="relative flex items-start gap-3 sm:gap-4">
                 <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-green-50 rounded-xl sm:rounded-2xl border border-emerald-200/60 shadow-sm">
                   <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-700" />
@@ -766,6 +845,17 @@ export default function ReportPage() {
                   <p className="text-xs sm:text-base text-gray-600">Tentukan lokasi sampah dengan Google Maps</p>
                 </div>
               </div>
+
+              <style jsx>{`
+                @keyframes scroll-left {
+                  0% {
+                    transform: translateX(0);
+                  }
+                  100% {
+                    transform: translateX(-50%);
+                  }
+                }
+              `}</style>
             </div>
 
             <div className="space-y-6 sm:space-y-8">
@@ -879,12 +969,57 @@ export default function ReportPage() {
         {/* Recent Reports Section */}
         <div className="mt-8 sm:mt-12">
           <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-4 sm:mb-6">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute inset-0 flex flex-col justify-around opacity-[0.12]">
+                {/* Multiple rows scrolling at different speeds */}
+                {[0, 1, 2].map((row) => (
+                  <div
+                    key={row}
+                    className="flex gap-8 whitespace-nowrap"
+                    style={{
+                      animation: `scroll-left ${12 + row * 4}s linear infinite`,
+                      animationDelay: `${row * -2}s`,
+                    }}
+                  >
+                    {/* Duplicate icons for seamless loop */}
+                    {[...Array(2)].map((_, setIndex) => (
+                      <div key={setIndex} className="flex gap-8">
+                        {Array.from({ length: 16 }).map((_, i) => (
+                          <Package
+                            key={i}
+                            className={`flex-shrink-0 text-emerald-500 ${
+                              i % 3 === 0 ? "w-5 h-5" : i % 3 === 1 ? "w-4 h-4" : "w-6 h-6"
+                            }`}
+                            style={{
+                              transform: `rotate(${((i * 25) % 45) - 22}deg)`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Content */}
             <div className="relative flex items-center gap-2 sm:gap-3">
               <div className="p-1.5 sm:p-2 bg-gradient-to-br from-emerald-100 to-green-50 rounded-lg sm:rounded-xl border border-emerald-200/60 shadow-sm">
                 <Package className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" />
               </div>
               <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Laporan Terbaru</h2>
             </div>
+
+            <style jsx>{`
+              @keyframes scroll-left {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+            `}</style>
           </div>
           <div className="overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             <div className="max-h-[400px] sm:max-h-[480px] overflow-x-auto sm:overflow-x-hidden overflow-y-auto">
