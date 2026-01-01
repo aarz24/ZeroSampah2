@@ -114,9 +114,27 @@ export async function POST(request: Request) {
       videos
     } = data;
 
-    if (!title || !location || !eventDate || !eventTime) {
+    // Import validation
+    const { validateCreateEvent, createValidationErrorResponse, sanitizeString } = await import('@/lib/validation');
+    
+    // Sanitize and validate input
+    const input = {
+      title: sanitizeString(title || ''),
+      description: description ? sanitizeString(description) : undefined,
+      location: sanitizeString(location || ''),
+      latitude: latitude || undefined,
+      longitude: longitude || undefined,
+      eventDate: eventDate || '',
+      eventTime: eventTime || '',
+      wasteCategories: wasteCategories || undefined,
+      maxParticipants: maxParticipants || undefined,
+      rewardInfo: rewardInfo ? sanitizeString(rewardInfo) : undefined,
+    };
+
+    const validation = validateCreateEvent(input);
+    if (!validation.valid) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        createValidationErrorResponse(validation.errors),
         { status: 400 }
       );
     }

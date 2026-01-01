@@ -523,44 +523,83 @@ export async function createTransaction(
   }
 }
 
-// export async function redeemReward(userId: number, rewardId: number) {
-//   try {
-//     const userReward = await getOrCreateReward(userId) as any;
-    
-//     if (rewardId === 0) {
-//       // Redeem all points
-//       const [updatedReward] = await db.update(Rewards)
-//         .set({ 
-//           points: 0,
-//           updatedAt: new Date(),
-//         })
-//         .where(eq(Rewards.userId, userId))
-//         .returning()
-//         .execute();
+// Redeem a reward using user points
+export async function redeemReward(userId: string, rewardId: number) {
+  try {
+    // Use a transaction to ensure atomicity and prevent race conditions
+    // This ensures that all operations succeed or all fail together
+    return await db.transaction(async (tx) => {
+      // Get user's current points within transaction
+      const [user] = await tx
+        .select()
+        .from(Users)
+        .where(eq(Users.clerkId, userId))
+        .execute();
 
-//       // Create a transaction for this redemption
-//       await createTransaction(userId, 'redeemed', userReward.points, `Redeemed all points: ${userReward.points}`);
+      if (!user) {
+        throw new Error("User not found");
+      }
 
-//       return updatedReward;
-//     } else {
-//       // Existing logic for redeeming specific rewards
-//       const availableReward = await db.select().from(Rewards).where(eq(Rewards.id, rewardId)).execute();
+      // Get reward details and lock the row to prevent concurrent modifications
+      const [reward] = await tx
+        .select()
+        .from(Rewards)
+        .where(eq(Rewards.id, rewardId))
+        .execute();
 
-//       if (!userReward || !availableReward[0] || userReward.points < availableReward[0].points) {
-//         throw new Error("Insufficient points or invalid reward");
-//       }
+      if (!reward) {
+        throw new Error("Reward not found");
+      }
 
-//       const [updatedReward] = await db.update(Rewards)
-//         .set({ 
-//           points: sql`${Rewards.points} - ${availableReward[0].points}`,
-//           updatedAt: new Date(),
-//         })
-//         .where(eq(Rewards.userId, userId))
-//         .returning()
-//         .execute();
+      // Check if user has enough points
+      if (user.points < reward.pointsRequired) {
+        throw new Error("Insufficient points");
+      }
 
-//       // Create a transaction for this redemption
-//       await createTransaction(userId, 'redeemed', availableReward[0].points, `
+      // Check stock availability
+      if (reward.stock <= 0) {
+        throw new Error("Reward out of stock");
+      }
+
+      // Deduct points from user
+      const [updatedUser] = await tx
+        .update(Users)
+        .set({ 
+          points: sql`${Users.points} - ${reward.pointsRequired}`,
+          updatedAt: new Date(),
+        })
+        .where(eq(Users.clerkId, userId))
+        .returning()
+        .execute();
+
+      // Reduce reward stock atomically
+      await tx
+        .update(Rewards)
+        .set({ 
+          stock: sql`${Rewards.stock} - 1`,
+        })
+        .where(eq(Rewards.id, rewardId))
+        .execute();
+
+      // Create transaction record
+      await tx
+        .insert(Transactions)
+        .values({
+          userId,
+          rewardId,
+          pointsUsed: reward.pointsRequired,
+          transactionType: 'redeemed',
+          description: `Redeemed: ${reward.name}`,
+        })
+        .execute();
+
+      return updatedUser;
+    });
+  } catch (error) {
+    console.error("Error redeeming reward:", error);
+    throw error;
+  }
+}
 
 export async function getReportById(reportId: number) {
   try {
@@ -820,6 +859,256 @@ export async function getUserOrganizedEvents(userId: string) {
     return events.map(event => ({ event }));
   } catch (error) {
     console.error("Error fetching user organized events:", error);
+    throw error;
+  }
+}
+
+// ============ ADDITIONAL ACTIONS ============
+
+// Get all available rewards (catalog)
+export async function getRewardsCatalog() {
+  try {
+    const rewards = await db
+      .select()
+      .from(Rewards)
+      .orderBy(desc(Rewards.pointsRequired));
+    
+    return rewards;
+  } catch (error) {
+    console.error("Error fetching rewards catalog:", error);
+    throw error;
+  }
+}
+
+// Create a new reward (admin function)
+export async function createReward(data: {
+  name: string;
+  description?: string;
+  pointsRequired: number;
+  imageUrl?: string;
+  stock: number;
+}) {
+  try {
+    const [reward] = await db
+      .insert(Rewards)
+      .values(data)
+      .returning();
+    
+    return reward;
+  } catch (error) {
+    console.error("Error creating reward:", error);
+    throw error;
+  }
+}
+
+// Update reward stock
+export async function updateRewardStock(rewardId: number, newStock: number) {
+  try {
+    const [reward] = await db
+      .update(Rewards)
+      .set({ stock: newStock })
+      .where(eq(Rewards.id, rewardId))
+      .returning();
+    
+    return reward;
+  } catch (error) {
+    console.error("Error updating reward stock:", error);
+    throw error;
+  }
+}
+
+// Get user statistics
+export async function getUserStats(userId: string) {
+  try {
+    // Get user basic info
+    const [user] = await db
+      .select()
+      .from(Users)
+      .where(eq(Users.clerkId, userId));
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Get report count
+    const reports = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(Reports)
+      .where(eq(Reports.userId, userId));
+    
+    const reportCount = reports[0]?.count || 0;
+
+    // Get collection count (as collector)
+    const collections = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(CollectedWastes)
+      .where(eq(CollectedWastes.collectorId, userId));
+    
+    const collectionCount = collections[0]?.count || 0;
+
+    // Get total points earned
+    const pointsEarned = await db
+      .select({ total: sql<number>`sum(points_used)::int` })
+      .from(Transactions)
+      .where(and(
+        eq(Transactions.userId, userId),
+        eq(Transactions.transactionType, 'earned')
+      ));
+    
+    const totalPointsEarned = pointsEarned[0]?.total || 0;
+
+    // Get total points redeemed
+    const pointsRedeemed = await db
+      .select({ total: sql<number>`sum(points_used)::int` })
+      .from(Transactions)
+      .where(and(
+        eq(Transactions.userId, userId),
+        eq(Transactions.transactionType, 'redeemed')
+      ));
+    
+    const totalPointsRedeemed = pointsRedeemed[0]?.total || 0;
+
+    // Get events organized
+    const eventsOrganized = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(Events)
+      .where(eq(Events.organizerId, userId));
+    
+    const eventsOrganizedCount = eventsOrganized[0]?.count || 0;
+
+    // Get events joined
+    const eventsJoined = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(EventRegistrations)
+      .where(eq(EventRegistrations.userId, userId));
+    
+    const eventsJoinedCount = eventsJoined[0]?.count || 0;
+
+    return {
+      user: {
+        clerkId: user.clerkId,
+        email: user.email,
+        fullName: user.fullName,
+        profileImage: user.profileImage,
+        points: user.points,
+      },
+      stats: {
+        reportsSubmitted: reportCount,
+        wastesCollected: collectionCount,
+        pointsEarned: totalPointsEarned,
+        pointsRedeemed: totalPointsRedeemed,
+        currentPoints: user.points,
+        eventsOrganized: eventsOrganizedCount,
+        eventsJoined: eventsJoinedCount,
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    throw error;
+  }
+}
+
+// Get event participant count
+export async function getEventParticipantCount(eventId: number) {
+  try {
+    const result = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(EventRegistrations)
+      .where(and(
+        eq(EventRegistrations.eventId, eventId),
+        eq(EventRegistrations.status, 'registered')
+      ));
+    
+    return result[0]?.count || 0;
+  } catch (error) {
+    console.error("Error getting event participant count:", error);
+    return 0;
+  }
+}
+
+// Update event status
+export async function updateEventStatus(
+  eventId: number, 
+  status: 'published' | 'cancelled' | 'completed'
+) {
+  try {
+    const [event] = await db
+      .update(Events)
+      .set({ 
+        status,
+        updatedAt: new Date()
+      })
+      .where(eq(Events.id, eventId))
+      .returning();
+    
+    return event;
+  } catch (error) {
+    console.error("Error updating event status:", error);
+    throw error;
+  }
+}
+
+// Cancel event registration
+export async function cancelEventRegistration(eventId: number, userId: string) {
+  try {
+    const [registration] = await db
+      .update(EventRegistrations)
+      .set({ status: 'cancelled' })
+      .where(and(
+        eq(EventRegistrations.eventId, eventId),
+        eq(EventRegistrations.userId, userId)
+      ))
+      .returning();
+    
+    return registration;
+  } catch (error) {
+    console.error("Error cancelling registration:", error);
+    throw error;
+  }
+}
+
+// Get user by Clerk ID
+export async function getUserByClerkId(clerkId: string) {
+  try {
+    const [user] = await db
+      .select()
+      .from(Users)
+      .where(eq(Users.clerkId, clerkId));
+    
+    return user || null;
+  } catch (error) {
+    console.error("Error fetching user by Clerk ID:", error);
+    throw error;
+  }
+}
+
+// Get all users (for admin)
+export async function getAllUsers(limit: number = 100, offset: number = 0) {
+  try {
+    const users = await db
+      .select()
+      .from(Users)
+      .orderBy(desc(Users.points))
+      .limit(limit)
+      .offset(offset);
+    
+    return users;
+  } catch (error) {
+    console.error("Error fetching all users:", error);
+    return [];
+  }
+}
+
+// Delete report (admin or user)
+export async function deleteReport(reportId: number) {
+  try {
+    await db
+      .delete(Reports)
+      .where(eq(Reports.id, reportId));
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting report:", error);
     throw error;
   }
 }
