@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getRewardsCatalog, createReward } from '@/db/actions';
 import { auth } from '@clerk/nextjs/server';
+import { 
+  validateCreateReward, 
+  createValidationErrorResponse, 
+  sanitizeString 
+} from '@/lib/validation';
 
 export const maxDuration = 300;
 
@@ -31,21 +36,31 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, description, pointsRequired, imageUrl, stock } = body;
+    
+    // Sanitize inputs
+    const input = {
+      name: sanitizeString(body.name || ''),
+      description: body.description ? sanitizeString(body.description) : undefined,
+      pointsRequired: parseInt(body.pointsRequired),
+      imageUrl: body.imageUrl || undefined,
+      stock: parseInt(body.stock)
+    };
 
-    if (!name || !pointsRequired || stock === undefined) {
+    // Validate input
+    const validation = validateCreateReward(input);
+    if (!validation.valid) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, pointsRequired, stock' },
+        createValidationErrorResponse(validation.errors),
         { status: 400 }
       );
     }
 
     const reward = await createReward({
-      name,
-      description: description || '',
-      pointsRequired,
-      imageUrl: imageUrl || null,
-      stock
+      name: input.name,
+      description: input.description || '',
+      pointsRequired: input.pointsRequired,
+      imageUrl: input.imageUrl || null,
+      stock: input.stock
     });
 
     return NextResponse.json(reward, { status: 201 });
