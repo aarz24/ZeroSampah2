@@ -543,7 +543,7 @@ export default function DashboardPage() {
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: index * 0.1 + 0.3, type: "spring", stiffness: 200 }}
                 >
-                  <p className={`text-xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
+                  <p className={`${typeof stat.value === 'string' ? 'text-lg sm:text-2xl md:text-3xl' : 'text-xl sm:text-4xl md:text-5xl'} font-extrabold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
                     {stat.value}
                   </p>
                 </motion.div>
