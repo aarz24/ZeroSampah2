@@ -1,75 +1,110 @@
-import 'dotenv/config';
-import db from "../src/db/index";
-import { Users, Reports, Rewards } from "../src/db/schema";
+import db from '../src/db/index';
+import { Rewards } from '../src/db/schema';
 
-async function main() {
-  console.log("Seeding database using DATABASE_URL=", process.env.DATABASE_URL ? "[set]" : "[missing]");
-  if (!process.env.DATABASE_URL) {
-    console.error("DATABASE_URL is missing. Set it in .env and retry.");
-    process.exit(1);
-  }
+/**
+ * Database seeding script for ZeroSampah
+ * Run with: npm run db:seed
+ */
 
-  // 1) Demo user
-  await db
-    .insert(Users)
-    .values({
-      clerkId: "clerk_demo",
-      email: "demo@zerosampah.com",
-      fullName: "Demo User",
-      points: 100,
-    })
-    .onConflictDoNothing()
-    .execute();
-  console.log("✔ Inserted demo user (or already exists)");
-
-  // 2) Sample rewards
-  await db
-    .insert(Rewards)
-    .values([
-      {
-        name: "Botol Minum Ramah Lingkungan",
-        description: "Botol minum stainless steel yang dapat digunakan ulang",
-        pointsRequired: 200,
-        imageUrl: "/images/rewards/botol.webp",
-        stock: 50,
-      },
-      {
-        name: "Set Peralatan Makan Bambu",
-        description: "Set peralatan makan bambu ramah lingkungan",
-        pointsRequired: 300,
-        imageUrl: "/images/rewards/peralatan-bambu.jpg",
-        stock: 30,
-      },
-      {
-        name: "Tas Belanja Katun Organik",
-        description: "Tas belanja ramah lingkungan terbuat dari katun organik",
-        pointsRequired: 150,
-        imageUrl: "/images/rewards/tas-katun.webp",
-        stock: 100,
-      },
-    ])
-    .onConflictDoNothing()
-    .execute();
-  console.log("✔ Inserted rewards (or already exist)");
-
-  // 3) Sample report
-  await db
-    .insert(Reports)
-    .values({
-      userId: "clerk_demo",
-      location: "https://maps.google.com/?q=-6.2088,106.8456",
-      wasteType: "Plastic bottles",
-      amount: "5 kg",
-      status: "pending",
+async function seedRewards() {
+  console.log('🌱 Seeding rewards...');
+  
+  const rewards = [
+    {
+      name: 'Voucher Makanan Rp 25.000',
+      description: 'Voucher makan di restoran partner',
+      pointsRequired: 100,
       imageUrl: null,
-    })
-    .execute();
-  console.log("✔ Inserted a sample report");
+      stock: 50,
+    },
+    {
+      name: 'Voucher Belanja Rp 50.000',
+      description: 'Voucher belanja di supermarket partner',
+      pointsRequired: 200,
+      imageUrl: null,
+      stock: 30,
+    },
+    {
+      name: 'Tas Belanja Ramah Lingkungan',
+      description: 'Tas belanja terbuat dari bahan daur ulang',
+      pointsRequired: 150,
+      imageUrl: null,
+      stock: 100,
+    },
+    {
+      name: 'Botol Minum Stainless Steel',
+      description: 'Botol minum berkualitas tinggi',
+      pointsRequired: 250,
+      imageUrl: null,
+      stock: 75,
+    },
+    {
+      name: 'Paket Bibit Tanaman',
+      description: 'Paket berisi 5 bibit tanaman hias',
+      pointsRequired: 120,
+      imageUrl: null,
+      stock: 40,
+    },
+    {
+      name: 'Voucher Transportasi Rp 50.000',
+      description: 'Voucher untuk transportasi online',
+      pointsRequired: 180,
+      imageUrl: null,
+      stock: 60,
+    },
+    {
+      name: 'Set Alat Makan Bambu',
+      description: 'Sendok, garpu, dan sumpit dari bambu',
+      pointsRequired: 200,
+      imageUrl: null,
+      stock: 45,
+    },
+    {
+      name: 'Kompos Organik 5kg',
+      description: 'Pupuk kompos organik berkualitas',
+      pointsRequired: 80,
+      imageUrl: null,
+      stock: 120,
+    },
+    {
+      name: 'Sertifikat Penghargaan',
+      description: 'Sertifikat penghargaan untuk kontribusi lingkungan',
+      pointsRequired: 500,
+      imageUrl: null,
+      stock: 20,
+    },
+    {
+      name: 'Voucher Kursus Online',
+      description: 'Akses ke kursus online tentang keberlanjutan',
+      pointsRequired: 300,
+      imageUrl: null,
+      stock: 35,
+    },
+  ];
 
-  console.log("✅ Seeding completed");
+  try {
+    for (const reward of rewards) {
+      await db.insert(Rewards).values(reward).onConflictDoNothing();
+      console.log(`✅ Added reward: ${reward.name}`);
+    }
+    console.log('🎉 Rewards seeding completed!');
+  } catch (error) {
+    console.error('❌ Error seeding rewards:', error);
+    throw error;
+  }
 }
 
-main().then(() => process.exit(0)).catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+async function main() {
+  console.log('🚀 Starting database seeding...');
+  
+  try {
+    await seedRewards();
+    console.log('✨ All seeding completed successfully!');
+    process.exit(0);
+  } catch (error) {
+    console.error('💥 Seeding failed:', error);
+    process.exit(1);
+  }
+}
+
+main();
