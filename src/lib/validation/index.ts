@@ -23,13 +23,32 @@ export function validateUrl(url: string): boolean {
 // Note: This is basic sanitization. For production with user-generated HTML content,
 // consider using a library like DOMPurify for more comprehensive protection.
 export function sanitizeString(input: string): string {
-  return input
-    .replace(/[<>]/g, '') // Remove < and >
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+=/gi, '') // Remove event handlers (onclick, onload, etc.)
-    .replace(/&lt;script&gt;/gi, '') // Remove encoded script tags
-    .replace(/&lt;\/script&gt;/gi, '')
-    .trim();
+  let sanitized = input;
+  
+  // Remove all HTML tags
+  sanitized = sanitized.replace(/[<>]/g, '');
+  
+  // Remove dangerous protocols (javascript:, data:, vbscript:)
+  sanitized = sanitized.replace(/javascript:/gi, '');
+  sanitized = sanitized.replace(/data:/gi, '');
+  sanitized = sanitized.replace(/vbscript:/gi, '');
+  
+  // Remove ALL event handlers using a loop to ensure complete removal
+  // This prevents issues with overlapping matches
+  let previousLength;
+  do {
+    previousLength = sanitized.length;
+    sanitized = sanitized.replace(/on\w+\s*=/gi, '');
+  } while (sanitized.length !== previousLength);
+  
+  // Remove encoded script tags
+  sanitized = sanitized.replace(/&lt;script&gt;/gi, '');
+  sanitized = sanitized.replace(/&lt;\/script&gt;/gi, '');
+  
+  // Remove expression() which can be used in CSS attacks
+  sanitized = sanitized.replace(/expression\s*\(/gi, '');
+  
+  return sanitized.trim();
 }
 
 // Validate waste type
