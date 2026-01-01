@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaMedal, FaTrophy, FaGift, FaStar, FaLeaf, FaLightbulb, FaAward, FaUsers } from "react-icons/fa";
+import { useUser } from "@clerk/nextjs";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
@@ -139,31 +140,35 @@ const moreAvailableRewards = [
 const mergedAvailableRewards = [...availableRewards, ...moreAvailableRewards];
 
 export default function RewardsPage() {
+  const { user, isLoaded: isUserLoaded } = useUser();
   const [activeTab, setActiveTab] = useState("earned");
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch user's points from server. We pull clerkId from localStorage userData if available.
-  const fetchPoints = async (clerkId?: string) => {
-    try {
-      const id = clerkId || JSON.parse(localStorage.getItem('userData') || 'null')?.clerkId;
-      if (!id) return;
-      const res = await fetch(`/api/rewards/points?userId=${encodeURIComponent(id)}`);
-      if (!res.ok) return;
-      const data = await res.json();
-      if (typeof data.points === 'number') setTotalPoints(data.points);
-    } catch (e) {
-      console.error('Failed to fetch points', e);
-    }
-  };
-
+  // Fetch user's points from API using Clerk user ID
   useEffect(() => {
-    // Initial fetch
-    fetchPoints();
-    // Poll every 8 seconds to pick up updates from collections/reports
-    const t = setInterval(() => fetchPoints(), 8000);
-    return () => clearInterval(t);
-  }, []);
+    const fetchPoints = async () => {
+      if (!user?.id) return;
+      
+      try {
+        const res = await fetch(`/api/rewards/points?userId=${encodeURIComponent(user.id)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (typeof data.points === 'number') {
+            setTotalPoints(data.points);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch points', e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isUserLoaded) {
+      fetchPoints();
+    }
+  }, [user, isUserLoaded]);
 
   const getStatusLabel = (status: string) => {
     if (status === "completed") return "Selesai";
@@ -171,16 +176,7 @@ export default function RewardsPage() {
     return status;
   };
 
-  // Simulate waiting for layout components to load
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 300); // Adjust this time as needed based on your actual layout load time
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
+  if (isLoading || !isUserLoaded) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader />

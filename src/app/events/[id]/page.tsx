@@ -415,3 +415,125 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
     </div>
   );
 }
+
+// Baris 1: Directive Next.js untuk menandakan ini adalah Client Component (berjalan di browser)
+
+// Baris 3: Import React hooks
+// - use: untuk unwrap Promise dari params
+// - useState: untuk state management lokal
+// - useEffect: untuk side effects setelah component mount
+
+// Baris 4: Import fungsi navigasi dari Next.js
+// - notFound: untuk redirect ke halaman 404
+// - useRouter: untuk navigasi programatik
+
+// Baris 5: Import dynamic dari Next.js untuk lazy loading component
+// Digunakan untuk component yang hanya berjalan di client-side
+
+// Baris 6: Import component QRCodeDisplay untuk menampilkan QR code
+
+// Baris 7: Import icon dari lucide-react (QrCode dan ScanLine)
+
+// Baris 8: Import useUser hook dari Clerk untuk autentikasi user
+
+// Baris 10: Dynamic import QRScanner dengan SSR disabled
+// ssr: false artinya component ini hanya di-render di client, tidak di server
+// Karena QR Scanner membutuhkan akses kamera yang hanya tersedia di browser
+
+// Baris 12-38: Interface TypeScript untuk EventData
+// Mendefinisikan struktur data event lengkap dengan:
+// - event: detail acara (id, title, description, location, date, dll)
+// - organizer: data penyelenggara acara
+// - userRegistration: data pendaftaran user (termasuk QR code)
+
+// Baris 40: Deklarasi component EventDetailPage dengan parameter params (Promise<{id: string}>)
+
+// Baris 41: Inisialisasi router untuk navigasi
+
+// Baris 42: Unwrap Promise params untuk mendapatkan id event
+
+// Baris 43: Get user data dari Clerk authentication
+
+// Baris 44-48: Deklarasi state variables:
+// - eventData: menyimpan data event lengkap
+// - loading: status loading data
+// - registering: status proses pendaftaran
+// - showQR: toggle tampilan QR code
+// - showScanner: toggle tampilan scanner QR (untuk organizer)
+
+// Baris 50-64: useEffect hook untuk fetch data event saat component mount
+// 1. Fetch data dari API endpoint /api/events/${id}
+// 2. Handle error 404 dengan redirect ke halaman not found
+// 3. Set eventData dengan response JSON
+// 4. Set loading false setelah selesai
+
+// Baris 66-88: Function handleRegister untuk mendaftar ke event
+// 1. Validasi user sudah login
+// 2. Set registering true untuk show loading state
+// 3. POST request ke /api/events dengan action 'register'
+// 4. Jika berhasil, refresh data event untuk update UI
+// 5. Handle error dan set registering false
+
+// Baris 90-99: Conditional render loading state
+// Tampilkan skeleton loading dengan animasi pulse
+
+// Baris 101: Redirect ke 404 jika eventData tidak ada
+
+// Baris 103-108: Extract data dari eventData dan compute derived states:
+// - ev: data event
+// - organizer: data penyelenggara
+// - registration: data pendaftaran user
+// - isRegistered: boolean apakah user sudah daftar
+// - isOrganizer: boolean apakah user adalah penyelenggara
+// - eventDate: format tanggal event ke Bahasa Indonesia
+
+// Baris 110-115: Return JSX - container utama dengan gradient background
+
+// Baris 112-119: Tombol "Kembali" untuk navigasi ke halaman sebelumnya
+
+// Baris 122-152: Hero Section - header event
+// - Background gradient hijau
+// - Judul event dan tanggal/waktu
+// - Badge jumlah peserta (hardcoded 0, seharusnya dynamic)
+
+// Baris 154-167: Section Deskripsi Acara
+// Conditional render, hanya tampil jika ev.description ada
+
+// Baris 170-181: Section Kategori Sampah
+// Conditional render, tampilkan badge untuk setiap kategori
+// Loop melalui ev.wasteCategories array
+
+// Baris 184-197: Section Organizer Info
+// Tampilkan nama penyelenggara dengan avatar icon
+
+// Baris 202-220: Reward Section (conditional)
+// Tampilkan info reward dengan emoji hadiah
+// Hanya muncul jika ev.rewardInfo ada
+
+// Baris 223-323: Info Cards Grid (3 kolom)
+// Card 1: Perlengkapan yang dibutuhkan (sarung tangan, kantong sampah, sepatu)
+// Card 2: Aturan singkat acara (pisahkan sampah, utamakan keselamatan, hormati warga)
+// Card 3: Lokasi acara dengan link ke Google Maps
+
+// Baris 326-361: Section Action Buttons
+// Conditional rendering berdasarkan status user:
+// - Jika belum login: tampilkan pesan untuk login
+// - Jika belum daftar & bukan organizer: tombol "Gabung Acara"
+// - Jika sudah daftar: tombol "Tampilkan/Sembunyikan QR Code"
+// - Jika adalah organizer: tombol "Buka/Tutup Scanner"
+
+// Baris 364-383: QR Code Display Section (conditional)
+// Tampil jika user sudah daftar dan showQR = true
+// Menampilkan QR code dengan ukuran 280x280 px
+// Ada info box dengan instruksi untuk tunjukkan QR ke panitia
+
+// Baris 386-406: QR Scanner Section (conditional)
+// Tampil jika user adalah organizer dan showScanner = true
+// Menampilkan component QRScanner untuk verifikasi kehadiran peserta
+// Ada info box mode panitia
+
+// Baris 409-442: Media Section
+// Menampilkan foto dan video event
+// Jika tidak ada media: tampilkan placeholder dengan icon dan pesan
+// Grid layout 3 kolom untuk foto/video
+// Video dengan controls untuk play/pause

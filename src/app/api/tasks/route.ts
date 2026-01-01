@@ -47,3 +47,22 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });
   }
 }
+
+// Baris 1: Import NextResponse dari next/server untuk mengirim response dari API route
+// Baris 2: Import fungsi getWasteCollectionTasks dari folder db/actions untuk mengambil daftar tugas pengumpulan sampah dari database
+
+// Baris 4: Export dynamic = 'force-dynamic' untuk memaksa route ini selalu dinamis (tidak di-cache) di Next.js
+
+// Baris 6-32: Deklarasi array dummyTasks berisi data dummy untuk development ketika database down:
+//             - Task 1: Plastic bottles 5 kg di Jakarta dengan status pending
+//             - Task 2: Organic waste 3 kg di Jakarta dengan status pending
+//             Setiap task punya: id, userId, location (Google Maps URL), wasteType, amount, status, collectorId (null), imageUrl (null), verificationResult (null), dan date (tanggal hari ini)
+
+// Baris 34: Export fungsi GET async untuk menangani request GET daftar tugas pengumpulan sampah
+// Baris 35: Blok try untuk menjalankan kode utama
+// Baris 36: Memanggil fungsi getWasteCollectionTasks untuk mengambil semua task dari database
+// Baris 37: Return response JSON berisi daftar tasks
+// Baris 38-48: Blok catch untuk menangkap error:
+//              Baris 39: Log error ke console dengan prefix 'GET /api/tasks error'
+//              Baris 41-44: Jika error code adalah ENOTFOUND atau ETIMEDOUT (database tidak tersedia/maintenance), log pesan dan return dummyTasks sebagai fallback untuk development
+//              Baris 46: Untuk error lainnya, return response error 500 dengan pesan "Failed to fetch tasks"

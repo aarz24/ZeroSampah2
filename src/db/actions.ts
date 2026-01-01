@@ -757,6 +757,9 @@ export async function verifyAttendance(data: {
       })
       .returning();
     
+    // Award points for attending event
+    await updateUserPoints(data.userId, 25);
+    
     return { success: true, attendance, userName: user?.fullName || 'User' };
   } catch (error) {
     console.error("Error verifying attendance:", error);
@@ -823,3 +826,209 @@ export async function getUserOrganizedEvents(userId: string) {
     throw error;
   }
 }
+
+// Baris 1: Import instance database dari file index
+// db adalah instance Drizzle ORM yang terkoneksi ke database
+
+// Baris 2: Import semua table schema dari file schema
+// Users, Reports, Rewards, dll adalah definisi tabel database
+
+// Baris 3: Import operator Drizzle ORM untuk query
+// eq = equals, sql = raw SQL, and = logical AND, desc = descending order
+
+// Baris 5-14: Interface TypeScript untuk VerificationResult
+// Mendefinisikan struktur data hasil verifikasi sampah dari AI
+// Berisi info seperti waktu dekomposisi, dampak lingkungan, jejak karbon, dll
+// [key: string] untuk property dinamis lainnya
+
+// Baris 16-37: Function createUser untuk membuat user baru di database
+// 1. Cek apakah user dengan clerkId sudah ada
+// 2. Jika sudah ada, throw error
+// 3. Jika belum, insert user baru dengan data: clerkId, email, fullName, profileImage
+// 4. Return user yang baru dibuat
+// Handle error dengan console.error dan throw error
+
+// Baris 40-48: Function getUserByEmail untuk ambil user berdasarkan email
+// Select dari tabel Users dengan kondisi email = parameter
+// Return user pertama yang ditemukan atau null jika error
+
+// Baris 50-90: Function createReport untuk membuat laporan sampah baru
+// Parameter: userId, location, wasteType, amount, imageUrl (optional), verificationResult (optional)
+// 1. Log parameter untuk debugging
+// 2. Auto-create user jika belum ada dengan onConflictDoNothing (upsert pattern)
+// 3. Insert report baru dengan semua data
+// 4. Convert verificationResult object ke JSON string untuk disimpan
+// 5. Set status default "pending"
+// 6. Return report yang baru dibuat
+
+// Baris 92-99: Function getReportsByUserId untuk ambil semua laporan user
+// Select semua reports dengan userId = parameter
+// Return array reports atau array kosong jika error
+
+// Baris 101-118: Function getOrCreateReward untuk get atau create reward user
+// 1. Coba select reward dengan userId
+// 2. Jika tidak ada, create reward baru dengan default values
+// 3. Return reward object atau null jika error
+
+// Baris 120-134: Function updateRewardPoints untuk tambah poin reward user
+// Gunakan sql template untuk increment: points = points + pointsToAdd
+// Update juga updatedAt dengan timestamp sekarang
+// Return reward yang sudah diupdate
+
+// Baris 136-150: Function updateUserPoints untuk tambah poin user
+// Sama seperti updateRewardPoints tapi update tabel Users
+// Increment points dengan SQL: points = points + pointsToAdd
+// Update updatedAt timestamp
+
+// Baris 152-167: Function createCollectedWaste untuk record sampah yang sudah dikumpulkan
+// Insert ke tabel CollectedWastes dengan: reportId, collectorId, collectionDate, comment
+// Return collected waste yang baru dibuat
+
+// Baris 169-176: Function getCollectedWastesByCollector untuk ambil riwayat pengumpulan
+// Select semua collected wastes dengan collectorId = parameter
+// Return array atau kosong jika error
+
+// Baris 178-189: Function createNotification untuk buat notifikasi user
+// Insert ke tabel Notifications dengan: userId, message, type
+// Return notification yang baru dibuat
+
+// Baris 191-202: Function getUnreadNotifications untuk ambil notifikasi belum dibaca
+// Select dengan kondisi AND: userId = parameter DAN isRead = false
+// Return array notifications
+
+// Baris 204-210: Function markNotificationAsRead untuk tandai notifikasi sudah dibaca
+// Update Notifications set isRead = true dengan id = parameter
+
+// Baris 212-219: Function getPendingReports untuk ambil semua laporan pending
+// Select reports dengan status = "pending"
+// Return array reports
+
+// Baris 221-239: Function getLeaderboard untuk ambil ranking user berdasarkan poin
+// Select: clerkId, fullName, email, points, profileImage dari Users
+// Order by points descending (tertinggi dulu)
+// Limit sesuai parameter (default 100)
+// Return array users sorted by points
+
+// Baris 241-259: Function updateReportStatus untuk update status laporan
+// Parameter: reportId, status, collectorId (optional)
+// Buat object updateData yang dinamis
+// Jika collectorId provided, tambahkan ke updateData
+// Update report dan return hasil update
+
+// Baris 261-272: Function getRecentReports untuk ambil laporan terbaru
+// Select reports order by createdAt descending
+// Limit sesuai parameter (default 10)
+// Return array reports
+
+// Baris 274-303: Function getWasteCollectionTasks untuk ambil tugas pengumpulan sampah
+// Select reports dengan kondisi: status = 'pending' DAN collectorId IS NULL
+// Artinya: laporan yang belum ada yang ambil
+// Order by createdAt descending (terbaru dulu)
+// Convert date ke ISO string untuk konsistensi format
+// Return array tasks
+
+// Baris 305-329: Function saveReward untuk simpan reward baru
+// 1. Insert reward baru dengan: userId, name, collectionInfo, points, level, isAvailable
+// 2. Create transaction record untuk track history
+// 3. Return reward yang baru dibuat
+// Throw error jika gagal
+
+// Baris 331-346: Function saveCollectedWaste untuk simpan collected waste
+// Insert ke CollectedWastes dengan: reportId, collectorId, collectionDate
+// Return collected waste atau null jika error
+
+// Baris 348-367: Function updateTaskStatus untuk update status task
+// Mirip updateReportStatus tapi khusus untuk task
+// Buat updateData dinamis, include collectorId jika provided
+// Return updated report
+
+// Baris 369-388: Function getAllRewards untuk ambil semua rewards dengan join
+// Select rewards dengan LEFT JOIN ke Users untuk get fullName
+// Select: id, userId, points, level, createdAt, userName
+// Order by points descending
+// Return array rewards
+
+// Baris 390-418: Function getRewardTransactions untuk ambil riwayat transaksi poin user
+// Select transactions dengan userId = parameter
+// Order by date descending, limit 10 (transaksi terbaru)
+// Format date ke YYYY-MM-DD untuk display
+// Return array formatted transactions
+// Multiple console.log untuk debugging
+
+// Baris 420-462: Function getAvailableRewards untuk ambil daftar reward yang bisa ditukar
+// 1. Get semua transaksi user untuk hitung total points
+// 2. Calculate points: earned - redeemed
+// 3. Select rewards yang isAvailable = true dari database
+// 4. Combine user points dengan database rewards
+// 5. Return array dengan user points di index 0, diikuti rewards lainnya
+
+// Baris 464-482: Function createTransaction untuk record transaksi poin
+// Parameter: userId, rewardId (nullable), pointsUsed, transactionType, description
+// transactionType: 'earned' (dapat poin) atau 'redeemed' (tukar poin)
+// Insert transaction dan return hasil
+
+// Baris 484-534: Function redeemReward (COMMENTED OUT)
+// Code untuk redeem/tukar poin reward
+// Logic: cek poin cukup, kurangi poin user, create transaction
+// Di-comment kemungkinan sedang dalam development atau tidak dipakai
+
+// Baris 536-551: Function getReportById untuk ambil detail report berdasarkan ID
+// Select report dengan id = parameter
+// Throw error jika tidak ditemukan
+// Return report object
+
+// Baris 553-556: Comment section separator untuk EVENT ACTIONS
+
+// Baris 558-578: Function createEvent untuk buat event/acara baru
+// Parameter: object dengan semua data event
+// Data: organizerId, title, description, location, lat/lng, date, time, categories, dll
+// Insert ke tabel Events dan return event yang baru dibuat
+
+// Baris 580-599: Function getPublishedEvents untuk ambil semua event yang sudah published
+// Select Events dengan LEFT JOIN Users untuk get organizer info
+// Filter: status = 'published'
+// Order by eventDate descending
+// Return array dengan structure { event, organizer }
+
+// Baris 601-618: Function getEventById untuk ambil detail event by ID
+// Select event dengan LEFT JOIN Users untuk get organizer
+// Filter: id = parameter
+// Return object { event, organizer } atau null jika tidak ada
+
+// Baris 620-650: Function registerForEvent untuk daftar ke event
+// 1. Cek apakah user sudah terdaftar dengan AND condition
+// 2. Jika sudah, return success: false dengan message
+// 3. Generate unique QR code: format "EVENT:eventId:userId:timestamp"
+// 4. Insert ke EventRegistrations dengan qrCode
+// 5. Return success: true dengan registration data
+
+// Baris 652-667: Function getUserEventRegistration untuk cek pendaftaran user
+// Select registration dengan kondisi AND: eventId, userId, status='registered'
+// Return registration atau null
+
+// Baris 669-729: Function verifyAttendance untuk verifikasi kehadiran via QR scan
+// 1. Parse dan validate QR code format: "EVENT:eventId:userId:timestamp"
+// 2. Cek format valid (parts[0]='EVENT', parts[1]=eventId, parts[2]=userId)
+// 3. Get registration dengan QR code yang di-scan
+// 4. Cek apakah sudah pernah verified (prevent double verification)
+// 5. Get user name untuk response
+// 6. Insert attendance record dengan: eventId, userId, registrationId, verifiedBy, qrCode
+// 7. Return success dengan attendance dan userName
+
+// Baris 731-747: Function getEventAttendees untuk ambil daftar peserta yang sudah verified
+// Select EventAttendance dengan LEFT JOIN Users
+// Filter: eventId = parameter
+// Order by verifiedAt descending (terbaru dulu)
+// Return array { attendance, user }
+
+// Baris 749-765: Function getUserRegisteredEvents untuk ambil event yang user daftar
+// Select EventRegistrations dengan LEFT JOIN Events
+// Filter: userId DAN status='registered'
+// Order by eventDate descending
+// Return array { registration, event }
+
+// Baris 767-781: Function getUserOrganizedEvents untuk ambil event yang user buat
+// Select Events dengan organizerId = userId
+// Order by eventDate descending
+// Map hasil ke format { event } untuk konsistensi dengan getUserRegisteredEvents
+// Return array { event }

@@ -50,3 +50,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Failed to create report' }, { status: 500 });
   }
 }
+
+// Baris 1: Import NextResponse dari next/server untuk mengirim response dari API route
+// Baris 2: Import fungsi createReport, getRecentReports, updateUserPoints, dan createTransaction dari folder db/actions untuk operasi database
+
+// Baris 4: Export dynamic = 'force-dynamic' untuk memaksa route ini selalu dinamis (tidak di-cache) di Next.js
+// Baris 5: Set maxDuration = 300 detik (5 menit) sebagai batas waktu maksimal eksekusi fungsi serverless di Vercel
+
+// Baris 7: Export fungsi GET async untuk menangani request GET daftar report terbaru
+// Baris 8: Blok try untuk menjalankan kode utama
+// Baris 9: Parse URL dari request
+// Baris 10: Ambil parameter 'limit' dari query string, default 10 jika tidak ada, lalu convert ke Number
+// Baris 11: Memanggil fungsi getRecentReports dengan parameter limit untuk mengambil report terbaru dari database
+// Baris 12: Return response JSON berisi daftar reports
+// Baris 13-16: Blok catch untuk menangkap error, mencetak error ke console dengan prefix 'GET /api/reports error', dan return response error 500 dengan pesan "Failed to fetch reports"
+
+// Baris 18: Export fungsi POST async untuk menangani request POST pembuatan report baru
+// Baris 19: Blok try untuk menjalankan kode utama
+// Baris 20: Parse body request menjadi JSON
+// Baris 21: Log body request yang diterima dalam format JSON yang rapi untuk debugging
+// Baris 22: Destructuring userId, location, wasteType, amount, imageUrl, dan verificationResult dari body
+// Baris 23: Log userId yang akan digunakan untuk create report
+
+// Baris 25-27: Memanggil fungsi createReport untuk membuat report baru dengan semua parameter dan log hasilnya
+
+// Baris 29-44: Jika report berhasil dibuat:
+//              Baris 30-31: Set pointsForReport = 10 poin dan panggil updateUserPoints untuk menambah poin user
+//              Baris 33-39: Membuat record transaksi dengan createTransaction:
+//                           - userId: ID user yang dapat poin
+//                           - null: tidak ada reward_id (ini earning bukan redeem)
+//                           - pointsForReport: jumlah poin (10)
+//                           - 'earned': tipe transaksi
+//                           - description dengan nomor report
+//              Baris 41: Log konfirmasi pemberian poin ke user
+
+// Baris 45: Return response JSON berisi data report yang baru dibuat
+// Baris 46-49: Blok catch untuk menangkap error, mencetak error ke console dengan prefix 'POST /api/reports error', dan return response error 500 dengan pesan "Failed to create report"

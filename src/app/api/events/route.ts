@@ -148,3 +148,60 @@ export async function POST(request: Request) {
     );
   }
 }
+
+// Baris 1: Import NextResponse dari next/server untuk mengirim response dari API route
+// Baris 2-8: Import fungsi-fungsi dari db/actions untuk operasi database event:
+//            - getPublishedEvents: ambil semua event yang sudah dipublish
+//            - createEvent: buat event baru
+//            - registerForEvent: daftar ke event
+//            - getUserRegisteredEvents: ambil event yang user sudah daftar
+//            - getUserOrganizedEvents: ambil event yang user organize/buat
+// Baris 9: Import auth dari Clerk untuk autentikasi dan mendapatkan user ID yang sedang login
+
+// Baris 11: Set maxDuration = 300 detik (5 menit) sebagai batas waktu maksimal eksekusi fungsi serverless di Vercel
+
+// Baris 13-15: Export fungsi GET async untuk menangani request GET daftar event
+// Baris 16: Blok try untuk menjalankan kode utama
+// Baris 17: Parse URL request dan ambil searchParams untuk mendapat query parameters
+// Baris 18: Ambil parameter 'type' dari query string (bisa 'registered', 'organized', atau null untuk semua event published)
+
+// Baris 20: Mendapatkan userId dari auth Clerk (bisa null jika user tidak login)
+
+// Baris 22-25: Jika type = 'registered' dan userId ada, ambil event yang user sudah daftar menggunakan getUserRegisteredEvents dan return sebagai JSON
+
+// Baris 27-30: Jika type = 'organized' dan userId ada, ambil event yang user organize menggunakan getUserOrganizedEvents dan return sebagai JSON
+
+// Baris 32-34: Default: jika tidak ada type atau type tidak valid, ambil semua event published menggunakan getPublishedEvents dan return sebagai JSON
+
+// Baris 36-42: Blok catch untuk menangkap error, mencetak error ke console, dan return response error 500 Internal Server Error
+
+// Baris 44-46: Export fungsi POST async untuk membuat event baru atau registrasi ke event
+// Baris 47: Blok try untuk menjalankan kode utama
+// Baris 48-53: Mendapatkan userId dari auth Clerk, jika tidak ada (user tidak login) return error 401 Unauthorized
+
+// Baris 55-84: Memastikan user sudah ada di database:
+//              Baris 56-57: Import currentUser dari Clerk dan dapatkan data user dari Clerk
+//              Baris 58-67: Import db, schema Users, dan fungsi eq dari drizzle-orm, lalu cek apakah user dengan clerkId ini sudah ada di database
+//              Baris 69-83: Jika user tidak ada (existingUser.length = 0), auto-create user baru:
+//                           - Buat fullName dari firstName+lastName Clerk atau default 'Anonymous User'
+//                           - Insert user baru dengan clerkId, email, fullName, dan profileImage dari data Clerk
+
+// Baris 86: Parse body request menjadi JSON
+// Baris 87: Destructuring action dan sisanya sebagai data dari body
+
+// Baris 89-101: Jika action = 'register' (registrasi ke event):
+//               Baris 90-96: Destructuring eventId, validasi jika eventId tidak ada return error 400
+//               Baris 98-99: Panggil registerForEvent untuk daftarkan user ke event dan return hasilnya sebagai JSON
+
+// Baris 103-119: Destructuring semua field untuk create event: title, description, location, latitude, longitude, eventDate, eventTime, wasteCategories, maxParticipants, rewardInfo, images, videos
+
+// Baris 121-126: Validasi field wajib: jika title, location, eventDate, atau eventTime tidak ada, return error 400 "Missing required fields"
+
+// Baris 128-143: Panggil createEvent untuk membuat event baru dengan semua parameter:
+//                - organizerId: userId yang sedang login
+//                - semua field lainnya, dengan default values untuk field optional (description='', wasteCategories=[], dll)
+//                - eventDate dikonversi ke objek Date
+
+// Baris 145: Return event yang baru dibuat sebagai JSON dengan status 201 Created
+
+// Baris 147-153: Blok catch untuk menangkap error, mencetak error ke console, ambil error message, dan return response error 500 dengan detail error

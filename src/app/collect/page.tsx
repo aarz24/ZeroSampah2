@@ -1032,3 +1032,156 @@ export default function CollectPage() {
     </div>
   );
 }
+
+// Baris 1-2: Import React hooks untuk state management dan side effects
+// useState untuk menyimpan state lokal, useEffect untuk operasi setelah component mount
+
+// Baris 3: Import motion dari framer-motion untuk animasi component
+
+// Baris 4-11: Import icon-icon dari lucide-react untuk UI
+// Trash2 = ikon tempat sampah, MapPin = ikon lokasi, CheckCircle = ikon centang, dll
+
+// Baris 12: Import toast dari react-hot-toast untuk notifikasi popup
+
+// Baris 14: Import useRouter dari next.js untuk navigasi halaman
+
+// Baris 15: Import component Loader untuk tampilan loading
+
+// Baris 16: Import component Image dari next.js untuk optimasi gambar
+
+// Baris 17: Import Lottie untuk animasi JSON
+
+// Baris 18-22: Import file animasi Lottie dalam format JSON
+
+// Baris 26: Konstanta untuk jumlah item per halaman pagination
+
+// Baris 28-40: Interface TypeScript untuk tipe data Task (tugas pengumpulan sampah)
+// Mendefinisikan struktur data seperti id, userId, location, wasteType, dll
+
+// Baris 42-48: Interface untuk VerificationDetails (detail hasil verifikasi AI)
+// Menyimpan hasil analisis apakah lokasi sama, ada sampah, status pembersihan, dll
+
+// Baris 50-56: Interface untuk CollectedWaste (data sampah yang sudah dikumpulkan)
+
+// Baris 58-62: Interface untuk User (data pengguna)
+
+// Baris 64-72: Interface untuk FetchedTask (format data task yang diambil dari API)
+
+// Baris 74: Deklarasi component React utama bernama CollectPage
+
+// Baris 75: Inisialisasi router untuk navigasi
+
+// Baris 76-87: Deklarasi state variables menggunakan useState:
+// - user: data pengguna yang login
+// - tasks: array daftar tugas pengumpulan sampah
+// - currentPage: halaman pagination saat ini
+// - loading: status loading data
+// - hoveredWasteType: jenis sampah yang sedang di-hover mouse
+// - searchTerm: kata kunci pencarian
+// - selectedTask: tugas yang dipilih untuk verifikasi
+// - verificationStatus: status proses verifikasi (idle/verifying/success/failure)
+// - verificationResult: hasil verifikasi dari backend
+// - file: file gambar yang diupload
+// - preview: URL preview gambar yang diupload
+// - verificationDetails: detail lengkap hasil verifikasi AI
+
+// Baris 89-99: Function getDaysAgo untuk menghitung selisih hari dari tanggal tertentu
+// Mengkonversi tanggal ke format "Hari ini" atau "X hari yang lalu"
+
+// Baris 101-128: Function handleFileChange untuk memproses file yang diupload
+// Validasi tipe file harus gambar, ukuran max 10MB
+// Membaca file dan membuat preview URL menggunakan FileReader
+
+// Baris 130-137: Function readFileAsBase64 untuk convert file ke base64 string
+// Menggunakan Promise untuk async operation dengan FileReader
+
+// Baris 139-144: Function extractBase64Data untuk extract base64 dan mime type
+// Memisahkan metadata dan data base64 dari data URL
+
+// Baris 146-154: Filter dan sort tasks berdasarkan search term
+// Filter berdasarkan location yang cocok dengan searchTerm
+// Sort berdasarkan createdAt descending (terbaru dulu)
+
+// Baris 156: Hitung jumlah total halaman pagination
+
+// Baris 158-161: Slice array tasks untuk pagination
+// Mengambil subset data sesuai halaman aktif
+
+// Baris 163-195: useEffect hook untuk fetch data saat component mount
+// Mengambil data tasks dari API endpoint '/api/tasks'
+// Handle error dan loading state
+// Map data dari API ke format Task interface
+// Ambil user data dari localStorage
+
+// Baris 197-199: useEffect untuk reset halaman ke 1 saat searchTerm berubah
+
+// Baris 201-301: Function handleVerify - fungsi utama untuk verifikasi pengumpulan sampah
+// 1. Validasi file dan selectedTask ada
+// 2. Convert gambar ke base64
+// 3. Kirim request ke API Gemini untuk analisis 2 gambar (sebelum & sesudah)
+// 4. Parse response JSON dari AI
+// 5. Cek apakah lokasi sama, ada sampah, dan sudah dibersihkan sepenuhnya
+// 6. Jika valid, buat record CollectedWaste, update status report, tambah poin reward
+// 7. Kirim notifikasi ke user
+// 8. Update state tasks dengan data terbaru
+
+// Baris 303-305: Function handleViewDetails untuk navigasi ke halaman detail report
+
+// Baris 307-322: Function handleStartCollection untuk mulai pengumpulan
+// Set selectedTask dan update status ke 'in_progress' via API
+// Optimistically update UI sebelum response API
+
+// Baris 324-958: Return JSX - render UI component
+// Struktur:
+// - Background gradient dan decorative elements
+// - Header dengan animasi, judul, dan search bar
+// - Loading state dengan Loader component
+// - List tasks dengan pagination
+// - Modal verifikasi dengan upload gambar
+
+// Baris 328-331: Background decorative elements dengan gradient blur
+
+// Baris 336-453: Header section dengan:
+// - Animasi motion.div dari framer-motion
+// - Gradient background hijau
+// - Animasi daun jatuh (fallen leaf) sebagai dekorasi
+// - Logo Lottie animation
+// - Judul halaman
+// - Search bar
+
+// Baris 455-469: Conditional rendering - tampilkan Loader saat loading = true
+
+// Baris 471-481: Conditional rendering - tampilkan pesan kosong jika tidak ada tasks
+
+// Baris 483-653: Map dan render setiap task card dengan:
+// - Info lokasi (link ke Google Maps)
+// - Status badge (pending/in_progress/verified)
+// - Grid info: jenis sampah, berat, tanggal
+// - Tombol aksi sesuai status dan user
+
+// Baris 655-677: Pagination controls - tombol prev/next dan info halaman
+
+// Baris 682-958: Modal verifikasi yang muncul saat selectedTask != null
+// Struktur modal:
+// - Backdrop blur
+// - Header dengan tombol close
+// - Gambar asli dari report
+// - Upload section untuk foto verifikasi
+// - Preview gambar yang diupload
+// - Detail hasil verifikasi dari AI
+// - Status messages (success/failure)
+// - Action buttons (Batal/Verifikasi)
+
+// Baris 699-708: Modal header dengan judul dan tombol close
+
+// Baris 711-802: Modal content dengan scroll:
+// - Tampilkan gambar asli
+// - Form upload gambar verifikasi
+// - Preview gambar yang diupload
+// - Detail verifikasi jika ada (lokasi sama, ada sampah, status pembersihan, dll)
+
+// Baris 805-828: Status messages untuk success/failure verifikasi
+
+// Baris 832-867: Action buttons di bottom modal:
+// - Tombol Batal/Tutup
+// - Tombol Verifikasi dengan loading state

@@ -4,6 +4,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import {
   FaRecycle,
   FaRobot,
@@ -18,7 +20,6 @@ import {
   FaArrowRight,
   FaHandsHelping,
 } from 'react-icons/fa';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function AboutPage() {
   return (
@@ -230,7 +231,7 @@ export default function AboutPage() {
           </div>
 
           {/* Feature Highlights */}
-          <div className="grid gap-3 sm:gap-4 mb-8 sm:mb-12 grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 mb-4 sm:mb-6 grid-cols-2 lg:grid-cols-4">
             <div className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-5 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-green-100 shadow-lg hover:shadow-xl hover:border-green-300 transition-all duration-300 hover:-translate-y-1">
               <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 text-green-600 shadow-inner">
                 <FaCalendarAlt className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -265,53 +266,6 @@ export default function AboutPage() {
               <div>
                 <h4 className="text-sm sm:text-base font-bold text-gray-900">Reward Otomatis</h4>
                 <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Poin untuk setiap partisipasi</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Animations Row */}
-          <div className="relative p-4 sm:p-8 mb-6 sm:mb-8 bg-white/60 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-green-100 shadow-xl">
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-green-50/50 via-transparent to-emerald-50/50" />
-            <div className="relative flex justify-center flex-wrap gap-2 sm:gap-4 lg:-space-x-8 lg:flex-nowrap">
-              <div className="flex items-center justify-center w-24 sm:w-48 lg:w-56 transition-transform hover:scale-110 hover:z-10">
-                <DotLottieReact
-                  src="/animations/backyard-planting.json"
-                  loop
-                  autoplay
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </div>
-              <div className="flex items-center justify-center w-24 sm:w-48 lg:w-56 transition-transform hover:scale-110 hover:z-10">
-                <DotLottieReact
-                  src="/animations/young-family.json"
-                  loop
-                  autoplay
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </div>
-              <div className="flex items-center justify-center w-24 sm:w-48 lg:w-56 transition-transform hover:scale-110 hover:z-10">
-                <DotLottieReact
-                  src="/animations/rubbish-collection.json"
-                  loop
-                  autoplay
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </div>
-              <div className="flex items-center justify-center w-24 sm:w-48 lg:w-56 transition-transform hover:scale-110 hover:z-10">
-                <DotLottieReact
-                  src="/animations/warehouse-delivery.json"
-                  loop
-                  autoplay
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </div>
-              <div className="flex items-center justify-center w-24 sm:w-48 lg:w-56 transition-transform hover:scale-110 hover:z-10">
-                <DotLottieReact
-                  src="/animations/teamwork.json"
-                  loop
-                  autoplay
-                  style={{ width: '100%', height: 'auto' }}
-                />
               </div>
             </div>
           </div>
@@ -416,6 +370,15 @@ interface FeatureCardProps {
 }
 
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (isSignedIn) {
+      router.push('/dashboard');
+    }
+  };
+
   return (
     <div className="group relative h-full p-6 text-left bg-white/90 rounded-2xl border border-white/60 shadow-xl backdrop-blur transition-all hover:-translate-y-1 hover:shadow-2xl">
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 bg-gradient-to-br from-green-100/80 via-white to-transparent blur-xl transition-opacity" />
@@ -427,12 +390,20 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
           <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
           <p className="text-gray-600 leading-relaxed">{description}</p>
         </div>
-        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-600">
+        <button
+          onClick={handleClick}
+          disabled={!isSignedIn}
+          className={`inline-flex items-center gap-1 text-xs font-semibold ${
+            isSignedIn
+              ? 'text-green-600 cursor-pointer hover:text-green-700'
+              : 'text-gray-400 cursor-not-allowed'
+          }`}
+        >
           Jelajahi fitur
-          <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className={`w-4 h-4 transition-transform ${isSignedIn ? 'group-hover:translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M13 5l7 7-7 7" />
           </svg>
-        </span>
+        </button>
       </div>
     </div>
   );

@@ -775,3 +775,179 @@ export default function CreateEventPage() {
     </div>
   );
 }
+
+// Baris 1: Directive Next.js untuk menandakan ini adalah Client Component
+
+// Baris 3: Import React hooks
+// - useState: untuk state management
+// - FormEvent: tipe TypeScript untuk form submit event
+
+// Baris 4: Import useRouter dari Next.js untuk navigasi
+
+// Baris 5: Import useUser dari Clerk untuk mendapatkan data user yang login
+
+// Baris 6: Import toast dari react-hot-toast untuk notifikasi popup
+
+// Baris 7: Import DotLottieReact untuk animasi Lottie format .lottie
+
+// Baris 8: Import Lottie untuk animasi Lottie format .json
+
+// Baris 9-12: Import file animasi daun jatuh dalam format JSON
+
+// Baris 13: Import dynamic dari Next.js untuk lazy loading component
+
+// Baris 14: Import motion dari framer-motion untuk animasi
+
+// Baris 15: Import CSS Mapbox untuk styling peta
+
+// Baris 17: Dynamic import component Map dengan SSR disabled
+// Map hanya di-render di client karena membutuhkan browser API
+
+// Baris 19: Deklarasi component CreateEventPage
+
+// Baris 20: Inisialisasi router untuk navigasi
+
+// Baris 21: Get data user dari Clerk authentication
+
+// Baris 22: State loading untuk status submit form
+
+// Baris 23-30: State formData untuk menyimpan data form dasar
+// Berisi: title, location, eventDate, eventTime, description, maxParticipants
+
+// Baris 31: State coordinates untuk menyimpan lat/lng yang dipilih di peta
+
+// Baris 32: State wasteCategories untuk menyimpan array kategori sampah yang dipilih
+
+// Baris 33: State rewardInfo untuk info hadiah/reward peserta
+
+// Baris 34-35: State untuk menyimpan File objects dari upload foto dan video
+
+// Baris 36-37: State untuk preview URL foto dan video yang diupload
+
+// Baris 39-41: Function handleInputChange untuk update formData saat input berubah
+// Generic handler untuk semua input text dan textarea
+
+// Baris 44-73: Function extractCoordinatesFromUrl untuk extract koordinat dari URL Google Maps
+// Mendukung 4 pattern berbeda:
+// 1. Format @lat,lng (contoh: @-6.2088,106.8456)
+// 2. Format q=lat,lng (query parameter)
+// 3. Format ll=lat,lng (latitude longitude parameter)
+// 4. Return null jika tidak match pattern apapun
+// Menggunakan regex untuk extract angka koordinat
+
+// Baris 75-105: Function handleLocationChange untuk handle perubahan input lokasi
+// 1. Update formData dengan value baru
+// 2. Cek apakah value adalah URL Google Maps
+// 3. Jika URL shortened (maps.app.goo.gl), fetch dari API untuk resolve redirect
+// 4. Jika URL biasa, langsung extract koordinat menggunakan regex
+// 5. Set coordinates state jika berhasil extract
+// 6. Tampilkan toast success
+
+// Baris 107-112: Function handleCategoryToggle untuk toggle kategori sampah
+// Jika sudah ada, remove dari array
+// Jika belum ada, tambahkan ke array
+
+// Baris 114-124: Function onImageChange untuk handle upload foto
+// 1. Convert FileList ke Array
+// 2. Set images state
+// 3. Create preview URL menggunakan URL.createObjectURL
+// 4. Set imagePreviews state
+
+// Baris 126-136: Function onVideoChange untuk handle upload video
+// Sama seperti onImageChange tapi untuk video
+
+// Baris 138-241: Function handleSubmit - fungsi utama untuk submit form
+// Parameter: e (FormEvent), isDraft (boolean untuk simpan sebagai draft)
+
+// Baris 141-144: Validasi user sudah login
+
+// Baris 146-149: Validasi field wajib terisi
+
+// Baris 151-154: Validasi koordinat sudah dipilih di peta
+
+// Baris 156: Set loading true untuk disable form
+
+// Baris 159-176: Convert images ke base64 data URLs
+// Loop semua file, cek ukuran max 2MB per foto
+// Gunakan FileReader untuk convert ke base64
+// Simpan hasil ke array imageUrls
+
+// Baris 179-196: Convert videos ke base64 data URLs
+// Sama seperti images tapi max 5MB per video
+
+// Baris 198-211: Buat object eventData dengan semua data form
+// Convert coordinates ke string, handle null values
+// Include semua data: title, description, location, coordinates, date, time, categories, dll
+
+// Baris 213-218: POST request ke API /api/events
+// Kirim eventData sebagai JSON body
+
+// Baris 220-225: Handle error response dari API
+// Parse error message, log detail error
+
+// Baris 227-229: Jika berhasil, tampilkan toast dan navigate ke halaman detail event
+
+// Baris 230-234: Catch error dan tampilkan toast error
+
+// Baris 235-237: Finally block - set loading false
+
+// Baris 240-246: Conditional render - jika user belum login tampilkan pesan
+
+// Baris 248-267: Return JSX - container utama dengan gradient background
+
+// Baris 251-260: Tombol "Kembali" dengan animasi motion dari framer-motion
+
+// Baris 263-337: Hero Section dengan animasi
+// - Background gradient hijau dengan decorative elements
+// - Animasi daun jatuh di background
+// - Logo Lottie (time.json) dengan animasi scale
+// - Judul dan subtitle
+// - Floating particles dengan animasi bergerak naik-turun
+
+// Baris 339-356: Form wrapper dengan animasi
+// onSubmit trigger handleSubmit dengan isDraft=false
+
+// Baris 358-375: Form Header dengan gradient dan animasi daun
+// Judul "Detail Acara" dengan icon dan deskripsi
+
+// Baris 377-428: Section 1 - Informasi Dasar
+// Input untuk: Judul Acara (required), Tanggal (required), Waktu (required), Deskripsi (optional)
+// Semua input dengan styling modern dan icon
+
+// Baris 430-521: Section 2 - Detail Lokasi
+// - Input text untuk alamat atau link Google Maps
+// - Hint untuk paste link Google Maps
+// - Component Map untuk pilih lokasi dengan klik
+// - Display koordinat yang dipilih
+// - Warning jika belum pilih lokasi
+
+// Baris 523-546: Section 3 - Pengaturan Peserta
+// Input number untuk maksimal peserta (optional)
+// Hint: kosongkan jika tidak ada batasan
+
+// Baris 548-569: Section 4 - Kategori Sampah
+// Grid checkboxes untuk 6 kategori: plastik, organik, kertas, logam, kaca, elektronik
+// Toggle dengan handleCategoryToggle
+// Styling berbeda untuk yang checked vs unchecked
+
+// Baris 571-597: Section 5 - Reward untuk Peserta
+// Input text untuk info hadiah/insentif (optional)
+// Background gradient kuning/amber untuk emphasis
+// Hint: reward meningkatkan antusiasme peserta
+
+// Baris 599-654: Section 6 - Dokumentasi (Optional)
+// Upload foto:
+// - File input accept image/* dengan multiple files
+// - Validasi max 2MB per foto
+// - Grid preview foto yang diupload
+// Upload video:
+// - File input accept video/* dengan multiple files
+// - Validasi max 5MB per video
+// - Grid preview video dengan controls
+
+// Baris 657-689: Action Buttons Section
+// - Tombol "Simpan Draf" (border putih, trigger handleSubmit dengan isDraft=true)
+// - Tombol "Terbitkan Acara" (gradient hijau, trigger handleSubmit dengan isDraft=false)
+// - Loading state dengan spinner
+// - Animasi hover dan tap dengan framer-motion
+// - Disable saat loading

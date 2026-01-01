@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaMedal, FaTrophy, FaCrown, FaLeaf, FaUser } from "react-icons/fa";
+import { useUser } from "@clerk/nextjs";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
@@ -13,99 +14,14 @@ import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
 import fallenLeaf2 from "../../../public/animations/fallen-leaf-2.json";
 import fallenLeaf3 from "../../../public/animations/fallen-leaf-3.json";
 
-// Dummy leaderboard data
-const leaderboardData = [
-  {
-    id: 1,
-    name: "Alvin Masykur",
-    points: 2500,
-    rank: 1,
-    achievements: 15,
-    avatar: "https://ui-avatars.com/api/?name=Alvin+Masykur&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaCrown className="text-yellow-500" />,
-  },
-  {
-    id: 2,
-    name: "Nara",
-    points: 2350,
-    rank: 2,
-    achievements: 14,
-    avatar: "https://ui-avatars.com/api/?name=Nara&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaMedal className="text-gray-400" />,
-  },
-  {
-    id: 3,
-    name: "Abdul",
-    points: 2200,
-    rank: 3,
-    achievements: 13,
-    avatar: "https://ui-avatars.com/api/?name=Abdul&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaMedal className="text-amber-600" />,
-  },
-  {
-    id: 4,
-    name: "Ical",
-    points: 2050,
-    rank: 4,
-    achievements: 12,
-    avatar: "https://ui-avatars.com/api/?name=Ical&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-  {
-    id: 5,
-    name: "Boris",
-    points: 1900,
-    rank: 5,
-    achievements: 11,
-    avatar: "https://ui-avatars.com/api/?name=Boris&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-  {
-    id: 6,
-    name: "Juan",
-    points: 1750,
-    rank: 6,
-    achievements: 10,
-    avatar: "https://ui-avatars.com/api/?name=Juan&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-  {
-    id: 7,
-    name: "Dhika",
-    points: 1600,
-    rank: 7,
-    achievements: 9,
-    avatar: "https://ui-avatars.com/api/?name=Dhika&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-  {
-    id: 8,
-    name: "Husen",
-    points: 1450,
-    rank: 8,
-    achievements: 8,
-    avatar: "https://ui-avatars.com/api/?name=Husen&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-  {
-    id: 9,
-    name: "Ariel",
-    points: 1300,
-    rank: 9,
-    achievements: 7,
-    avatar: "https://ui-avatars.com/api/?name=Ariel&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-  {
-    id: 10,
-    name: "Aryan",
-    points: 1150,
-    rank: 10,
-    achievements: 6,
-    avatar: "https://ui-avatars.com/api/?name=Aryan&background=4CAF50&color=fff&size=128&rounded=true",
-    badge: <FaLeaf className="text-green-500" />,
-  },
-];
+// Interface for leaderboard user from API
+interface LeaderboardUser {
+  clerkId: string;
+  fullName: string | null;
+  email: string;
+  points: number;
+  profileImage: string | null;
+}
 
 // Time periods for filtering
 const timePeriods = [
@@ -116,19 +32,42 @@ const timePeriods = [
 ];
 
 export default function LeaderboardPage() {
+  const { user, isLoaded: isUserLoaded } = useUser();
   const [activePeriod, setActivePeriod] = useState("all-time");
-  const [userRank] = useState(12);
-  const [userPoints] = useState(950);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
+  const [userRank, setUserRank] = useState(0);
+  const [userPoints, setUserPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate waiting for layout components to load
+  // Fetch leaderboard data from API
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 300); // Adjust this time as needed based on your actual layout load time
+    const fetchLeaderboard = async () => {
+      try {
+        const res = await fetch('/api/leaderboard');
+        if (res.ok) {
+          const data = await res.json();
+          setLeaderboardData(data);
+          
+          // Find current user's rank and points
+          if (user?.id) {
+            const userIndex = data.findIndex((u: LeaderboardUser) => u.clerkId === user.id);
+            if (userIndex !== -1) {
+              setUserRank(userIndex + 1);
+              setUserPoints(data[userIndex].points);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, []);
+    if (isUserLoaded) {
+      fetchLeaderboard();
+    }
+  }, [user, isUserLoaded]);
 
   if (isLoading) {
     return (
@@ -341,33 +280,41 @@ export default function LeaderboardPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
-              {leaderboardData.map((user, index) => (
+              {leaderboardData.map((user, index) => {
+                const rank = index + 1;
+                const displayName = user.fullName || user.email.split('@')[0];
+                const avatar = user.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4CAF50&color=fff&size=128&rounded=true`;
+                
+                return (
                 <motion.tr
-                  key={user.id}
+                  key={user.clerkId}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3, delay: index * 0.03 }}
                   className={`transition-colors duration-200 hover:bg-gray-50/80 ${
-                    user.rank <= 3 ? "bg-gradient-to-r from-amber-50/30 to-transparent" : ""
+                    rank <= 3 ? "bg-gradient-to-r from-amber-50/30 to-transparent" : ""
                   }`}
                 >
                   <td className="px-3 sm:px-6 py-3 sm:py-5 whitespace-nowrap">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div
                         className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full font-bold text-sm sm:text-lg ${
-                          user.rank === 1
+                          rank === 1
                             ? "bg-gradient-to-br from-amber-400 to-amber-500 text-white shadow-sm"
-                            : user.rank === 2
+                            : rank === 2
                             ? "bg-gradient-to-br from-gray-400 to-gray-500 text-white shadow-sm"
-                            : user.rank === 3
+                            : rank === 3
                             ? "bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-sm"
                             : "bg-green-100 text-green-700"
                         }`}
                       >
-                        {user.rank}
+                        {rank}
                       </div>
                       <span className="text-xl opacity-80">
-                        {user.badge}
+                        {rank === 1 ? <FaCrown className="text-yellow-500" /> : 
+                         rank === 2 ? <FaMedal className="text-gray-400" /> :
+                         rank === 3 ? <FaMedal className="text-amber-600" /> :
+                         <FaLeaf className="text-green-500" />}
                       </span>
                     </div>
                   </td>
@@ -376,19 +323,19 @@ export default function LeaderboardPage() {
                       <div className="flex-shrink-0 w-12 h-12 relative ring-2 ring-gray-100 rounded-full">
                         <Image
                           className="rounded-full"
-                          src={user.avatar}
-                          alt={user.name}
+                          src={avatar}
+                          alt={displayName}
                           fill
                           sizes="48px"
                         />
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-gray-800">
-                          {user.name}
+                          {displayName}
                         </div>
-                        {user.rank <= 3 && (
+                        {rank <= 3 && (
                           <div className="text-xs text-gray-500 font-medium">
-                            Top {user.rank}
+                            Top {rank}
                           </div>
                         )}
                       </div>
@@ -405,7 +352,7 @@ export default function LeaderboardPage() {
                     </div>
                   </td>
                 </motion.tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>

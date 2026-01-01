@@ -104,6 +104,7 @@ interface UserData {
 interface UserStats {
   points: number;
   reportsCount: number;
+  eventsAttendedCount: number;
   rank: string;
   impact: string;
 }
@@ -115,8 +116,9 @@ export default function DashboardPage() {
   const [userStats, setUserStats] = useState<UserStats>({
     points: 0,
     reportsCount: 0,
-    rank: "Elite",
-    impact: "Positif"
+    eventsAttendedCount: 0,
+    rank: "Pemula",
+    impact: "Rendah"
   });
   const [recentReports, setRecentReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -225,6 +227,7 @@ export default function DashboardPage() {
             setUserStats({
               points: stats.points,
               reportsCount: stats.reportsCount,
+              eventsAttendedCount: stats.eventsAttendedCount,
               rank: stats.rank,
               impact: stats.impact
             });
@@ -330,7 +333,7 @@ export default function DashboardPage() {
     },
     {
       title: "Peringkat Saat Ini",
-      value: userStats.rank === "Eco Warrior" ? "Elite" : userStats.rank,
+      value: userStats.rank,
       icon: TrendingUp,
       gradient: "from-purple-500 via-violet-500 to-purple-600",
       iconBg: "bg-gradient-to-br from-purple-400 to-purple-600",
@@ -338,7 +341,7 @@ export default function DashboardPage() {
     },
     {
       title: "Dampak Lingkungan",
-      value: userStats.impact === "Positive" ? "Positif" : userStats.impact,
+      value: userStats.impact,
       icon: Leaf,
       gradient: "from-blue-500 via-cyan-500 to-blue-600",
       iconBg: "bg-gradient-to-br from-blue-400 to-cyan-600",
@@ -793,7 +796,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="text-left sm:text-right">
                     <span className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">
-                      0
+                      {userStats.eventsAttendedCount}
                     </span>
                   </div>
                 </motion.div>
@@ -1382,3 +1385,100 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+// Baris 1: "use client" - Menandakan ini adalah Client Component di Next.js (bukan Server Component)
+
+// Baris 3: Import React hooks untuk state management dan side effects
+// Baris 4: Import Framer Motion untuk animasi
+// Baris 5-27: Import icon-icon dari lucide-react untuk UI
+// Baris 29: Import useRouter dari Next.js untuk navigasi
+// Baris 30: Import Link dari Next.js untuk navigasi tanpa reload
+// Baris 31: Import tipe Report dari lib/types
+// Baris 32: Import useUser dari Clerk untuk autentikasi
+// Baris 33-37: Import animasi Lottie (daun jatuh untuk dekorasi)
+
+// Baris 40: Konstanta CACHE_EXPIRATION = 5 menit untuk cache localStorage
+
+// Baris 42-105: Object recyclingItems berisi data panduan daur ulang untuk 4 kategori:
+//               - plastic: Panduan daur ulang plastik
+//               - electronics: Panduan daur ulang elektronik  
+//               - paper: Panduan daur ulang kertas
+//               - organic: Panduan daur ulang organik
+//               Setiap kategori punya: name, image, description, steps (langkah-langkah), impact, tips
+// Baris 107-111: Interface UserData untuk data user:
+//                - name: nama user
+//                - email: email user
+//                - id: clerk ID user
+
+// Baris 113-118: Interface UserStats untuk statistik user dari DATABASE:
+//                - points: total poin user
+//                - reportsCount: jumlah laporan yang dibuat
+//                - rank: peringkat (Elite, Eco Master, dll)
+//                - impact: dampak lingkungan (Positif, Signifikan, dll)
+// Baris 122-124: Destructuring useUser dari Clerk untuk cek status login
+// Baris 125: useRouter untuk navigasi programmatic
+// Baris 126: State userData untuk menyimpan data user
+// Baris 127-132: State userStats dengan DEFAULT VALUES:
+//                ⚠️ MASALAH ADA DI SINI! Default rank="Elite" dan impact="Positif"
+//                Ini HARDCODED values yang muncul di dashboard Anda!
+// Baris 133: State recentReports untuk list laporan terbaru
+// Baris 134: State isLoading untuk loading indicator
+// Baris 135: State isRefreshing untuk refresh button
+// Baris 136-138: State untuk modal detail recycling
+// Baris 139: Ref untuk auto-scroll ke expanded content
+
+// Baris 142-153: Function handleCardClick untuk handle klik card recycling guide dengan auto-scroll
+
+// Baris 155-166: useEffect untuk auto-cycle through steps di recycling guide setiap 2 detik
+
+// Baris 168-175: useEffect lain untuk auto-cycle di modal dengan interval 5 detik
+// Baris 178-199: useEffect untuk load userData dari localStorage (BUKAN dari database!)
+//                Baris 179-180: Cek kalau di client-side (browser)
+//                Baris 181-183: Ambil userData dari localStorage
+//                Baris 184-197: Jika tidak ada di localStorage tapi ada user dari Clerk:
+//                               - Buat userData baru dari Clerk data
+//                               - Simpan ke localStorage (dengan try-catch untuk handle quota errors)
+// Baris 202-207: useEffect untuk redirect user yang tidak login ke homepage
+//                Menggunakan isLoaded dan isSignedIn dari Clerk
+// Baris 209: Deklarasi async function fetchRecentReports dengan parameter forceRefresh
+// Baris 210-212: Try block dan set isLoading = true
+
+// Baris 214-221: Cek cache di localStorage:
+//                - Ambil cachedData dan cacheTimestamp
+//                - Hitung apakah cache masih valid (< 5 menit)
+
+// Baris 223-234: ⭐ FETCH USER STATS DARI DATABASE API!
+//                Baris 225: Fetch ke endpoint `/api/users/${user.id}/stats`
+//                Baris 226-233: Jika berhasil, UPDATE userStats state dengan data dari API:
+//                               - points dari database
+//                               - reportsCount dari database  
+//                               - rank dari database
+//                               - impact dari database
+//                ⚠️ INI HARUSNYA OVERRIDE default values "Elite" dan "Positif"!
+
+// Baris 236-245: Jika ada cache valid dan tidak force refresh, gunakan cache
+
+// Baris 247-263: ⭐ FETCH REPORTS DARI DATABASE API!
+//                Baris 248: Fetch ke endpoint `/api/reports?limit=5`
+//                Baris 249: Parse response JSON
+//                Baris 251-256: Format reports (convert null imageUrl ke undefined)
+//                Baris 258-263: Simpan ke localStorage cache (dengan try-catch)
+//                Baris 265: Set recentReports state
+
+// Baris 267-272: Catch error dan finally block
+// Baris 274-279: useEffect untuk load data saat pertama kali komponen di-render
+//                Memanggil fetchRecentReports() jika user sudah login
+// Baris 281-285: Function handleRefresh untuk manual refresh data
+//                Set isRefreshing = true dan panggil fetchRecentReports(true)
+// Baris 287-297: Jika Clerk belum selesai load auth, tampilkan loading spinner
+
+// Baris 299-302: Jika user tidak login, return null (akan di-redirect)
+
+// Baris 304-305: Fallback name jika userData tidak ada, ambil dari Clerk
+// Baris 307-336: Array stats untuk 4 card statistik:
+//                1. Total Poin - value: userStats.points (dari database!)
+//                2. Laporan Dikirim - value: userStats.reportsCount (dari database!)
+//                3. Peringkat - value: userStats.rank === "Eco Warrior" ? "Elite" : userStats.rank
+//                   ⚠️ MASALAH: Ada ternary yang convert "Eco Warrior" jadi "Elite"!
+//                4. Dampak Lingkungan - value: userStats.impact === "Positive" ? "Positif" : userStats.impact
+//                   ⚠️ Ada ternary yang convert "Positive" jadi "Positif" (Bahasa Indonesia)

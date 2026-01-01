@@ -73,3 +73,16 @@ main().then(() => process.exit(0)).catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+// Baris 1-2: Import dotenv dan koneksi database
+// Baris 3: Import schema untuk tabel Users, Reports, dan Rewards
+// Baris 5: Deklarasi fungsi utama untuk seeding database
+// Baris 6-10: Mencetak status DATABASE_URL dan keluar jika tidak ada
+// Baris 12-20: Insert user demo dengan clerk_id "clerk_demo", jika sudah ada akan diabaikan (onConflictDoNothing)
+// Baris 21: Mencetak konfirmasi bahwa user demo berhasil diinsert
+// Baris 23-48: Insert 3 data reward: Botol Minum (200 poin), Set Peralatan Bambu (300 poin), dan Tas Belanja Katun (150 poin)
+// Baris 49-50: Mencetak konfirmasi rewards berhasil diinsert
+// Baris 52-61: Insert sample report dari user demo dengan lokasi Jakarta, jenis sampah botol plastik 5 kg, status pending
+// Baris 62: Mencetak konfirmasi report berhasil diinsert
+// Baris 64: Mencetak pesan seeding selesai
+// Baris 67-70: Menjalankan fungsi main, keluar dengan sukses atau error

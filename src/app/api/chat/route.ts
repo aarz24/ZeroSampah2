@@ -78,3 +78,33 @@ export async function POST(req: Request) {
     );
   }
 } 
+
+// Baris 1: Import NextResponse dari next/server untuk mengirim response dari API route
+
+// Baris 3-4: Set maxDuration = 300 detik (5 menit) sebagai batas waktu maksimal eksekusi fungsi serverless di Vercel
+
+// Baris 6-7: Komentar placeholder yang menjelaskan bahwa ini adalah tempat untuk integrasi Gemini API yang sebenarnya
+
+// Baris 9-37: Deklarasi objek WASTE_MANAGEMENT_RESPONSES yang berisi template respons chatbot untuk topik pengelolaan sampah:
+//             - recycling: array 4 respons tentang daur ulang
+//             - composting: array 4 respons tentang pengomposan
+//             - hazardous: array 4 respons tentang sampah berbahaya
+//             - general: array 4 respons umum tentang pengelolaan sampah
+
+// Baris 39: Export fungsi POST async untuk menangani request POST ke endpoint API ini
+// Baris 40: Blok try untuk menjalankan kode utama
+// Baris 41: Destructuring message dan imageUrl dari body request JSON
+
+// Baris 43-44: Inisialisasi variabel responseContent kosong dan convert message ke lowercase untuk pengecekan keyword
+
+// Baris 46-50: Kondisi jika message mengandung kata 'recycl' (recycle/recycling), pilih random response dari array recycling
+// Baris 51-55: Kondisi jika message mengandung kata 'compost', pilih random response dari array composting
+// Baris 56-60: Kondisi jika message mengandung kata 'hazard' atau 'chemical', pilih random response dari array hazardous
+// Baris 61-65: Kondisi else (default), pilih random response dari array general
+
+// Baris 67-70: Jika ada imageUrl, tambahkan teks tambahan ke responseContent tentang melihat gambar dan tips pengelolaan sampah
+
+// Baris 72-75: Membuat objek response dengan role 'assistant' dan content berisi responseContent yang sudah dipilih
+
+// Baris 77: Return response dalam format JSON menggunakan NextResponse.json
+// Baris 78-83: Blok catch untuk menangkap error, mencetak error ke console, dan return response error dengan status 500

@@ -16,3 +16,13 @@ import { desc } from 'drizzle-orm';
     process.exit(0);
   }
 })();
+
+// Baris 1-2: Import konfigurasi dotenv untuk memuat variabel environment dari file .env, dan import koneksi database dari folder src/db
+// Baris 3: Import schema tabel Reports dan fungsi desc (descending) dari Drizzle ORM
+// Baris 5: Membuat fungsi async yang langsung dieksekusi (IIFE - Immediately Invoked Function Expression)
+// Baris 6-7: Blok try untuk menjalankan kode utama
+// Baris 8: Mencetak status apakah DATABASE_URL sudah diset atau belum di environment
+// Baris 9: Query database untuk mengambil data dari tabel Reports, diurutkan berdasarkan createdAt dari yang terbaru, dibatasi 10 data saja
+// Baris 10-11: Mencetak hasil query dalam format JSON yang rapi
+// Baris 12-13: Blok catch untuk menangkap dan mencetak error jika terjadi kesalahan
+// Baris 14-15: Blok finally yang selalu dijalankan untuk keluar dari proses
