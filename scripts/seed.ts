@@ -1,9 +1,14 @@
 import db from '../src/db/index';
-import { Rewards } from '../src/db/schema';
+import { Rewards, Events } from '../src/db/schema';
 
 /**
  * Database seeding script for ZeroSampah
  * Run with: npm run db:seed
+ * 
+ * Seeds:
+ * - Rewards catalog
+ * - Sample community events
+ * - (Users are auto-created via Clerk webhooks)
  */
 
 async function seedRewards() {
@@ -94,15 +99,65 @@ async function seedRewards() {
   }
 }
 
+async function seedEvents() {
+  console.log('🌱 Seeding sample events...');
+  
+  // Note: These events require a valid organizerId (user clerk_id)
+  // You'll need to create a user first via Clerk, then update the organizerId
+  // For now, we'll skip seeding events or you can manually add organizerId
+  
+  console.log('ℹ️  Event seeding skipped - requires valid user IDs from Clerk');
+  console.log('   To seed events:');
+  console.log('   1. Create a user via the app');
+  console.log('   2. Get their clerk_id from the users table');
+  console.log('   3. Update this seed script with the clerk_id');
+  
+  // Example events structure (commented out):
+  /*
+  const sampleEvents = [
+    {
+      organizerId: 'user_xxx', // Replace with actual clerk_id
+      title: 'Bersih-Bersih Pantai Ancol',
+      description: 'Mari bersama membersihkan pantai Ancol dari sampah plastik',
+      location: 'Pantai Ancol, Jakarta Utara',
+      latitude: '-6.122435',
+      longitude: '106.843155',
+      eventDate: new Date('2026-02-15T08:00:00'),
+      eventTime: '08:00',
+      wasteCategories: ['Plastic', 'Glass', 'Metal'],
+      status: 'published',
+      maxParticipants: 50,
+      rewardInfo: 'Makan siang gratis dan sertifikat',
+      images: [],
+      videos: [],
+    },
+    // Add more sample events...
+  ];
+  
+  for (const event of sampleEvents) {
+    await db.insert(Events).values(event).onConflictDoNothing();
+    console.log(`✅ Added event: ${event.title}`);
+  }
+  */
+}
+
 async function main() {
   console.log('🚀 Starting database seeding...');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
   
   try {
     await seedRewards();
+    console.log();
+    await seedEvents();
+    console.log();
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('✨ All seeding completed successfully!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     process.exit(0);
   } catch (error) {
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.error('💥 Seeding failed:', error);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     process.exit(1);
   }
 }

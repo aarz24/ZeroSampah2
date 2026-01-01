@@ -23,7 +23,16 @@ export async function GET() {
   }
 }
 
-// POST - Create a new reward (admin only - add proper authorization check in production)
+// POST - Create a new reward
+// TODO: Add admin authorization check
+// Currently requires authentication but doesn't verify admin role
+// In production, implement role-based access control (RBAC):
+// 
+// Example implementation:
+// const user = await getUserByClerkId(userId);
+// if (user.role !== 'admin') {
+//   return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+// }
 export async function POST(request: Request) {
   try {
     const { userId } = await auth();

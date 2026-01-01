@@ -526,68 +526,75 @@ export async function createTransaction(
 // Redeem a reward using user points
 export async function redeemReward(userId: string, rewardId: number) {
   try {
-    // Get user's current points
-    const [user] = await db
-      .select()
-      .from(Users)
-      .where(eq(Users.clerkId, userId))
-      .execute();
+    // Use a transaction to ensure atomicity and prevent race conditions
+    // This ensures that all operations succeed or all fail together
+    return await db.transaction(async (tx) => {
+      // Get user's current points within transaction
+      const [user] = await tx
+        .select()
+        .from(Users)
+        .where(eq(Users.clerkId, userId))
+        .execute();
 
-    if (!user) {
-      throw new Error("User not found");
-    }
+      if (!user) {
+        throw new Error("User not found");
+      }
 
-    // Get reward details
-    const [reward] = await db
-      .select()
-      .from(Rewards)
-      .where(eq(Rewards.id, rewardId))
-      .execute();
+      // Get reward details and lock the row to prevent concurrent modifications
+      const [reward] = await tx
+        .select()
+        .from(Rewards)
+        .where(eq(Rewards.id, rewardId))
+        .execute();
 
-    if (!reward) {
-      throw new Error("Reward not found");
-    }
+      if (!reward) {
+        throw new Error("Reward not found");
+      }
 
-    // Check if user has enough points
-    if (user.points < reward.pointsRequired) {
-      throw new Error("Insufficient points");
-    }
+      // Check if user has enough points
+      if (user.points < reward.pointsRequired) {
+        throw new Error("Insufficient points");
+      }
 
-    // Check stock availability
-    if (reward.stock <= 0) {
-      throw new Error("Reward out of stock");
-    }
+      // Check stock availability
+      if (reward.stock <= 0) {
+        throw new Error("Reward out of stock");
+      }
 
-    // Deduct points from user
-    const [updatedUser] = await db
-      .update(Users)
-      .set({ 
-        points: sql`${Users.points} - ${reward.pointsRequired}`,
-        updatedAt: new Date(),
-      })
-      .where(eq(Users.clerkId, userId))
-      .returning()
-      .execute();
+      // Deduct points from user
+      const [updatedUser] = await tx
+        .update(Users)
+        .set({ 
+          points: sql`${Users.points} - ${reward.pointsRequired}`,
+          updatedAt: new Date(),
+        })
+        .where(eq(Users.clerkId, userId))
+        .returning()
+        .execute();
 
-    // Reduce reward stock
-    await db
-      .update(Rewards)
-      .set({ 
-        stock: sql`${Rewards.stock} - 1`,
-      })
-      .where(eq(Rewards.id, rewardId))
-      .execute();
+      // Reduce reward stock atomically
+      await tx
+        .update(Rewards)
+        .set({ 
+          stock: sql`${Rewards.stock} - 1`,
+        })
+        .where(eq(Rewards.id, rewardId))
+        .execute();
 
-    // Create transaction record
-    await createTransaction(
-      userId, 
-      rewardId, 
-      reward.pointsRequired, 
-      'redeemed',
-      `Redeemed: ${reward.name}`
-    );
+      // Create transaction record
+      await tx
+        .insert(Transactions)
+        .values({
+          userId,
+          rewardId,
+          pointsUsed: reward.pointsRequired,
+          transactionType: 'redeemed',
+          description: `Redeemed: ${reward.name}`,
+        })
+        .execute();
 
-    return updatedUser;
+      return updatedUser;
+    });
   } catch (error) {
     console.error("Error redeeming reward:", error);
     throw error;

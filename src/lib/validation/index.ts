@@ -20,11 +20,15 @@ export function validateUrl(url: string): boolean {
 }
 
 // Sanitize string input (prevent XSS)
+// Note: This is basic sanitization. For production with user-generated HTML content,
+// consider using a library like DOMPurify for more comprehensive protection.
 export function sanitizeString(input: string): string {
   return input
     .replace(/[<>]/g, '') // Remove < and >
     .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/on\w+=/gi, '') // Remove event handlers (onclick, onload, etc.)
+    .replace(/&lt;script&gt;/gi, '') // Remove encoded script tags
+    .replace(/&lt;\/script&gt;/gi, '')
     .trim();
 }
 
@@ -271,6 +275,19 @@ export function createValidationErrorResponse(errors: string[]) {
 }
 
 // Rate limiting helper
+// NOTE: This in-memory rate limiter is suitable for development and single-instance deployments.
+// For production serverless/multi-instance environments, use Redis-based rate limiting:
+// - Upstash Rate Limit: https://upstash.com/docs/redis/sdks/ratelimit-ts/overview
+// - Redis + ioredis: Implement custom rate limiter with Redis
+// 
+// Example with Upstash:
+// import { Ratelimit } from "@upstash/ratelimit"
+// import { Redis } from "@upstash/redis"
+// 
+// const ratelimit = new Ratelimit({
+//   redis: Redis.fromEnv(),
+//   limiter: Ratelimit.slidingWindow(10, "60 s"),
+// })
 export class RateLimiter {
   private requests: Map<string, number[]> = new Map();
   private readonly maxRequests: number;
