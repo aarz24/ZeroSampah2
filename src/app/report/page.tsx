@@ -613,17 +613,17 @@ export default function ReportPage() {
           {/* Image Upload Card */}
           <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
-            <div className="flex items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <div className="p-2 sm:p-3 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl sm:rounded-2xl">
-                <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-green-600" />
-              </div>
-              <div>
-                <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">
-                  Unggah Foto Sampah
-                </h2>
-                <p className="text-xs sm:text-base text-gray-600">
-                  Ambil foto yang jelas dari sampah untuk membantu kami menganalisisnya secara akurat
-                </p>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-6 sm:mb-8">
+              <div className="relative flex items-start gap-3 sm:gap-4">
+                <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-green-50 rounded-xl sm:rounded-2xl border border-emerald-200/60 shadow-sm">
+                  <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-700" />
+                </div>
+                <div>
+                  <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">Unggah Foto Sampah</h2>
+                  <p className="text-xs sm:text-base text-gray-600">
+                    Ambil foto yang jelas dari sampah untuk membantu kami menganalisisnya secara akurat
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -756,15 +756,15 @@ export default function ReportPage() {
           {/* Location Details Card */}
           <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
-            <div className="flex items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl sm:rounded-2xl">
-                <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-600" />
-              </div>
-              <div>
-                <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">
-                  Detail Lokasi
-                </h2>
-                <p className="text-xs sm:text-base text-gray-600">Tentukan lokasi sampah dengan Google Maps</p>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-6 sm:mb-8">
+              <div className="relative flex items-start gap-3 sm:gap-4">
+                <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-green-50 rounded-xl sm:rounded-2xl border border-emerald-200/60 shadow-sm">
+                  <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-700" />
+                </div>
+                <div>
+                  <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">Detail Lokasi</h2>
+                  <p className="text-xs sm:text-base text-gray-600">Tentukan lokasi sampah dengan Google Maps</p>
+                </div>
               </div>
             </div>
 
@@ -878,13 +878,13 @@ export default function ReportPage() {
 
         {/* Recent Reports Section */}
         <div className="mt-8 sm:mt-12">
-          <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg sm:rounded-xl">
-              <Package className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+          <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-4 sm:mb-6">
+            <div className="relative flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-emerald-100 to-green-50 rounded-lg sm:rounded-xl border border-emerald-200/60 shadow-sm">
+                <Package className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" />
+              </div>
+              <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Laporan Terbaru</h2>
             </div>
-            <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
-              Laporan Terbaru
-            </h2>
           </div>
           <div className="overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             <div className="max-h-[400px] sm:max-h-[480px] overflow-x-auto sm:overflow-x-hidden overflow-y-auto">

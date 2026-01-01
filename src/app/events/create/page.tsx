@@ -377,37 +377,6 @@ export default function CreateEventPage() {
         >
           {/* Form Header */}
           <div className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 px-4 sm:px-8 py-4 sm:py-6 overflow-hidden">
-            {/* Fallen Leaf Animations - Decorative Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute -top-4 -left-4 w-20 sm:w-28 h-20 sm:h-28 opacity-25">
-                <Lottie animationData={fallenLeaf} loop={true} />
-              </div>
-              <div className="absolute -top-2 left-1/4 w-16 sm:w-24 h-16 sm:h-24 opacity-20">
-                <Lottie animationData={fallenLeaf1} loop={true} />
-              </div>
-              <div className="absolute -top-4 left-1/2 w-20 sm:w-28 h-20 sm:h-28 opacity-25">
-                <Lottie animationData={fallenLeaf2} loop={true} />
-              </div>
-              <div className="absolute -top-2 right-1/4 w-16 sm:w-24 h-16 sm:h-24 opacity-20">
-                <Lottie animationData={fallenLeaf3} loop={true} />
-              </div>
-              <div className="absolute -top-4 -right-4 w-20 sm:w-28 h-20 sm:h-28 opacity-25">
-                <Lottie animationData={fallenLeaf} loop={true} />
-              </div>
-              <div className="absolute -bottom-4 -left-4 w-20 sm:w-28 h-20 sm:h-28 opacity-25">
-                <Lottie animationData={fallenLeaf1} loop={true} />
-              </div>
-              <div className="absolute -bottom-2 left-1/3 w-16 sm:w-24 h-16 sm:h-24 opacity-20">
-                <Lottie animationData={fallenLeaf2} loop={true} />
-              </div>
-              <div className="absolute -bottom-4 right-1/3 w-20 sm:w-28 h-20 sm:h-28 opacity-25">
-                <Lottie animationData={fallenLeaf3} loop={true} />
-              </div>
-              <div className="absolute -bottom-4 -right-4 w-20 sm:w-28 h-20 sm:h-28 opacity-25">
-                <Lottie animationData={fallenLeaf} loop={true} />
-              </div>
-            </div>
-            
             <div className="relative z-10">
               <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
                 <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
