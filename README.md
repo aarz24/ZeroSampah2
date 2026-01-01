@@ -1,61 +1,382 @@
 # ZeroSampah
 
-A waste reporting, collection, and rewards web application. Users can submit waste reports, view analytics, track collections, and earn rewards. This project uses your own API keys for the database, Google Gemini, and Clerk.
+A comprehensive waste reporting, collection, and rewards web application with community cleanup events. Users can submit waste reports, view analytics, track collections, earn rewards, and participate in community environmental initiatives.
 
-Note: Replace placeholder values and sections below with your own details before publishing.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Next.js](https://img.shields.io/badge/Next.js-16.0-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![React](https://img.shields.io/badge/React-19.0-blue)
 
+---
 
-## Tech Stack
-- Next.js (App Router) + TypeScript
-- Tailwind CSS
-- Drizzle ORM + Neon/Postgres (or your configured DB)
-- Clerk for Auth (Next.js SDK)
-- Google Gemini API
-- Leaflet / React Google Maps
+## 🌟 Features
 
-## Features
-- Authentication with Clerk
-- Waste report submission with verification flow
-- Dashboard with recent reports and stats
-- Leaderboard and rewards
-- Collection view and report details
-- API routes for reports, collections, rewards, notifications, chat, and webhooks
- - Community Cleanup Events (Browse, Detail, Create, Dashboard)
+### Core Features
+- ✅ **User Authentication** - Secure auth with Clerk (email, social login, MFA)
+- ✅ **Waste Report Submission** - AI-powered waste verification with Google Gemini
+- ✅ **Real-time Dashboard** - View recent reports, stats, and analytics
+- ✅ **Rewards System** - Earn points for reporting and collecting waste
+- ✅ **Leaderboard** - Competitive rankings based on environmental contributions
+- ✅ **Waste Collection** - Track and manage waste collection tasks
+- ✅ **Report Details** - Detailed view of each waste report with verification
 
-## Screenshots
-- Home: `home.png`
-- Dashboard: `dashboard.png`
-- Rewards: `rewards.png`
-- Waste Report: `wastereport.png`
-- Waste Report Details: `wastereportdetails.png`
-- Waste Collection: `wastecollection.png`
+### Community Features
+- ✅ **Community Cleanup Events** - Organize and join environmental cleanup activities
+- ✅ **QR Code System** - Secure event registration and attendance verification
+- ✅ **Event Dashboard** - Manage organized and joined events
+- ✅ **Event Discovery** - Browse upcoming cleanup events in your area
+- ✅ **Attendance Tracking** - Verify participants with QR code scanning
 
-Embed in Markdown if you prefer hosted images later.
+### Technical Features
+- ✅ **Responsive Design** - Mobile-first, works on all devices
+- ✅ **Real-time Updates** - Live notifications and status updates
+- ✅ **Secure API** - Input validation, sanitization, and rate limiting
+- ✅ **Type Safety** - Full TypeScript implementation
+- ✅ **Database ORM** - Drizzle ORM with PostgreSQL
 
-## Getting Started
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js LTS
-- Package manager: npm (default)
-- A Postgres database (e.g., Neon) or your configured database matching DATABASE_URL
-- API keys for Clerk and Google Gemini
+- Node.js 20+ and npm
+- PostgreSQL database (Neon, Supabase, or local)
+- Clerk account for authentication
+- Google Gemini API key
 
 ### Installation
-1. Install dependencies:
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/aarz24/ZeroSampah2.git
+   cd ZeroSampah2
+   ```
+
+2. **Install dependencies**
+   ```bash
    npm install
+   ```
 
-2. Create a .env file at the project root based on the template below.
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your credentials
+   ```
 
-3. Run database migrations (Drizzle):
-   # push schema to the database
+4. **Initialize database**
+   ```bash
    npm run db:push
-   # optional: explore the schema
-   npm run db:studio
+   npm run db:seed  # Optional: Add sample rewards
+   ```
 
-4. Start the development server:
+5. **Start development server**
+   ```bash
    npm run dev
+   ```
 
-The app runs by default on http://localhost:3000
+6. **Open your browser**
+   ```
+   http://localhost:3000
+   ```
+
+For detailed setup instructions, see [DEVELOPMENT_SETUP.md](./DEVELOPMENT_SETUP.md)
+
+---
+
+## 📚 Documentation
+
+- **[Development Setup](./DEVELOPMENT_SETUP.md)** - Complete guide to set up the project locally
+- **[API Documentation](./API_DOCUMENTATION.md)** - REST API endpoints and usage examples
+- **[Database Schema](./DATABASE_DOCUMENTATION.md)** - Database structure and relationships
+- **[Deployment Guide](./DEPLOYMENT_GUIDE.md)** - Step-by-step deployment to production
+- **[Security Best Practices](./SECURITY_BEST_PRACTICES.md)** - Security guidelines and implementation
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+- **Next.js 16** - React framework with App Router
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **Lottie React** - Animated illustrations
+
+### Backend
+- **Next.js API Routes** - Serverless functions
+- **Drizzle ORM** - Type-safe database queries
+- **PostgreSQL** - Relational database
+- **Clerk** - Authentication and user management
+
+### AI & Maps
+- **Google Gemini** - AI-powered waste verification
+- **Leaflet** - Interactive maps
+- **React Google Maps** - Google Maps integration
+- **Mapbox** - Alternative map provider
+
+### Development Tools
+- **ESLint** - Code linting
+- **TypeScript** - Static type checking
+- **Drizzle Kit** - Database migrations
+- **tsx** - TypeScript execution
+
+---
+
+## 📁 Project Structure
+
+```
+ZeroSampah2/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── api/               # API routes
+│   │   │   ├── events/        # Events CRUD
+│   │   │   ├── reports/       # Waste reports
+│   │   │   ├── rewards/       # Rewards system
+│   │   │   ├── users/         # User management
+│   │   │   └── webhooks/      # Clerk webhooks
+│   │   ├── dashboard/         # User dashboard
+│   │   ├── events/            # Community events
+│   │   ├── leaderboard/       # Rankings
+│   │   └── ...                # Other pages
+│   ├── components/            # React components
+│   │   ├── QRCodeDisplay.tsx  # QR code generator
+│   │   ├── QRScanner.tsx      # QR code scanner
+│   │   └── ...                # UI components
+│   ├── db/                    # Database layer
+│   │   ├── schema.ts          # Drizzle schema
+│   │   ├── actions.ts         # Database operations
+│   │   └── index.ts           # DB connection
+│   ├── hooks/                 # Custom React hooks
+│   └── lib/                   # Utilities
+│       ├── validation/        # Input validation
+│       ├── utils.ts           # Helper functions
+│       └── ...
+├── public/                    # Static assets
+│   └── animations/            # Lottie animations
+├── scripts/                   # Utility scripts
+│   ├── seed.ts               # Database seeding
+│   └── test-api-comprehensive.js
+├── .env.example              # Environment template
+├── drizzle.config.ts         # Drizzle configuration
+├── next.config.ts            # Next.js config
+├── package.json              # Dependencies
+└── tsconfig.json             # TypeScript config
+```
+
+---
+
+## 🔒 Security
+
+This project implements multiple security measures:
+
+- ✅ **Input Validation** - All user inputs validated and sanitized
+- ✅ **XSS Prevention** - HTML escaping and content sanitization
+- ✅ **SQL Injection Protection** - Parameterized queries with Drizzle ORM
+- ✅ **Authentication** - Clerk-managed secure sessions
+- ✅ **Rate Limiting** - Built-in rate limiter for API endpoints
+- ✅ **Environment Variables** - Secrets stored securely
+- ✅ **HTTPS Enforcement** - SSL/TLS for all connections
+
+For more details, see [SECURITY_BEST_PRACTICES.md](./SECURITY_BEST_PRACTICES.md)
+
+---
+
+## 📊 Database Schema
+
+### Core Tables
+- **users** - User accounts synced from Clerk
+- **reports** - Waste reports submitted by users
+- **rewards** - Redeemable rewards catalog
+- **transactions** - Points earned and spent history
+
+### Events Tables
+- **events** - Community cleanup events
+- **event_registrations** - User event registrations
+- **event_attendance** - Verified attendees
+
+### Supporting Tables
+- **collected_wastes** - Collection records
+- **notifications** - User notifications
+
+For detailed schema information, see [DATABASE_DOCUMENTATION.md](./DATABASE_DOCUMENTATION.md)
+
+---
+
+## 🎯 API Endpoints
+
+### Reports
+- `GET /api/reports` - Get recent reports
+- `POST /api/reports` - Submit new report
+- `GET /api/reports/[id]` - Get report details
+
+### Rewards
+- `GET /api/rewards` - Get rewards catalog
+- `POST /api/rewards` - Create reward (admin)
+- `POST /api/rewards/redeem` - Redeem reward
+
+### Events
+- `GET /api/events` - Get published events
+- `POST /api/events` - Create or register for event
+- `GET /api/events/[id]` - Get event details
+- `POST /api/events/[id]/verify` - Verify attendance
+
+### Users
+- `GET /api/users/stats` - Get user statistics
+- `GET /api/leaderboard` - Get leaderboard
+
+For complete API documentation, see [API_DOCUMENTATION.md](./API_DOCUMENTATION.md)
+
+---
+
+## 🧪 Testing
+
+Run the comprehensive API test suite:
+
+```bash
+# Test all API endpoints
+node scripts/test-api-comprehensive.js
+
+# Test database connection
+node test-connection.js
+
+# Test Gemini AI integration
+node test-gemini.js
+```
+
+---
+
+## 📱 Screenshots
+
+### Home Page
+Landing page with feature overview and call-to-action
+
+### Dashboard
+User dashboard showing recent reports, stats, and quick actions
+
+### Waste Report
+Report submission form with AI verification
+
+### Events
+Community cleanup events discovery and registration
+
+### Leaderboard
+User rankings based on environmental contributions
+
+### Rewards
+Points system and redeemable rewards catalog
+
+---
+
+## 🌍 Environment Variables
+
+Required environment variables (see `.env.example` for details):
+
+```env
+# Database
+DATABASE_URL=postgresql://...
+
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+CLERK_SECRET_KEY=sk_...
+CLERK_WEBHOOK_SECRET_USER=whsec_...
+
+# Google Gemini AI
+GEMINI_API_KEY=...
+
+# Application
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+```
+
+---
+
+## 🚀 Deployment
+
+Deploy to Vercel (recommended):
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Deploy to production
+vercel --prod
+```
+
+For detailed deployment instructions, see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
+---
+
+## 📈 Performance
+
+- **Server Components** - Reduced client bundle size
+- **Image Optimization** - Next.js Image component
+- **API Caching** - Optimized data fetching
+- **Code Splitting** - Automatic route-based splitting
+- **Database Indexes** - Optimized query performance
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## 👥 Authors
+
+- **aarz24** - Initial work - [@aarz24](https://github.com/aarz24)
+
+---
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Clerk](https://clerk.com/) - Authentication
+- [Drizzle ORM](https://orm.drizzle.team/) - Database ORM
+- [Google Gemini](https://deepmind.google/technologies/gemini/) - AI verification
+- [Vercel](https://vercel.com/) - Deployment platform
+
+---
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/aarz24/ZeroSampah2/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/aarz24/ZeroSampah2/discussions)
+- **Documentation**: See docs in this repository
+
+---
+
+## 🗺️ Roadmap
+
+### Upcoming Features
+- [ ] File upload integration (images/videos)
+- [ ] Push notifications
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics dashboard
+- [ ] Multi-language support
+- [ ] Export reports to PDF
+- [ ] Integration with waste management services
+- [ ] Gamification enhancements
+
+---
+
+**Made with ❤️ for a cleaner environment**
 
 ## Community Cleanup Events — User Flows
 
