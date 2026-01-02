@@ -37,7 +37,7 @@ export default function Map({
     const accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
     if (!accessToken) {
-      setMapError("Mapbox access token not configured");
+      setMapError("Token akses Mapbox tidak dikonfigurasi");
       setIsLoading(false);
       return;
     }
@@ -117,7 +117,7 @@ export default function Map({
 
       map.on('error', (e: any) => {
         console.error('Mapbox error:', e);
-        setMapError('Failed to load map');
+        setMapError('Gagal memuat peta');
         setIsLoading(false);
       });
 

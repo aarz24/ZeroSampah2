@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
+import { TaskCard } from "@/components/TaskCard";
 import litterAnimation from "@/../Litter.json";
 import fallenLeaf from "../../../public/animations/fallen-leaf.json";
 import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
@@ -85,7 +86,6 @@ export default function CollectPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [hoveredWasteType, setHoveredWasteType] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [verificationStatus, setVerificationStatus] = useState<"idle" | "verifying" | "success" | "failure">("idle");
@@ -123,13 +123,13 @@ export default function CollectPage() {
           setPreview(e.target?.result as string);
         };
         reader.onerror = () => {
-          toast.error("Error reading file");
+          toast.error("Kesalahan membaca file");
         };
         reader.readAsDataURL(selectedFile);
       }
     } catch (error) {
       console.error("Error handling file:", error);
-      toast.error("Error processing file. Please try again.");
+      toast.error("Kesalahan memproses file. Silakan coba lagi.");
     }
   };
 
@@ -196,7 +196,7 @@ export default function CollectPage() {
         }));
         setTasks(mappedTasks);
       } catch (error: unknown) {
-        toast.error("Failed to load tasks. Please refresh the page.");
+        toast.error("Gagal memuat tugas. Silakan segarkan halaman.");
         setTasks([]); // Set empty array on error
       } finally {
         setLoading(false);
@@ -309,7 +309,7 @@ export default function CollectPage() {
 
         if (sameLocation && firstImageHasWaste && isFullyCleaned) {
           if (!user?.clerkId) {
-            toast.error("User not authenticated");
+            toast.error("Pengguna tidak terautentikasi");
             return;
           }
 
@@ -581,178 +581,14 @@ export default function CollectPage() {
               ) : (
                 <div className="space-y-4">
                   {paginatedTasks.map((task) => (
-                    <div
+                    <TaskCard
                       key={task.id}
-                      className="group overflow-hidden bg-white rounded-2xl border-2 border-gray-200 shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-green-300 hover:-translate-y-1"
-                    >
-                      <div className="p-5 bg-gradient-to-r from-gray-50 to-green-50/30 border-b border-gray-200">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                              <MapPin className="w-5 h-5 text-green-600" />
-                            </div>
-                            <a
-                              href={task.location}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-bold text-green-600 text-base cursor-pointer hover:text-green-700 hover:underline transition-colors"
-                            >
-                              Lihat Lokasi
-                            </a>
-                          </div>
-                          <span
-                            className={`rounded-xl px-4 py-2 text-sm font-bold shadow-md ${
-                              task.status === "pending"
-                                ? "bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300"
-                                : task.status === "in_progress"
-                                ? "bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300"
-                                : "bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300"
-                            }`}
-                          >
-                            {task.status === "pending"
-                              ? "⏳ Menunggu"
-                              : task.status === "in_progress"
-                              ? "🔄 Sedang Berlangsung"
-                              : "✅ Terverifikasi"}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                            <div className="flex-shrink-0 p-2 bg-white rounded-lg shadow-sm">
-                              <Trash2 className="w-5 h-5 text-gray-600" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-xs font-medium text-gray-500 mb-1">Jenis Sampah</div>
-                              <div className="relative">
-                                <span
-                                  onMouseEnter={() =>
-                                    setHoveredWasteType(task.wasteType)
-                                  }
-                                  onMouseLeave={() => setHoveredWasteType(null)}
-                                  className="block text-sm font-bold text-gray-900 cursor-pointer line-clamp-2"
-                                  title={task.wasteType}
-                                >
-                                  {task.wasteType}
-                                </span>
-                                {hoveredWasteType === task.wasteType && (
-                                  <div className="absolute left-0 top-full z-10 p-3 mt-2 text-sm text-white bg-gray-900 rounded-lg shadow-xl whitespace-normal max-w-[250px]">
-                                    {task.wasteType}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                            <div className="flex-shrink-0 p-2 bg-white rounded-lg shadow-sm">
-                              <Weight className="w-5 h-5 text-gray-600" />
-                            </div>
-                            <div className="flex-1">
-                              <div className="text-xs font-medium text-gray-500 mb-1">Perkiraan Berat</div>
-                              <div className="text-sm font-bold text-gray-900">
-                                {task.amount || "N/A"}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                            <div className="flex-shrink-0 p-2 bg-white rounded-lg shadow-sm">
-                              <Calendar className="w-5 h-5 text-gray-600" />
-                            </div>
-                            <div className="flex-1">
-                              <div className="text-xs font-medium text-gray-500 mb-1">Tanggal Lapor</div>
-                              <div className="text-sm font-bold text-gray-900">
-                                {task.createdAt
-                                  ? task.createdAt.toLocaleDateString('id-ID', {
-                                      day: 'numeric',
-                                      month: 'short',
-                                      year: 'numeric'
-                                    })
-                                  : "No date"}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-5 border-t-2 border-gray-100">
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Clock className="w-4 h-4 text-blue-600" />
-                            <span className="font-medium">
-                              {task.createdAt && (
-                                <>
-                                  {typeof getDaysAgo(task.createdAt) === "string"
-                                    ? getDaysAgo(task.createdAt)
-                                    : `${getDaysAgo(task.createdAt)} hari yang lalu`}
-                                </>
-                              )}
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                            {task.status === "pending" && (
-                              <>
-                                <button
-                                  onClick={() =>
-                                    handleViewDetails(task.id?.toString() || "")
-                                  }
-                                  className="flex items-center justify-center gap-2 flex-1 sm:flex-initial rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-green-600 border-2 border-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer transition-all shadow-sm hover:shadow-md"
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                  </svg>
-                                  Lihat Detail
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    handleStartCollection(
-                                      task.id?.toString() || ""
-                                    )
-                                  }
-                                  className="flex items-center justify-center gap-2 flex-1 sm:flex-initial rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer transition-all shadow-md hover:shadow-lg"
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                  </svg>
-                                  Mulai Pengumpulan
-                                </button>
-                              </>
-                            )}
-                            {task.status === "in_progress" &&
-                              task.collectorId === user?.id && (
-                                <button
-                                  onClick={() => setSelectedTask(task)}
-                                  className="flex items-center justify-center gap-2 w-full rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 px-4 py-2.5 text-sm font-bold text-white hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer transition-all shadow-md hover:shadow-lg"
-                                >
-                                  <CheckCircle className="w-4 h-4" />
-                                  Selesai & Verifikasi
-                                </button>
-                              )}
-                            {task.status === "in_progress" &&
-                              task.collectorId !== user?.id && (
-                                <div className="flex items-center gap-2 px-4 py-2.5 bg-yellow-50 rounded-xl border border-yellow-200">
-                                  <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                                  </svg>
-                                  <span className="text-sm font-bold text-yellow-800">
-                                    Sedang dikerjakan
-                                  </span>
-                                </div>
-                              )}
-                            {task.status === "verified" && (
-                              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl border border-green-300 shadow-sm">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <span className="text-sm font-bold text-green-700">
-                                  🎁 Hadiah Diterima
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      task={task}
+                      userId={user?.clerkId}
+                      onViewDetails={handleViewDetails}
+                      onStartCollection={handleStartCollection}
+                      onComplete={(completedTask) => setSelectedTask(completedTask)}
+                    />
                   ))}
                 </div>
               )}

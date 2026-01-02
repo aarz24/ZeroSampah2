@@ -23,7 +23,7 @@ export default function QRCodeDisplay({
           light: '#FFFFFF'
         }
       }, (err) => {
-        if (err) setError('Failed to generate QR code');
+        if (err) setError('Gagal membuat kode QR');
       });
     }
   }, [value, size]);

@@ -94,12 +94,12 @@ export default function ReportPage() {
         const selectedFile = e.target.files[0];
 
         if (!selectedFile.type.startsWith("image/")) {
-          toast.error("Please upload an image file");
+          toast.error("Silakan unggah file gambar");
           return;
         }
 
         if (selectedFile.size > 10 * 1024 * 1024) {
-          toast.error("File size should be less than 10MB");
+          toast.error("Ukuran file harus kurang dari 10MB");
           return;
         }
 
@@ -109,13 +109,13 @@ export default function ReportPage() {
           setPreview(e.target?.result as string);
         };
         reader.onerror = () => {
-          toast.error("Error reading file");
+          toast.error("Kesalahan membaca file");
         };
         reader.readAsDataURL(selectedFile);
       }
     } catch (error) {
       console.error("Error handling file:", error);
-      toast.error("Error processing file. Please try again.");
+      toast.error("Kesalahan memproses file. Silakan coba lagi.");
     }
   };
 
@@ -129,7 +129,7 @@ export default function ReportPage() {
       try {
         new URL(value);
       } catch {
-        toast.error("Please enter a valid URL");
+        toast.error("Silakan masukkan URL yang valid");
         return;
       }
     }
@@ -140,7 +140,7 @@ export default function ReportPage() {
   // Verification Functions
   const handleVerify = async () => {
     if (!file) {
-      toast.error("No file selected");
+      toast.error("Tidak ada file yang dipilih");
       return;
     }
 
@@ -385,7 +385,7 @@ export default function ReportPage() {
         setReports(recentReports as Report[]);
       } catch (error) {
         console.error("Error fetching recent reports:", error);
-        toast.error("Failed to load recent reports");
+        toast.error("Gagal memuat laporan terbaru");
       } finally {
         setIsLoadingReports(false);
       }
@@ -613,9 +613,9 @@ export default function ReportPage() {
           {/* Image Upload Card */}
           <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
-            <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-6 sm:mb-8">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-6 sm:mb-8">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute inset-0 flex flex-col justify-around opacity-[0.12]">
+                <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                   {/* Multiple rows scrolling at different speeds */}
                   {[0, 1, 2].map((row) => (
                     <div
@@ -632,7 +632,7 @@ export default function ReportPage() {
                           {Array.from({ length: 16 }).map((_, i) => (
                             <Camera
                               key={i}
-                              className={`flex-shrink-0 text-emerald-500 ${
+                              className={`flex-shrink-0 text-green-300 ${
                                 i % 3 === 0 ? "w-5 h-5" : i % 3 === 1 ? "w-4 h-4" : "w-6 h-6"
                               }`}
                               style={{
@@ -649,14 +649,12 @@ export default function ReportPage() {
 
               {/* Content */}
               <div className="relative flex items-start gap-3 sm:gap-4">
-                <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-green-50 rounded-xl sm:rounded-2xl border border-emerald-200/60 shadow-sm">
-                  <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-700" />
+                <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm">
+                  <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">Unggah Foto Sampah</h2>
-                  <p className="text-xs sm:text-base text-gray-600">
-                    Ambil foto yang jelas dari sampah untuk membantu kami menganalisisnya secara akurat
-                  </p>
+                  <h2 className="text-lg sm:text-2xl font-bold text-white mb-1">Unggah Foto Sampah</h2>
+                  
                 </div>
               </div>
 
@@ -801,9 +799,9 @@ export default function ReportPage() {
           {/* Location Details Card */}
           <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
-            <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-6 sm:mb-8">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-6 sm:mb-8">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute inset-0 flex flex-col justify-around opacity-[0.12]">
+                <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                   {/* Multiple rows scrolling at different speeds */}
                   {[0, 1, 2].map((row) => (
                     <div
@@ -820,7 +818,7 @@ export default function ReportPage() {
                           {Array.from({ length: 16 }).map((_, i) => (
                             <MapPin
                               key={i}
-                              className={`flex-shrink-0 text-emerald-500 ${
+                              className={`flex-shrink-0 text-green-300 ${
                                 i % 3 === 0 ? "w-5 h-5" : i % 3 === 1 ? "w-4 h-4" : "w-6 h-6"
                               }`}
                               style={{
@@ -837,12 +835,12 @@ export default function ReportPage() {
 
               {/* Content */}
               <div className="relative flex items-start gap-3 sm:gap-4">
-                <div className="p-2 sm:p-3 bg-gradient-to-br from-emerald-100 to-green-50 rounded-xl sm:rounded-2xl border border-emerald-200/60 shadow-sm">
-                  <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-emerald-700" />
+                <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm">
+                  <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-1">Detail Lokasi</h2>
-                  <p className="text-xs sm:text-base text-gray-600">Tentukan lokasi sampah dengan Google Maps</p>
+                  <h2 className="text-lg sm:text-2xl font-bold text-white mb-1">Detail Lokasi</h2>
+                
                 </div>
               </div>
 
@@ -968,9 +966,9 @@ export default function ReportPage() {
 
         {/* Recent Reports Section */}
         <div className="mt-8 sm:mt-12">
-          <div className="relative overflow-hidden rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-green-50 via-white to-emerald-50 p-4 sm:p-5 mb-4 sm:mb-6">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-4 sm:mb-6">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute inset-0 flex flex-col justify-around opacity-[0.12]">
+              <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                 {/* Multiple rows scrolling at different speeds */}
                 {[0, 1, 2].map((row) => (
                   <div
@@ -987,7 +985,7 @@ export default function ReportPage() {
                         {Array.from({ length: 16 }).map((_, i) => (
                           <Package
                             key={i}
-                            className={`flex-shrink-0 text-emerald-500 ${
+                            className={`flex-shrink-0 text-green-300 ${
                               i % 3 === 0 ? "w-5 h-5" : i % 3 === 1 ? "w-4 h-4" : "w-6 h-6"
                             }`}
                             style={{
@@ -1004,10 +1002,10 @@ export default function ReportPage() {
 
             {/* Content */}
             <div className="relative flex items-center gap-2 sm:gap-3">
-              <div className="p-1.5 sm:p-2 bg-gradient-to-br from-emerald-100 to-green-50 rounded-lg sm:rounded-xl border border-emerald-200/60 shadow-sm">
-                <Package className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" />
+              <div className="p-1.5 sm:p-2 bg-white/20 rounded-lg sm:rounded-xl border border-white/30 shadow-sm">
+                <Package className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Laporan Terbaru</h2>
+              <h2 className="text-lg sm:text-2xl font-bold text-white">Laporan Terbaru</h2>
             </div>
 
             <style jsx>{`
