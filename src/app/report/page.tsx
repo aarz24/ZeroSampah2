@@ -574,7 +574,11 @@ export default function ReportPage() {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 flex-shrink-0 bg-white/20 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-3 shadow-xl shadow-black/10 border border-white/20 overflow-hidden"
+              className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 flex-shrink-0 bg-white/20 backdrop-blur-md rounded-2xl sm:rounded-3xl p-2 sm:p-3 shadow-2xl shadow-white/30 border-2 border-white/40 overflow-hidden ring-4 ring-white/20 ring-offset-2 ring-offset-transparent"
+              style={{
+                boxShadow: '0 25px 50px -12px rgba(255, 255, 255, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%)'
+              }}
             >
               <Lottie
                 animationData={noteAnimation}
@@ -590,7 +594,10 @@ export default function ReportPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
                 className="text-2xl sm:text-3xl md:text-5xl font-extrabold mb-2 sm:mb-3 tracking-tight"
-                style={{ textShadow: '0 2px 20px rgba(0,0,0,0.2)' }}
+                style={{ 
+                  textShadow: '0 4px 30px rgba(0,0,0,0.4), 0 2px 10px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2)',
+                  filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.3))'
+                }}
               >
                 Laporkan Sampah
               </motion.h1>
@@ -611,9 +618,9 @@ export default function ReportPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* Image Upload Card */}
-          <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
+          <div className="relative overflow-hidden pt-0 px-0 pb-5 sm:pb-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
-            <div className="relative overflow-hidden rounded-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-6 sm:mb-8">
+            <div className="relative overflow-hidden rounded-t-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-6 sm:mb-8">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                   {/* Multiple rows scrolling at different speeds */}
@@ -648,13 +655,12 @@ export default function ReportPage() {
               </div>
 
               {/* Content */}
-              <div className="relative flex items-start gap-3 sm:gap-4">
-                <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm">
-                  <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+              <div className="relative flex items-center gap-3 sm:gap-4">
+                <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm backdrop-blur-sm">
+                  <Camera className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
                 </div>
-                <div>
-                  <h2 className="text-lg sm:text-2xl font-bold text-white mb-1">Unggah Foto Sampah</h2>
-                  
+                <div className="flex-1">
+                  <h2 className="text-lg sm:text-2xl font-bold text-white drop-shadow-lg tracking-wide">Unggah Foto Sampah</h2>
                 </div>
               </div>
 
@@ -669,7 +675,7 @@ export default function ReportPage() {
                 }
               `}</style>
             </div>
-
+            <div className="p-5 sm:p-8">    
             <div className="space-y-4 sm:space-y-6">
               {/* Upload Area */}
               <div className="relative group">
@@ -754,6 +760,7 @@ export default function ReportPage() {
                 )}
               </button>
             </div>
+            </div>
           </div>
 
           {/* Analysis Results Card */}
@@ -797,9 +804,9 @@ export default function ReportPage() {
           )}
 
           {/* Location Details Card */}
-          <div className="relative overflow-hidden p-5 sm:p-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
+          <div className="relative overflow-hidden pt-0 px-0 pb-0 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
             {/* Card Header */}
-            <div className="relative overflow-hidden rounded-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-6 sm:mb-8">
+            <div className="relative overflow-hidden rounded-t-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                   {/* Multiple rows scrolling at different speeds */}
@@ -834,13 +841,12 @@ export default function ReportPage() {
               </div>
 
               {/* Content */}
-              <div className="relative flex items-start gap-3 sm:gap-4">
-                <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm">
-                  <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+              <div className="relative flex items-center gap-3 sm:gap-4">
+                <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm backdrop-blur-sm">
+                  <MapPin className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
                 </div>
-                <div>
-                  <h2 className="text-lg sm:text-2xl font-bold text-white mb-1">Detail Lokasi</h2>
-                
+                <div className="flex-1">
+                  <h2 className="text-lg sm:text-2xl font-bold text-white drop-shadow-lg tracking-wide">Detail Lokasi</h2>
                 </div>
               </div>
 
@@ -855,6 +861,7 @@ export default function ReportPage() {
                 }
               `}</style>
             </div>
+            <div className="p-5 sm:p-8">
 
             <div className="space-y-6 sm:space-y-8">
               {/* Location Input */}
@@ -961,12 +968,13 @@ export default function ReportPage() {
                 )}
               </button>
             </div>
+            </div>
           </div>
         </form>
 
         {/* Recent Reports Section */}
         <div className="mt-8 sm:mt-12">
-          <div className="relative overflow-hidden rounded-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-4 sm:mb-6">
+          <div className="relative overflow-hidden rounded-t-2xl sm:rounded-t-3xl border-2 border-b-0 border-green-600 bg-green-500 p-4 sm:p-5">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                 {/* Multiple rows scrolling at different speeds */}
@@ -1001,11 +1009,13 @@ export default function ReportPage() {
             </div>
 
             {/* Content */}
-            <div className="relative flex items-center gap-2 sm:gap-3">
-              <div className="p-1.5 sm:p-2 bg-white/20 rounded-lg sm:rounded-xl border border-white/30 shadow-sm">
-                <Package className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            <div className="relative flex items-center gap-3 sm:gap-4">
+              <div className="p-2 sm:p-3 bg-white/20 rounded-xl sm:rounded-2xl border border-white/30 shadow-sm backdrop-blur-sm">
+                <Package className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
               </div>
-              <h2 className="text-lg sm:text-2xl font-bold text-white">Laporan Terbaru</h2>
+              <div className="flex-1">
+                <h2 className="text-lg sm:text-2xl font-bold text-white drop-shadow-lg tracking-wide">Laporan Terbaru</h2>
+              </div>
             </div>
 
             <style jsx>{`
@@ -1019,7 +1029,7 @@ export default function ReportPage() {
               }
             `}</style>
           </div>
-          <div className="overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
+          <div className="overflow-hidden bg-white/80 backdrop-blur-sm rounded-b-2xl sm:rounded-b-3xl shadow-xl border-2 border-t-0 border-green-600">
             <div className="max-h-[400px] sm:max-h-[480px] overflow-x-auto sm:overflow-x-hidden overflow-y-auto">
               {isLoadingReports
                 ? renderLoadingState()
