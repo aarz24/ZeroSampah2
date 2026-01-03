@@ -21,7 +21,7 @@ const rewardsData = [
     description: "Mencapai 100 poin dengan mendaur ulang 50 item",
     icon: <FaMedal className="text-yellow-400" />,
     points: 100,
-    date: "15 Mei 2023",
+    date: "Januari 2026",
     status: "completed",
   },
   {
@@ -30,7 +30,7 @@ const rewardsData = [
     description: "Menyelesaikan 10 tantangan ramah lingkungan",
     icon: <FaLightbulb className="text-yellow-300" />,
     points: 250,
-    date: "22 Juni 2023",
+    date: "Januari 2026",
     status: "completed",
   },
   {
@@ -39,7 +39,7 @@ const rewardsData = [
     description: "Mengurangi jejak karbon sebesar 25%",
     icon: <FaAward className="text-amber-400" />,
     points: 500,
-    date: "10 Juli 2023",
+    date: "Januari 2026",
     status: "completed",
   },
   {
@@ -48,7 +48,7 @@ const rewardsData = [
     description: "Mengundang 5 teman untuk bergabung dengan ZeroSampah",
     icon: <FaUsers className="text-yellow-400" />,
     points: 150,
-    date: "5 Agustus 2023",
+    date: "Januari 2026",
     status: "completed",
   },
   {
@@ -57,7 +57,7 @@ const rewardsData = [
     description: "Mencapai nol sampah selama 30 hari",
     icon: <FaTrophy className="text-purple-400" />,
     points: 300,
-    date: "18 September 2023",
+    date: "Januari 2026",
     status: "in-progress",
   },
 ];
@@ -141,7 +141,7 @@ const mergedAvailableRewards = [...availableRewards, ...moreAvailableRewards];
 
 export default function RewardsPage() {
   const { user, isLoaded: isUserLoaded } = useUser();
-  const [activeTab, setActiveTab] = useState("earned");
+  const [activeTab, setActiveTab] = useState("available");
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
 
