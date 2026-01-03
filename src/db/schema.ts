@@ -85,6 +85,9 @@ export const Events = pgTable("events", {
   status: text("status").notNull().default("published"), // published, cancelled, completed
   maxParticipants: integer("max_participants"),
   rewardInfo: text("reward_info"), // e.g., "Makan siang gratis", "Goodie bag", "Sertifikat"
+  contactPersonName: text("contact_person_name"),
+  contactPersonPhone: text("contact_person_phone"),
+  contactPersonEmail: text("contact_person_email"),
   images: text("images").array(),
   videos: text("videos").array(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),

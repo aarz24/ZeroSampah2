@@ -27,6 +27,9 @@ export default function CreateEventPage() {
     eventTime: '',
     description: '',
     maxParticipants: '',
+    contactPersonName: '',
+    contactPersonPhone: '',
+    contactPersonEmail: '',
   });
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [wasteCategories, setWasteCategories] = useState<string[]>([]);
@@ -201,6 +204,9 @@ export default function CreateEventPage() {
         wasteCategories,
         maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : null,
         rewardInfo: rewardInfo.trim() || null,
+        contactPersonName: formData.contactPersonName.trim() || null,
+        contactPersonPhone: formData.contactPersonPhone.trim() || null,
+        contactPersonEmail: formData.contactPersonEmail.trim() || null,
         images: imageUrls,
         videos: videoUrls,
       };
@@ -628,6 +634,91 @@ export default function CreateEventPage() {
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
                   <span>Reward meningkatkan antusiasme peserta</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Contact Person Section */}
+            <div className="border-t border-gray-100 pt-6 sm:pt-8">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-700 flex items-center justify-center text-xs sm:text-sm font-bold border border-blue-200">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </span>
+                Kontak Person
+              </h3>
+              
+              <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 rounded-xl p-4 sm:p-6 border border-blue-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
+                      Nama Kontak
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="text"
+                        name="contactPersonName"
+                        value={formData.contactPersonName}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                        placeholder="Nama yang bisa dihubungi"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
+                      Nomor Telepon/WhatsApp
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="tel"
+                        name="contactPersonPhone"
+                        value={formData.contactPersonPhone}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                        placeholder="08xxxxxxxxxx"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
+                      Email (Opsional)
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="email"
+                        name="contactPersonEmail"
+                        value={formData.contactPersonEmail}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                        placeholder="email@contoh.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-3 sm:mt-4 text-[10px] sm:text-xs text-gray-600 flex items-start gap-1.5">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <span>Kontak person akan ditampilkan kepada peserta untuk informasi lebih lanjut</span>
                 </p>
               </div>
             </div>

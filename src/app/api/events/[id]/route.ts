@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getEventById, getUserEventRegistration } from '@/db/actions';
+import { getEventById, getUserEventRegistration, getEventRegistrations, cancelEventRegistration, getEventRegistrationCount } from '@/db/actions';
 import { auth } from '@clerk/nextjs/server';
 
 // GET - Fetch event details
@@ -34,15 +34,64 @@ export async function GET(
       registration = await getUserEventRegistration(eventId, userId);
     }
 
+    // Get registration count
+    const registrationCount = await getEventRegistrationCount(eventId);
+
+    // Get registrations list if user is the organizer
+    let registrations = null;
+    if (userId && event.event.organizerId === userId) {
+      registrations = await getEventRegistrations(eventId);
+    }
+
     return NextResponse.json({
       ...event,
       userRegistration: registration,
+      registrationCount,
+      registrations,
     });
 
   } catch (error) {
     console.error('Error fetching event:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE - Cancel registration
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const { userId } = await auth();
+    const eventId = parseInt(id);
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    if (isNaN(eventId)) {
+      return NextResponse.json(
+        { error: 'Invalid event ID' },
+        { status: 400 }
+      );
+    }
+
+    const result = await cancelEventRegistration(eventId, userId);
+
+    return NextResponse.json(result);
+
+  } catch (error) {
+    console.error('Error cancelling registration:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
+    return NextResponse.json(
+      { error: message },
       { status: 500 }
     );
   }

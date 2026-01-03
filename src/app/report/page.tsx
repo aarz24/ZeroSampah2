@@ -618,9 +618,9 @@ export default function ReportPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           {/* Image Upload Card */}
-          <div className="relative overflow-hidden pt-0 px-0 pb-5 sm:pb-8 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
+          <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border-2 border-green-600">
             {/* Card Header */}
-            <div className="relative overflow-hidden rounded-t-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5 mb-6 sm:mb-8">
+            <div className="relative overflow-hidden bg-green-500 p-4 sm:p-5">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                   {/* Multiple rows scrolling at different speeds */}
@@ -804,9 +804,9 @@ export default function ReportPage() {
           )}
 
           {/* Location Details Card */}
-          <div className="relative overflow-hidden pt-0 px-0 pb-0 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-green-100">
+          <div className="relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border-2 border-green-600">
             {/* Card Header */}
-            <div className="relative overflow-hidden rounded-t-2xl border-2 border-green-600 bg-green-500 p-4 sm:p-5">
+            <div className="relative overflow-hidden bg-green-500 p-4 sm:p-5">
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute inset-0 flex flex-col justify-around opacity-[0.8]">
                   {/* Multiple rows scrolling at different speeds */}

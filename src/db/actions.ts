@@ -596,6 +596,9 @@ export async function createEvent(data: {
   wasteCategories?: string[];
   maxParticipants?: number;
   rewardInfo?: string;
+  contactPersonName?: string;
+  contactPersonPhone?: string;
+  contactPersonEmail?: string;
   images?: string[];
   videos?: string[];
 }) {
@@ -824,6 +827,82 @@ export async function getUserOrganizedEvents(userId: string) {
   } catch (error) {
     console.error("Error fetching user organized events:", error);
     throw error;
+  }
+}
+
+// Get all registrations for an event (for organizers)
+export async function getEventRegistrations(eventId: number) {
+  try {
+    const registrations = await db
+      .select({
+        registration: EventRegistrations,
+        user: Users,
+      })
+      .from(EventRegistrations)
+      .leftJoin(Users, eq(EventRegistrations.userId, Users.clerkId))
+      .where(eq(EventRegistrations.eventId, eventId))
+      .orderBy(desc(EventRegistrations.registeredAt));
+    
+    return registrations;
+  } catch (error) {
+    console.error("Error fetching event registrations:", error);
+    throw error;
+  }
+}
+
+// Cancel event registration
+export async function cancelEventRegistration(eventId: number, userId: string) {
+  try {
+    // Check if event hasn't happened yet
+    const [event] = await db
+      .select()
+      .from(Events)
+      .where(eq(Events.id, eventId));
+    
+    if (!event) {
+      throw new Error('Event not found');
+    }
+    
+    if (new Date(event.eventDate) < new Date()) {
+      throw new Error('Cannot cancel registration for past events');
+    }
+    
+    const [updated] = await db
+      .update(EventRegistrations)
+      .set({ status: 'cancelled' })
+      .where(and(
+        eq(EventRegistrations.eventId, eventId),
+        eq(EventRegistrations.userId, userId),
+        eq(EventRegistrations.status, 'registered')
+      ))
+      .returning();
+    
+    if (!updated) {
+      throw new Error('Registration not found or already cancelled');
+    }
+    
+    return { success: true, registration: updated };
+  } catch (error) {
+    console.error("Error cancelling registration:", error);
+    throw error;
+  }
+}
+
+// Get registration count for an event
+export async function getEventRegistrationCount(eventId: number) {
+  try {
+    const result = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(EventRegistrations)
+      .where(and(
+        eq(EventRegistrations.eventId, eventId),
+        eq(EventRegistrations.status, 'registered')
+      ));
+    
+    return result[0]?.count || 0;
+  } catch (error) {
+    console.error("Error getting registration count:", error);
+    return 0;
   }
 }
 
