@@ -114,3 +114,18 @@ export const EventAttendance = pgTable("event_attendance", {
   verifiedAt: timestamp("verified_at", { withTimezone: true }).defaultNow(),
   qrCodeScanned: text("qr_code_scanned").notNull(), // The QR code data that was scanned
 });
+
+// Reward Redemptions table
+export const RewardRedemptions = pgTable("reward_redemptions", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").references(() => Users.clerkId, { onDelete: 'cascade' }).notNull(),
+  rewardId: integer("reward_id").references(() => Rewards.id, { onDelete: 'set null' }),
+  rewardName: text("reward_name").notNull(), // Store reward name in case reward is deleted
+  pointsSpent: integer("points_spent").notNull(),
+  qrCode: text("qr_code").notNull().unique(), // Unique QR code for redemption
+  status: text("status").notNull().default("pending"), // pending, redeemed, expired
+  redeemedAt: timestamp("redeemed_at", { withTimezone: true }), // When sponsor scanned the QR
+  redeemedBy: text("redeemed_by"), // Sponsor/store who validated the redemption
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(), // 30 days from creation
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});

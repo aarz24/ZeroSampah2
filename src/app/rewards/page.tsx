@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { FaMedal, FaTrophy, FaGift, FaStar, FaLeaf, FaLightbulb, FaAward, FaUsers } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaMedal, FaTrophy, FaGift, FaLightbulb, FaAward, FaUsers, FaTimes, FaCheckCircle } from "react-icons/fa";
 import { useUser } from "@clerk/nextjs";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import Lottie from "lottie-react";
+import QRCodeDisplay from "@/components/QRCodeDisplay";
 import coinAnimation from "@/../coin.json";
 import fallenLeaf from "../../../public/animations/fallen-leaf.json";
 import fallenLeaf1 from "../../../public/animations/fallen-leaf-1.json";
@@ -144,6 +145,10 @@ export default function RewardsPage() {
   const [activeTab, setActiveTab] = useState("available");
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showRedemptionModal, setShowRedemptionModal] = useState(false);
+  const [selectedReward, setSelectedReward] = useState<typeof mergedAvailableRewards[0] | null>(null);
+  const [screenshotConfirmed, setScreenshotConfirmed] = useState(false);
+  const [redemptionCode, setRedemptionCode] = useState("");
 
   // Fetch user's points from API using Clerk user ID
   useEffect(() => {
@@ -174,6 +179,60 @@ export default function RewardsPage() {
     if (status === "completed") return "Selesai";
     if (status === "in-progress") return "Sedang Berlangsung";
     return status;
+  };
+
+  const handleRedeemReward = (reward: typeof mergedAvailableRewards[0]) => {
+    // Generate unique redemption code
+    const code = `ZS-${Date.now()}-${reward.id}-${user?.id?.slice(0, 8)}`;
+    setRedemptionCode(code);
+    setSelectedReward(reward);
+    setShowRedemptionModal(true);
+    setScreenshotConfirmed(false);
+  };
+
+  const handleCloseModal = () => {
+    setShowRedemptionModal(false);
+    setSelectedReward(null);
+    setScreenshotConfirmed(false);
+    setRedemptionCode("");
+  };
+
+  const handleConfirmScreenshot = async () => {
+    if (!selectedReward) return;
+
+    // Call API to redeem and deduct points only after screenshot confirmation
+    try {
+      const response = await fetch('/api/rewards/redeem', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rewardId: selectedReward.id,
+          rewardName: selectedReward.title,
+          pointsRequired: selectedReward.points,
+          qrCode: redemptionCode,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Redemption failed:', data);
+        const errorMessage = data.error || data.details || 'Unknown error';
+        alert(`Gagal menukarkan hadiah: ${errorMessage}`);
+        handleCloseModal();
+        return;
+      }
+
+      // Update local points display
+      setTotalPoints(data.newPoints);
+      setScreenshotConfirmed(true);
+    } catch (error) {
+      console.error('Error redeeming reward:', error);
+      alert('Terjadi kesalahan saat menukarkan hadiah');
+      handleCloseModal();
+    }
   };
 
   if (isLoading || !isUserLoaded) {
@@ -579,6 +638,7 @@ export default function RewardsPage() {
                       : "bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed"
                   }`}
                   disabled={totalPoints < reward.points}
+                  onClick={() => handleRedeemReward(reward)}
                   whileHover={totalPoints >= reward.points ? { scale: 1.03 } : {}}
                   whileTap={totalPoints >= reward.points ? { scale: 0.98 } : {}}
                 >
@@ -616,6 +676,122 @@ export default function RewardsPage() {
           ))}
         </div>
       )}
+
+      {/* Redemption Modal */}
+      <AnimatePresence>
+        {showRedemptionModal && selectedReward && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={handleCloseModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={handleCloseModal}
+                className="absolute top-4 right-4 z-10 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+              >
+                <FaTimes className="text-gray-600" />
+              </button>
+
+              {/* Header */}
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring" }}
+                  className="flex items-center justify-center mb-3"
+                >
+                  <div className="p-3 bg-white/20 backdrop-blur-sm rounded-full">
+                    <FaGift className="text-3xl" />
+                  </div>
+                </motion.div>
+                <h2 className="text-2xl font-bold text-center mb-2">
+                  {screenshotConfirmed ? "Selamat!" : "Penukaran Hadiah"}
+                </h2>
+                <p className="text-center text-green-100 text-sm">
+                  {selectedReward.title}
+                </p>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                {!screenshotConfirmed ? (
+                  <div className="space-y-6">
+                    {/* QR Code */}
+                    <div className="flex justify-center">
+                      <div className="p-4 bg-white border-2 border-green-500 rounded-lg">
+                        <QRCodeDisplay value={redemptionCode} size={160} />
+                      </div>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                      <p className="text-sm text-yellow-800 font-semibold">
+                        Screenshot QR code ini sekarang juga
+                      </p>
+                    </div>
+
+                    {/* Confirmation Button */}
+                    <motion.button
+                      onClick={handleConfirmScreenshot}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl shadow-lg transition-all duration-300"
+                    >
+                      ✓ Saya Sudah Screenshot
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-6 text-center"
+                  >
+                    {/* Success Icon */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", duration: 0.6 }}
+                      className="flex justify-center"
+                    >
+                      <div className="p-4 bg-green-100 rounded-full">
+                        <FaCheckCircle className="text-6xl text-green-500" />
+                      </div>
+                    </motion.div>
+
+                    {/* Simple instruction */}
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 p-6 rounded-xl">
+                      <p className="text-lg font-bold text-gray-800">
+                        Tunjukkan QR code kepada sponsor terafiliasi
+                      </p>
+                    </div>
+
+                    {/* Close Button */}
+                    <motion.button
+                      onClick={handleCloseModal}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full py-3 px-4 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold rounded-xl shadow-lg transition-all duration-300"
+                    >
+                      Tutup
+                    </motion.button>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
     </div>
   );
