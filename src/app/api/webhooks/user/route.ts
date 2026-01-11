@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const user = evt.data;
 
     const fullName =
-        user.full_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Anonymous User";
+      user.full_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "Anonymous User";
 
     if (evt.type === "user.created") {
       const existingUser = await db
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         })
         .where(eq(Users.clerkId, user.id))
         .execute();
-        
+
     } else if (evt.type === "user.deleted") {
       await db.delete(Users).where(eq(Users.clerkId, user.id)).execute();
       console.log("🗑️ User deleted:", user.id);

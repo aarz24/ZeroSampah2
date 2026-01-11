@@ -15,6 +15,7 @@ interface VerificationResult {
   [key: string]: string | undefined;
 }
 
+
 export async function createUser(
   clerkId: string,
   email: string,
@@ -33,7 +34,7 @@ export async function createUser(
       email,
       fullName,
       profileImage,
-    }).returning();   
+    }).returning();
     console.log(newUser);
     return newUser[0];
   } catch (error) {
@@ -41,6 +42,30 @@ export async function createUser(
     throw error;
   }
 }
+
+export async function syncUser(clerkId: string, email: string, fullName: string, profileImage?: string) {
+  try {
+    const existingUser = await db.select().from(Users).where(eq(Users.clerkId, clerkId)).execute();
+
+    if (existingUser.length === 0) {
+      const newUser = await db.insert(Users).values({
+        clerkId,
+        email,
+        fullName,
+        profileImage,
+      }).returning();
+      return newUser[0];
+    } else {
+      // Optional: Update user info if it changed
+      // await db.update(Users).set({ email, fullName, profileImage }).where(eq(Users.clerkId, clerkId)).execute();
+      return existingUser[0];
+    }
+  } catch (error) {
+    console.error("Error syncing user:", error);
+    return null;
+  }
+}
+
 
 
 export async function getUserByEmail(email: string) {
@@ -63,7 +88,7 @@ export async function createReport(
 ) {
   try {
     console.log('createReport - Starting with params:', { userId, location, wasteType, amount, hasImage: !!imageUrl });
-    
+
     // First, ensure user exists in database (auto-create if not exists)
     await db
       .insert(Users)
@@ -74,7 +99,7 @@ export async function createReport(
       })
       .onConflictDoNothing()
       .execute();
-    
+
     const [report] = await db
       .insert(Reports)
       .values({
@@ -132,7 +157,7 @@ export async function updateRewardPoints(userId: string, pointsToAdd: number) {
   try {
     const [updatedReward] = await db
       .update(Rewards)
-      .set({ 
+      .set({
         points: sql`${Rewards.points} + ${pointsToAdd}`,
         updatedAt: new Date()
       })
@@ -150,7 +175,7 @@ export async function updateUserPoints(userId: string, pointsToAdd: number) {
   try {
     const [updatedUser] = await db
       .update(Users)
-      .set({ 
+      .set({
         points: sql`${Users.points} + ${pointsToAdd}`,
         updatedAt: new Date()
       })
@@ -251,7 +276,7 @@ export async function getLeaderboard(limit: number = 100) {
       .orderBy(desc(Users.points))
       .limit(limit)
       .execute();
-    
+
     return users;
   } catch (error) {
     console.error("Error fetching leaderboard:", error);
@@ -345,7 +370,7 @@ export async function saveReward(userId: string, amount: number) {
       })
       .returning()
       .execute();
-    
+
     // Create a transaction for this reward
     await createTransaction(userId, null, amount, 'earned', 'Points earned for collecting waste');
 
@@ -377,11 +402,11 @@ export async function saveCollectedWaste(reportId: number, collectorId: string) 
 export async function updateTaskStatus(reportId: number, newStatus: string, collectorId?: string) {
   try {
     const updateData: Record<string, unknown> = { status: newStatus };
-    
+
     if (collectorId) {
       updateData.collectorId = collectorId;
     }
-    
+
     const [updatedReport] = await db
       .update(Reports)
       .set(updateData)
@@ -453,7 +478,7 @@ export async function getRewardTransactions(userId: string) {
 export async function getAvailableRewards(userId: string) {
   try {
     console.log('Fetching available rewards for user:', userId);
-    
+
     // Get user's total points
     const userTransactions = await getRewardTransactions(userId);
     const userPoints = userTransactions.reduce((total, transaction) => {
@@ -498,21 +523,21 @@ export async function getAvailableRewards(userId: string) {
 }
 
 export async function createTransaction(
-  userId: string, 
-  rewardId: number | null, 
-  pointsUsed: number, 
+  userId: string,
+  rewardId: number | null,
+  pointsUsed: number,
   transactionType: 'earned' | 'redeemed',
   description: string
 ) {
   try {
     const [transaction] = await db
       .insert(Transactions)
-      .values({ 
-        userId, 
+      .values({
+        userId,
         rewardId,
         pointsUsed,
         transactionType,
-        description 
+        description
       })
       .returning()
       .execute();
@@ -526,7 +551,7 @@ export async function createTransaction(
 // export async function redeemReward(userId: number, rewardId: number) {
 //   try {
 //     const userReward = await getOrCreateReward(userId) as any;
-    
+
 //     if (rewardId === 0) {
 //       // Redeem all points
 //       const [updatedReward] = await db.update(Rewards)
@@ -569,11 +594,11 @@ export async function getReportById(reportId: number) {
       .from(Reports)
       .where(eq(Reports.id, reportId))
       .execute();
-    
+
     if (!report) {
       throw new Error('Report not found');
     }
-    
+
     return report;
   } catch (error) {
     console.error("Error fetching report by ID:", error);
@@ -601,6 +626,7 @@ export async function createEvent(data: {
   contactPersonEmail?: string;
   images?: string[];
   videos?: string[];
+  generatedPoster?: string;
 }) {
   try {
     const [event] = await db.insert(Events).values(data).returning();
@@ -623,7 +649,7 @@ export async function getPublishedEvents() {
       .leftJoin(Users, eq(Events.organizerId, Users.clerkId))
       .where(eq(Events.status, 'published'))
       .orderBy(desc(Events.eventDate));
-    
+
     return events;
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -642,7 +668,7 @@ export async function getEventById(eventId: number) {
       .from(Events)
       .leftJoin(Users, eq(Events.organizerId, Users.clerkId))
       .where(eq(Events.id, eventId));
-    
+
     if (!event) return null;
     return event;
   } catch (error) {
@@ -662,19 +688,19 @@ export async function registerForEvent(eventId: number, userId: string) {
         eq(EventRegistrations.eventId, eventId),
         eq(EventRegistrations.userId, userId)
       ));
-    
+
     if (existing.length > 0) {
       return { success: false, message: 'Already registered', registration: existing[0] };
     }
 
     // Generate unique QR code data
     const qrCode = `EVENT:${eventId}:${userId}:${Date.now()}`;
-    
+
     const [registration] = await db
       .insert(EventRegistrations)
       .values({ eventId, userId, qrCode })
       .returning();
-    
+
     return { success: true, registration };
   } catch (error) {
     console.error("Error registering for event:", error);
@@ -693,7 +719,7 @@ export async function getUserEventRegistration(eventId: number, userId: string) 
         eq(EventRegistrations.userId, userId),
         eq(EventRegistrations.status, 'registered')
       ));
-    
+
     return registration || null;
   } catch (error) {
     console.error("Error fetching user registration:", error);
@@ -724,7 +750,7 @@ export async function verifyAttendance(data: {
         eq(EventRegistrations.userId, data.userId),
         eq(EventRegistrations.qrCode, data.qrCodeScanned)
       ));
-    
+
     if (!registration) {
       throw new Error('Registration not found');
     }
@@ -737,7 +763,7 @@ export async function verifyAttendance(data: {
         eq(EventAttendance.eventId, data.eventId),
         eq(EventAttendance.userId, data.userId)
       ));
-    
+
     if (existing.length > 0) {
       return { success: false, message: 'Already verified', alreadyVerified: true };
     }
@@ -759,10 +785,10 @@ export async function verifyAttendance(data: {
         qrCodeScanned: data.qrCodeScanned,
       })
       .returning();
-    
+
     // Award points for attending event
     await updateUserPoints(data.userId, 25);
-    
+
     return { success: true, attendance, userName: user?.fullName || 'User' };
   } catch (error) {
     console.error("Error verifying attendance:", error);
@@ -782,7 +808,7 @@ export async function getEventAttendees(eventId: number) {
       .leftJoin(Users, eq(EventAttendance.userId, Users.clerkId))
       .where(eq(EventAttendance.eventId, eventId))
       .orderBy(desc(EventAttendance.verifiedAt));
-    
+
     return attendees;
   } catch (error) {
     console.error("Error fetching event attendees:", error);
@@ -805,7 +831,7 @@ export async function getUserRegisteredEvents(userId: string) {
         eq(EventRegistrations.status, 'registered')
       ))
       .orderBy(desc(Events.eventDate));
-    
+
     return registrations;
   } catch (error) {
     console.error("Error fetching user registered events:", error);
@@ -821,7 +847,7 @@ export async function getUserOrganizedEvents(userId: string) {
       .from(Events)
       .where(eq(Events.organizerId, userId))
       .orderBy(desc(Events.eventDate));
-    
+
     // Return in the same structure as registered events for consistency
     return events.map(event => ({ event }));
   } catch (error) {
@@ -842,7 +868,7 @@ export async function getEventRegistrations(eventId: number) {
       .leftJoin(Users, eq(EventRegistrations.userId, Users.clerkId))
       .where(eq(EventRegistrations.eventId, eventId))
       .orderBy(desc(EventRegistrations.registeredAt));
-    
+
     return registrations;
   } catch (error) {
     console.error("Error fetching event registrations:", error);
@@ -858,15 +884,15 @@ export async function cancelEventRegistration(eventId: number, userId: string) {
       .select()
       .from(Events)
       .where(eq(Events.id, eventId));
-    
+
     if (!event) {
       throw new Error('Event not found');
     }
-    
+
     if (new Date(event.eventDate) < new Date()) {
       throw new Error('Cannot cancel registration for past events');
     }
-    
+
     const [updated] = await db
       .update(EventRegistrations)
       .set({ status: 'cancelled' })
@@ -876,11 +902,11 @@ export async function cancelEventRegistration(eventId: number, userId: string) {
         eq(EventRegistrations.status, 'registered')
       ))
       .returning();
-    
+
     if (!updated) {
       throw new Error('Registration not found or already cancelled');
     }
-    
+
     return { success: true, registration: updated };
   } catch (error) {
     console.error("Error cancelling registration:", error);
@@ -898,7 +924,7 @@ export async function getEventRegistrationCount(eventId: number) {
         eq(EventRegistrations.eventId, eventId),
         eq(EventRegistrations.status, 'registered')
       ));
-    
+
     return result[0]?.count || 0;
   } catch (error) {
     console.error("Error getting registration count:", error);

@@ -7,7 +7,8 @@ import AnimatedGlobe from '@/components/AnimatedGlobe'
 import Footer from '@/components/Footer'
 import { Chatbot } from '@/components/Chatbot'
 import Image from 'next/image'
-import { useUser, useClerk } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from 'next/navigation'
 
 const images = {
   recycling: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&q=80&w=1200",
@@ -18,21 +19,13 @@ const images = {
 
 export default function Home() {
   const { isSignedIn } = useUser();
-  const { openSignIn } = useClerk();
-  
+  const router = useRouter();
+
   const handleGetStarted = () => {
     if (isSignedIn) {
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } else {
-      openSignIn({
-        appearance: {
-          elements: {
-            rootBox: "rounded-xl",
-            card: "rounded-xl",
-          },
-        },
-        afterSignInUrl: "/dashboard",
-      });
+      router.push("/sign-in");
     }
   };
 
@@ -44,7 +37,7 @@ export default function Home() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
             className="absolute top-20 left-10 w-48 sm:w-72 h-48 sm:h-72 bg-gradient-to-br from-green-200/40 to-emerald-300/30 rounded-full blur-3xl"
-            animate={{ 
+            animate={{
               scale: [1, 1.2, 1],
               x: [0, 30, 0],
               y: [0, -20, 0]
@@ -53,7 +46,7 @@ export default function Home() {
           />
           <motion.div
             className="absolute bottom-40 right-20 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-br from-emerald-200/30 to-lime-200/40 rounded-full blur-3xl"
-            animate={{ 
+            animate={{
               scale: [1.2, 1, 1.2],
               x: [0, -40, 0],
               y: [0, 30, 0]
@@ -62,7 +55,7 @@ export default function Home() {
           />
           <motion.div
             className="absolute top-1/2 left-1/3 w-48 sm:w-64 h-48 sm:h-64 bg-gradient-to-br from-lime-100/30 to-green-200/20 rounded-full blur-2xl"
-            animate={{ 
+            animate={{
               scale: [1, 1.3, 1],
               rotate: [0, 180, 360]
             }}
@@ -95,7 +88,7 @@ export default function Home() {
           ))}
         </div>
 
-        <motion.div 
+        <motion.div
           className="hidden absolute z-50 left-106 lg:block top-22"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 0.75, x: 0 }}
@@ -106,14 +99,14 @@ export default function Home() {
         <div className="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid gap-8 items-center pt-12 lg:gap-12 lg:pt-20 md:grid-cols-2">
             {/* Left Content */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               className="p-3 sm:p-4 text-left from-green-50 to-white rounded-2xl sm:rounded-3xl backdrop-blur-sm sm:p-6 lg:p-8"
             >
               {/* Animated Badge */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -132,7 +125,7 @@ export default function Home() {
               </motion.div>
 
               {/* Main Heading with FlipWords */}
-              <motion.h1 
+              <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -143,33 +136,33 @@ export default function Home() {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-emerald-400 to-lime-500">
                   Untuk{" "}
                 </span>
-                <FlipWords 
-                  words={["Kita Semua", "Masa Depan", "Bumi Hijau", "Generasi"]} 
+                <FlipWords
+                  words={["Kita Semua", "Masa Depan", "Bumi Hijau", "Generasi"]}
                   duration={2500}
                   className="!text-emerald-500 font-extrabold"
                 />
               </motion.h1>
 
               {/* Description */}
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
                 className="mb-4 sm:mb-6 max-w-xl text-sm sm:text-lg leading-relaxed text-green-800/90 sm:mb-8 sm:text-xl"
               >
-                Bergabung dengan platform inovatif kami yang memberi penghargaan untuk 
+                Bergabung dengan platform inovatif kami yang memberi penghargaan untuk
                 <span className="font-semibold text-green-700"> pengelolaan sampah berkelanjutan</span>.
                 Laporkan, kumpulkan, dan dapatkan hadiah sambil membuat planet kita lebih bersih.
               </motion.p>
 
               {/* Action Buttons */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.6 }}
                 className="flex flex-col gap-3 sm:gap-4 sm:flex-row"
               >
-                <motion.button 
+                <motion.button
                   onClick={handleGetStarted}
                   whileHover={{ scale: 1.02, boxShadow: "0 20px 40px -10px rgba(34, 197, 94, 0.4)" }}
                   whileTap={{ scale: 0.98 }}
@@ -181,7 +174,7 @@ export default function Home() {
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </motion.button>
-                <motion.a 
+                <motion.a
                   href="/about"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -227,8 +220,8 @@ export default function Home() {
                 <div className="overflow-hidden relative h-28 sm:h-36 rounded-xl sm:rounded-2xl shadow-lg sm:h-48">
                   <div className="absolute inset-0 z-10 bg-green-600/10" />
                   <Image
-                      src={images.recycling}
-                      alt="Proses Daur Ulang"
+                    src={images.recycling}
+                    alt="Proses Daur Ulang"
                     fill
                     className="object-cover"
                     priority
@@ -237,7 +230,7 @@ export default function Home() {
                 <div className="overflow-hidden relative h-36 sm:h-48 rounded-xl sm:rounded-2xl shadow-lg sm:h-64">
                   <Image
                     src={images.greenTech}
-                      alt="Pengumpulan Sampah Cerdas"
+                    alt="Pengumpulan Sampah Cerdas"
                     fill
                     className="object-cover"
                     priority
@@ -248,7 +241,7 @@ export default function Home() {
                 <div className="overflow-hidden relative h-36 sm:h-48 rounded-xl sm:rounded-2xl shadow-lg sm:h-64">
                   <Image
                     src={images.sustainability}
-                      alt="Teknologi Berkelanjutan"
+                    alt="Teknologi Berkelanjutan"
                     fill
                     className="object-cover"
                     priority
@@ -257,7 +250,7 @@ export default function Home() {
                 <div className="overflow-hidden relative h-28 sm:h-36 rounded-xl sm:rounded-2xl shadow-lg sm:h-48">
                   <Image
                     src={images.cleanEnergy}
-                      alt="Solusi Ramah Lingkungan"
+                    alt="Solusi Ramah Lingkungan"
                     fill
                     className="object-cover"
                     priority
@@ -276,7 +269,7 @@ export default function Home() {
           <div className="absolute -bottom-32 -left-5 w-80 h-80 bg-green-200 rounded-full blur-3xl opacity-60"></div>
         </div>
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 relative">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -327,13 +320,13 @@ export default function Home() {
         {/* Background with pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50" />
         <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #10b981 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-        
+
         {/* Decorative blurs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-green-300/30 to-emerald-400/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-gradient-to-br from-teal-300/30 to-lime-300/20 rounded-full blur-3xl" />
-        
+
         <div className="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -342,7 +335,7 @@ export default function Home() {
           >
             {/* Top gradient accent */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500" />
-            
+
             <div className="p-8 sm:p-12 lg:p-16">
               <div className="flex flex-col items-center gap-10">
                 {/* Section Title */}
@@ -355,7 +348,7 @@ export default function Home() {
                     Bersama Wujudkan <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500">Lingkungan Bersih</span>
                   </h3>
                 </div>
-                
+
                 {/* Image with enhanced styling and embedded button */}
                 <div className="relative w-full max-w-4xl">
                   <div className="absolute -inset-4 bg-gradient-to-r from-green-400/20 via-emerald-400/20 to-teal-400/20 rounded-3xl blur-2xl" />
@@ -368,7 +361,7 @@ export default function Home() {
                     />
                     {/* Image overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                    
+
                     {/* Embedded CTA Button */}
                     <motion.a
                       href="/events"
@@ -392,7 +385,7 @@ export default function Home() {
       <section className="relative py-20 sm:py-28 lg:py-36 overflow-hidden">
         {/* Animated gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600" />
-        
+
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 -left-20 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse" />
@@ -401,7 +394,7 @@ export default function Home() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/10 rounded-full" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-white/10 rounded-full" />
         </div>
-        
+
         <div className="relative px-4 mx-auto max-w-7xl text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -422,7 +415,7 @@ export default function Home() {
               <span className="w-2 h-2 bg-lime-400 rounded-full absolute" />
               Bergabung Sekarang
             </motion.div>
-            
+
             {/* Heading */}
             <h2 className="mb-6 text-4xl font-extrabold text-white sm:mb-8 sm:text-5xl lg:text-6xl leading-tight">
               Siap <span className="relative inline-block">
@@ -430,13 +423,13 @@ export default function Home() {
                 <span className="absolute bottom-2 left-0 right-0 h-3 bg-lime-400/40 -skew-x-3" />
               </span>?
             </h2>
-            
+
             {/* Description */}
             <p className="mb-10 text-lg text-green-100/90 sm:mb-14 sm:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed">
               Bergabunglah dengan ribuan orang lain yang sudah berkontribusi untuk masa depan yang
               lebih bersih dan berkelanjutan bersama <span className="font-bold text-white">ZeroSampah</span>.
             </p>
-            
+
             {/* CTA Button */}
             <motion.a
               href="/dashboard"
@@ -450,7 +443,7 @@ export default function Home() {
               Mulai Perjalanan Anda
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.a>
-            
+
             {/* Trust indicators */}
             <div className="mt-12 flex flex-wrap justify-center gap-6 text-white/70 text-sm">
               <div className="flex items-center gap-2">
@@ -483,19 +476,19 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ 
-  icon: Icon, 
-  title, 
-  description, 
-  delay 
-}: { 
-  icon: React.ElementType; 
-  title: string; 
+function FeatureCard({
+  icon: Icon,
+  title,
+  description,
+  delay
+}: {
+  icon: React.ElementType;
+  title: string;
   description: string;
   delay: number;
 }) {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

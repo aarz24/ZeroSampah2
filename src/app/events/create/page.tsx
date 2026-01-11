@@ -34,9 +34,7 @@ export default function CreateEventPage() {
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [wasteCategories, setWasteCategories] = useState<string[]>([]);
   const [rewardInfo, setRewardInfo] = useState('');
-  const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [videoPreviews, setVideoPreviews] = useState<string[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -52,13 +50,13 @@ export default function CreateEventPage() {
       if (match1) {
         return { lat: parseFloat(match1[1]), lng: parseFloat(match1[2]) };
       }
-      
+
       // Pattern 3: google.com/maps with q=lat,lng
       const match2 = url.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
       if (match2) {
         return { lat: parseFloat(match2[1]), lng: parseFloat(match2[2]) };
       }
-      
+
       // Pattern 4: ll parameter
       const match3 = url.match(/ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
       if (match3) {
@@ -104,30 +102,18 @@ export default function CreateEventPage() {
   };
 
   const handleCategoryToggle = (category: string) => {
-    setWasteCategories(prev => 
-      prev.includes(category) 
+    setWasteCategories(prev =>
+      prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
     );
   };
 
-  const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setImages(files);
-    
-    // Create preview URLs
-    const previews: string[] = [];
-    files.forEach(file => {
-      const url = URL.createObjectURL(file);
-      previews.push(url);
-    });
-    setImagePreviews(previews);
-  };
 
   const onVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setVideos(files);
-    
+
     // Create preview URLs
     const previews: string[] = [];
     files.forEach(file => {
@@ -139,7 +125,7 @@ export default function CreateEventPage() {
 
   const handleSubmit = async (e: FormEvent, isDraft = false) => {
     e.preventDefault();
-    
+
     if (!user) {
       toast.error('Silakan login terlebih dahulu');
       return;
@@ -157,23 +143,6 @@ export default function CreateEventPage() {
 
     setLoading(true);
     try {
-      // Convert images to base64 data URLs
-      const imageUrls: string[] = [];
-      for (const file of images) {
-        // Check file size (limit to 2MB per image)
-        if (file.size > 2 * 1024 * 1024) {
-          toast.error(`Foto ${file.name} terlalu besar. Maksimal 2MB per foto.`);
-          setLoading(false);
-          return;
-        }
-        
-        const reader = new FileReader();
-        const dataUrl = await new Promise<string>((resolve) => {
-          reader.onload = (e) => resolve(e.target?.result as string);
-          reader.readAsDataURL(file);
-        });
-        imageUrls.push(dataUrl);
-      }
 
       // Convert videos to base64 data URLs
       const videoUrls: string[] = [];
@@ -184,7 +153,7 @@ export default function CreateEventPage() {
           setLoading(false);
           return;
         }
-        
+
         const reader = new FileReader();
         const dataUrl = await new Promise<string>((resolve) => {
           reader.onload = (e) => resolve(e.target?.result as string);
@@ -207,7 +176,6 @@ export default function CreateEventPage() {
         contactPersonName: formData.contactPersonName.trim() || null,
         contactPersonPhone: formData.contactPersonPhone.trim() || null,
         contactPersonEmail: formData.contactPersonEmail.trim() || null,
-        images: imageUrls,
         videos: videoUrls,
       };
 
@@ -246,10 +214,10 @@ export default function CreateEventPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 px-4 sm:px-6 py-6 sm:py-8">
       <div className="max-w-4xl mx-auto">
-        <motion.button 
+        <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => router.back()} 
+          onClick={() => router.back()}
           className="inline-flex items-center gap-2 text-sm font-medium text-green-700 hover:text-green-800 transition-colors mb-4 sm:mb-6 group"
         >
           <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,9 +225,9 @@ export default function CreateEventPage() {
           </svg>
           Kembali
         </motion.button>
-        
+
         {/* Hero with Animation */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -270,7 +238,7 @@ export default function CreateEventPage() {
             <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-emerald-400/20 rounded-full blur-3xl" />
           </div>
-          
+
           {/* Fallen Leaf Animations - Decorative Background */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-8 -left-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
@@ -310,7 +278,7 @@ export default function CreateEventPage() {
               <Lottie animationData={fallenLeaf1} loop={true} />
             </div>
           </div>
-          
+
           {/* Floating particles */}
           {[...Array(5)].map((_, i) => (
             <motion.div
@@ -331,10 +299,10 @@ export default function CreateEventPage() {
               }}
             />
           ))}
-          
+
           <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
             {/* Main Animation Logo */}
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
@@ -347,10 +315,10 @@ export default function CreateEventPage() {
                 style={{ width: '100%', height: '100%' }}
               />
             </motion.div>
-            
+
             {/* Content */}
             <div className="text-center sm:text-left">
-              <motion.h1 
+              <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -359,7 +327,7 @@ export default function CreateEventPage() {
               >
                 Buat Aksi Bersih Komunitas
               </motion.h1>
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
@@ -369,16 +337,16 @@ export default function CreateEventPage() {
               </motion.p>
             </div>
           </div>
-          
+
           {/* Bottom gradient line */}
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400/50 via-white/30 to-yellow-400/50" />
         </motion.div>
 
-        <motion.form 
+        <motion.form
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          onSubmit={(e) => handleSubmit(e, false)} 
+          onSubmit={(e) => handleSubmit(e, false)}
           className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-gray-100 overflow-hidden"
         >
           {/* Form Header */}
@@ -401,7 +369,7 @@ export default function CreateEventPage() {
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 text-green-700 flex items-center justify-center text-xs sm:text-sm font-bold border border-green-200">1</span>
                 Informasi Dasar
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div className="md:col-span-2">
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
@@ -413,58 +381,58 @@ export default function CreateEventPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                       </svg>
                     </div>
-                    <input 
+                    <input
                       name="title"
                       value={formData.title}
                       onChange={handleInputChange}
-                      className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base bg-gray-50 focus:bg-white" 
-                      placeholder="Contoh: Bersih-Bersih Taman RW 05" 
+                      className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-base bg-gray-50 focus:bg-white"
+                      placeholder="Contoh: Bersih-Bersih Taman RW 05"
                       required
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                     Tanggal <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <input 
+                    <input
                       type="date"
                       name="eventDate"
                       value={formData.eventDate}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base bg-gray-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-base bg-gray-50 focus:bg-white"
                       required
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
                     Waktu <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <input 
+                    <input
                       type="time"
                       name="eventTime"
                       value={formData.eventTime}
                       onChange={handleInputChange}
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base bg-gray-50 focus:bg-white"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-base bg-gray-50 focus:bg-white"
                       required
                     />
                   </div>
                 </div>
-                
+
                 <div className="md:col-span-2">
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Deskripsi</label>
-                  <textarea 
+                  <textarea
                     name="description"
                     value={formData.description}
                     onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none text-sm sm:text-base bg-gray-50 focus:bg-white" 
-                    rows={3} 
-                    placeholder="Ceritakan tujuan acara, aturan yang perlu diikuti, dll." 
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all resize-none text-base bg-gray-50 focus:bg-white"
+                    rows={3}
+                    placeholder="Ceritakan tujuan acara, aturan yang perlu diikuti, dll."
                   />
                 </div>
               </div>
@@ -475,7 +443,7 @@ export default function CreateEventPage() {
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 text-green-700 flex items-center justify-center text-xs sm:text-sm font-bold border border-green-200">2</span>
                 Detail Lokasi
               </h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
@@ -488,13 +456,13 @@ export default function CreateEventPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
-                    <input 
+                    <input
                       type="text"
                       name="location"
                       value={formData.location}
                       onChange={handleLocationChange}
                       required
-                      className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base bg-gray-50 focus:bg-white"
+                      className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-base bg-gray-50 focus:bg-white"
                       placeholder="Jl. Raya Jakarta atau link Google Maps"
                     />
                   </div>
@@ -514,7 +482,7 @@ export default function CreateEventPage() {
                     Klik pada peta untuk menentukan lokasi acara
                   </p>
                   <div className="rounded-xl overflow-hidden border-2 border-gray-200 shadow-sm">
-                    <Map 
+                    <Map
                       center={coordinates || { lat: -6.2088, lng: 106.8456 }}
                       zoom={13}
                       height={300}
@@ -554,7 +522,7 @@ export default function CreateEventPage() {
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 text-green-700 flex items-center justify-center text-xs sm:text-sm font-bold border border-green-200">3</span>
                 Pengaturan Peserta
               </h3>
-              
+
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">Maksimal Peserta (opsional)</label>
                 <div className="relative w-full md:w-64">
@@ -563,12 +531,12 @@ export default function CreateEventPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
-                  <input 
+                  <input
                     type="number"
                     name="maxParticipants"
                     value={formData.maxParticipants}
                     onChange={handleInputChange}
-                    className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base bg-gray-50 focus:bg-white" 
+                    className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-base bg-gray-50 focus:bg-white"
                     placeholder="Contoh: 50"
                     min="1"
                   />
@@ -582,18 +550,17 @@ export default function CreateEventPage() {
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 text-green-700 flex items-center justify-center text-xs sm:text-sm font-bold border border-green-200">4</span>
                 Kategori Sampah
               </h3>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                 {['plastik', 'organik', 'kertas', 'logam', 'kaca', 'elektronik'].map((k) => (
-                  <label 
-                    key={k} 
-                    className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border-2 cursor-pointer transition-all text-sm sm:text-base ${
-                      wasteCategories.includes(k)
-                        ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-700 font-medium shadow-sm'
-                        : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-green-300 hover:bg-white'
-                    }`}
+                  <label
+                    key={k}
+                    className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border-2 cursor-pointer transition-all text-sm sm:text-base ${wasteCategories.includes(k)
+                      ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-400 text-green-700 font-medium shadow-sm'
+                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-green-300 hover:bg-white'
+                      }`}
                   >
-                    <input 
+                    <input
                       type="checkbox"
                       checked={wasteCategories.includes(k)}
                       onChange={() => handleCategoryToggle(k)}
@@ -610,7 +577,7 @@ export default function CreateEventPage() {
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 text-yellow-700 flex items-center justify-center text-sm border border-yellow-200">🎁</span>
                 Reward untuk Peserta
               </h3>
-              
+
               <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 rounded-xl p-4 sm:p-6 border border-yellow-200">
                 <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2 sm:mb-3">
                   Hadiah atau Insentif (Opsional)
@@ -621,11 +588,11 @@ export default function CreateEventPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                     </svg>
                   </div>
-                  <input 
+                  <input
                     type="text"
                     value={rewardInfo}
                     onChange={(e) => setRewardInfo(e.target.value)}
-                    className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                    className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-yellow-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all bg-white text-base"
                     placeholder="Makan siang gratis, Goodie bag, Sertifikat, dll"
                   />
                 </div>
@@ -648,7 +615,7 @@ export default function CreateEventPage() {
                 </span>
                 Kontak Person
               </h3>
-              
+
               <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 rounded-xl p-4 sm:p-6 border border-blue-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
@@ -666,12 +633,12 @@ export default function CreateEventPage() {
                         name="contactPersonName"
                         value={formData.contactPersonName}
                         onChange={handleInputChange}
-                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-base"
                         placeholder="Nama yang bisa dihubungi"
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
                       Nomor Telepon/WhatsApp
@@ -687,12 +654,12 @@ export default function CreateEventPage() {
                         name="contactPersonPhone"
                         value={formData.contactPersonPhone}
                         onChange={handleInputChange}
-                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-base"
                         placeholder="08xxxxxxxxxx"
                       />
                     </div>
                   </div>
-                  
+
                   <div className="md:col-span-2">
                     <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
                       Email (Opsional)
@@ -708,7 +675,7 @@ export default function CreateEventPage() {
                         name="contactPersonEmail"
                         value={formData.contactPersonEmail}
                         onChange={handleInputChange}
-                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-sm sm:text-base"
+                        className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white text-base"
                         placeholder="email@contoh.com"
                       />
                     </div>
@@ -728,54 +695,18 @@ export default function CreateEventPage() {
                 <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 text-green-700 flex items-center justify-center text-xs sm:text-sm font-bold border border-green-200">5</span>
                 Dokumentasi (Opsional)
               </h3>
-              
+
               <div className="space-y-4 sm:space-y-6">
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">Foto Kondisi Lingkungan</label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-6 hover:border-green-400 hover:bg-green-50/30 transition-all cursor-pointer">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      multiple 
-                      onChange={onImageChange} 
-                      className="w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-1.5 sm:file:py-2 file:px-3 sm:file:px-4 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200 cursor-pointer" 
-                    />
-                    <p className="mt-1.5 sm:mt-2 text-[10px] sm:text-xs text-gray-500">PNG, JPG, atau JPEG hingga 2MB</p>
-                    {images.length > 0 && (
-                      <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-green-600 font-medium flex items-center gap-1">
-                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        {images.length} foto dipilih
-                      </p>
-                    )}
-                  </div>
-                  {imagePreviews.length > 0 && (
-                    <div className="mt-4 grid grid-cols-3 md:grid-cols-4 gap-3">
-                      {imagePreviews.map((preview, idx) => (
-                        <div key={idx} className="relative aspect-square bg-gray-200 rounded-lg overflow-hidden shadow-sm border border-gray-300">
-                          <img 
-                            src={preview} 
-                            alt={`Preview ${idx + 1}`} 
-                            className="w-full h-full object-cover"
-                            onLoad={(e) => console.log('Image loaded:', preview)}
-                            onError={(e) => console.error('Image failed to load:', preview)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">Video Kondisi Lingkungan</label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-green-500 transition-colors">
-                    <input 
-                      type="file" 
-                      accept="video/*" 
-                      multiple 
-                      onChange={onVideoChange} 
-                      className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer" 
+                    <input
+                      type="file"
+                      accept="video/*"
+                      multiple
+                      onChange={onVideoChange}
+                      className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer"
                     />
                     <p className="mt-2 text-xs text-gray-500">MP4, MOV, atau AVI hingga 50MB</p>
                   </div>
@@ -795,8 +726,8 @@ export default function CreateEventPage() {
 
           {/* Action Buttons */}
           <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 sm:px-8 py-4 sm:py-6 border-t flex flex-col sm:flex-row gap-3 sm:justify-end">
-            <motion.button 
-              type="button" 
+            <motion.button
+              type="button"
               onClick={(e) => handleSubmit(e as any, true)}
               disabled={loading}
               whileHover={{ scale: 1.02 }}
@@ -805,8 +736,8 @@ export default function CreateEventPage() {
             >
               Simpan Draf
             </motion.button>
-            <motion.button 
-              type="submit" 
+            <motion.button
+              type="submit"
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

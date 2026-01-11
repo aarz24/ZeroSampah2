@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { 
-  getPublishedEvents, 
-  createEvent, 
+import {
+  getPublishedEvents,
+  createEvent,
   registerForEvent,
   getUserRegisteredEvents,
-  getUserOrganizedEvents 
+  getUserOrganizedEvents
 } from '@/db/actions';
 import { auth } from '@clerk/nextjs/server';
 
@@ -15,23 +15,23 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type'); // 'registered' | 'organized' | null (all published)
-    
+
     const { userId } = await auth();
-    
+
     if (type === 'registered' && userId) {
       const events = await getUserRegisteredEvents(userId);
       return NextResponse.json(events);
     }
-    
+
     if (type === 'organized' && userId) {
       const events = await getUserOrganizedEvents(userId);
       return NextResponse.json(events);
     }
-    
+
     // Default: get all published events
     const events = await getPublishedEvents();
     return NextResponse.json(events);
-    
+
   } catch (error) {
     console.error('Error fetching events:', error);
     return NextResponse.json(
@@ -59,19 +59,19 @@ export async function POST(request: Request) {
       const { default: db } = await import('@/db/index');
       const { Users } = await import('@/db/schema');
       const { eq } = await import('drizzle-orm');
-      
+
       const existingUser = await db
         .select()
         .from(Users)
         .where(eq(Users.clerkId, userId))
         .limit(1);
-      
+
       if (existingUser.length === 0) {
         // Auto-create user if they don't exist
-        const fullName = clerkUser.fullName || 
-          `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 
+        const fullName = clerkUser.fullName ||
+          `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() ||
           'Anonymous User';
-        
+
         await db.insert(Users).values({
           clerkId: userId,
           email: clerkUser.emailAddresses[0]?.emailAddress || '',

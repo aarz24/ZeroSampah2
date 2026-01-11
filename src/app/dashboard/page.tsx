@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Trash, 
-  Package, 
-  Award, 
-  TrendingUp, 
+import {
+  Trash,
+  Package,
+  Award,
+  TrendingUp,
   Calendar,
   MapPin,
   Users,
@@ -132,12 +132,12 @@ export default function DashboardPage() {
   const handleCardClick = (key: string) => {
     const isClosing = expandedItem === key;
     setExpandedItem(isClosing ? null : key);
-    
+
     // Scroll to expanded content after a short delay to let it render
     if (!isClosing) {
       setTimeout(() => {
-        expandedContentRef.current?.scrollIntoView({ 
-          behavior: 'smooth', 
+        expandedContentRef.current?.scrollIntoView({
+          behavior: 'smooth',
           block: 'start'
         });
       }, 100);
@@ -202,7 +202,7 @@ export default function DashboardPage() {
   const fetchRecentReports = async (forceRefresh = false) => {
     try {
       setIsLoading(true);
-      
+
       // Check if we have cached data and it's not expired
       let cachedData: string | null = null;
       let cacheTimestamp: string | null = null;
@@ -213,11 +213,11 @@ export default function DashboardPage() {
         // Access to storage might be blocked; ignore cache in that case
         console.warn("localStorage getItem failed:", err);
       }
-      
+
       const now = new Date().getTime();
-      const isCacheValid = cacheTimestamp && 
+      const isCacheValid = cacheTimestamp &&
         (now - parseInt(cacheTimestamp)) < CACHE_EXPIRATION;
-      
+
       // Fetch user stats from database
       if (user?.id) {
         try {
@@ -236,7 +236,7 @@ export default function DashboardPage() {
           console.error("Error fetching user stats:", error);
         }
       }
-      
+
       // Use cached data if available, not expired, and not forcing refresh
       if (cachedData && isCacheValid && !forceRefresh) {
         try {
@@ -249,18 +249,18 @@ export default function DashboardPage() {
           // fall through to fetch fresh data
         }
       }
-      
+
       // Fetch fresh data from the server API
       const res = await fetch('/api/reports?limit=5');
       const reports = await res.json();
-      
+
       // Convert null imageUrl to undefined to match Report type
       const formattedReports = reports.map(report => ({
         ...report,
         imageUrl: report.imageUrl || undefined,
         collectorId: report.collectorId || null
       }));
-      
+
       // Cache the formatted reports
       // Safely cache the formatted reports; if quota exceeded, skip caching
       try {
@@ -272,9 +272,9 @@ export default function DashboardPage() {
           // Attempt to free space for our keys only
           localStorage.removeItem("recentReports");
           localStorage.removeItem("recentReportsTimestamp");
-        } catch {}
+        } catch { }
       }
-      
+
       setRecentReports(formattedReports as Report[]);
     } catch (error) {
       console.error("Error fetching recent reports:", error);
@@ -377,7 +377,7 @@ export default function DashboardPage() {
               <div className="absolute -top-6 -right-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
                 <Lottie animationData={fallenLeaf} loop={true} />
               </div>
-              
+
               {/* Middle row */}
               <div className="absolute top-1/2 -translate-y-1/2 -left-6 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
                 <Lottie animationData={fallenLeaf1} loop={true} />
@@ -391,7 +391,7 @@ export default function DashboardPage() {
               <div className="absolute top-1/2 -translate-y-1/2 -right-6 w-28 sm:w-36 h-28 sm:h-36 opacity-20">
                 <Lottie animationData={fallenLeaf} loop={true} />
               </div>
-              
+
               {/* Bottom row */}
               <div className="absolute -bottom-8 -left-8 w-32 sm:w-40 h-32 sm:h-40 opacity-25">
                 <Lottie animationData={fallenLeaf1} loop={true} />
@@ -409,12 +409,12 @@ export default function DashboardPage() {
                 <Lottie animationData={fallenLeaf1} loop={true} />
               </div>
             </div>
-            
+
             {/* Decorative background elements */}
             <div className="absolute top-0 right-0 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-32 sm:w-48 md:w-64 h-32 sm:h-48 md:h-64 bg-white/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
-            
+
             {/* Floating particles */}
             {[...Array(6)].map((_, i) => (
               <motion.div
@@ -435,7 +435,7 @@ export default function DashboardPage() {
                 }}
               />
             ))}
-            
+
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6">
               <div>
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-3 tracking-tight">
@@ -466,13 +466,13 @@ export default function DashboardPage() {
                   </span>
                 </h1>
               </div>
-              
+
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
               >
-                <Link 
+                <Link
                   href="/report"
                   className="group relative flex gap-2 sm:gap-3 items-center px-5 sm:px-8 py-3 sm:py-4 font-bold text-green-600 bg-white rounded-xl sm:rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 overflow-hidden"
                 >
@@ -502,8 +502,8 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 30, rotateX: -10 }}
               animate={{ opacity: 1, y: 0, rotateX: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ 
-                y: -10, 
+              whileHover={{
+                y: -10,
                 scale: 1.03,
                 transition: { duration: 0.3 }
               }}
@@ -511,21 +511,21 @@ export default function DashboardPage() {
             >
               {/* Animated background glow */}
               <div className={`absolute -inset-1 bg-gradient-to-r ${stat.gradient} rounded-3xl opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500`} />
-              
+
               {/* Top accent line */}
               <div className={`absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r ${stat.gradient} rounded-t-2xl sm:rounded-t-3xl`} />
-              
+
               {/* Content */}
               <div className="relative z-10 pt-1 sm:pt-2">
                 <div className="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-0 mb-3 sm:mb-5">
-                  <motion.div 
+                  <motion.div
                     className={`p-2.5 sm:p-4 rounded-xl sm:rounded-2xl ${stat.iconBg} shadow-lg group-hover:shadow-xl transition-all duration-300`}
                     whileHover={{ rotate: 360, scale: 1.15 }}
                     transition={{ duration: 0.6 }}
                   >
                     <stat.icon className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                   </motion.div>
-                  <motion.div 
+                  <motion.div
                     className="hidden sm:block text-right"
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -536,8 +536,8 @@ export default function DashboardPage() {
                     </span>
                   </motion.div>
                 </div>
-                
-                <motion.div 
+
+                <motion.div
                   className="mb-2 sm:mb-3"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -547,27 +547,27 @@ export default function DashboardPage() {
                     {stat.value}
                   </p>
                 </motion.div>
-                
+
                 <p className="text-xs sm:text-sm text-gray-500 leading-relaxed hidden sm:flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full bg-gradient-to-r ${stat.gradient}`} />
                   {stat.description}
                 </p>
                 <p className="text-xs sm:hidden text-gray-500 mt-1 font-medium">{stat.title}</p>
-                
+
                 {/* Decorative corner accent */}
                 <motion.div
                   className={`absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-gradient-to-br ${stat.gradient} opacity-10 blur-2xl group-hover:opacity-25 transition-opacity duration-500`}
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.3, 1],
                     rotate: [0, 45, 0],
                   }}
-                  transition={{ 
+                  transition={{
                     duration: 4,
                     repeat: Infinity,
                     repeatType: "reverse"
                   }}
                 />
-                
+
                 {/* Bottom shine effect */}
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
               </div>
@@ -587,14 +587,14 @@ export default function DashboardPage() {
             {/* Decorative background */}
             <div className="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-bl from-emerald-100/50 to-transparent rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -left-10 w-24 sm:w-40 h-24 sm:h-40 bg-gradient-to-tr from-green-100/50 to-transparent rounded-full blur-2xl" />
-            
+
             {/* Top accent bar */}
             <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-400" />
-            
+
             <div className="relative p-4 sm:p-6 md:p-8">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <motion.div 
+                  <motion.div
                     className="p-2 sm:p-3 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl sm:rounded-2xl shadow-lg shadow-emerald-200/50"
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.5 }}
@@ -606,7 +606,7 @@ export default function DashboardPage() {
                   </h2>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                  <motion.button 
+                  <motion.button
                     onClick={handleRefresh}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -621,7 +621,7 @@ export default function DashboardPage() {
                     <span>Segarkan</span>
                   </motion.button>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Link 
+                    <Link
                       href="/collect"
                       className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg sm:rounded-xl px-3 sm:px-5 py-1.5 sm:py-2.5 shadow-lg shadow-emerald-200/50 hover:shadow-xl transition-all"
                     >
@@ -631,7 +631,7 @@ export default function DashboardPage() {
                   </motion.div>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 {isLoading ? (
                   <div className="flex flex-col items-center justify-center py-16">
@@ -655,8 +655,8 @@ export default function DashboardPage() {
                     >
                       {/* Left accent */}
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-emerald-400 to-green-500 rounded-r-full opacity-0 group-hover/item:opacity-100 transition-opacity" />
-                      
-                      <motion.div 
+
+                      <motion.div
                         className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-50 to-green-100 text-emerald-600 border border-emerald-100 group-hover/item:from-emerald-500 group-hover/item:to-green-500 group-hover/item:text-white group-hover/item:border-transparent group-hover/item:shadow-lg transition-all duration-300"
                         whileHover={{ rotate: 180 }}
                         transition={{ duration: 0.4 }}
@@ -678,7 +678,7 @@ export default function DashboardPage() {
                           </span>
                         </p>
                       </div>
-                      <motion.a 
+                      <motion.a
                         href={report.location}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -692,7 +692,7 @@ export default function DashboardPage() {
                     </motion.div>
                   ))
                 ) : (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     className="py-14 text-center bg-gradient-to-br from-gray-50 to-emerald-50/30 border-2 border-dashed border-gray-200 rounded-3xl"
@@ -706,7 +706,7 @@ export default function DashboardPage() {
                     <p className="mb-1 text-base font-bold text-gray-600">Belum ada aktivitas terbaru</p>
                     <p className="mb-6 text-sm text-gray-400">Mulai dengan melaporkan titik sampah pertama Anda.</p>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Link 
+                      <Link
                         href="/report"
                         className="inline-flex items-center gap-2 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl px-6 py-3 shadow-lg shadow-emerald-200/50 hover:shadow-xl transition-all"
                       >
@@ -730,13 +730,13 @@ export default function DashboardPage() {
             {/* Decorative background */}
             <div className="absolute top-0 left-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-br from-cyan-100/50 to-transparent rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -right-10 w-24 sm:w-40 h-24 sm:h-40 bg-gradient-to-tl from-violet-100/50 to-transparent rounded-full blur-2xl" />
-            
+
             {/* Top accent bar */}
             <div className="h-1.5 bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-400" />
-            
+
             <div className="relative p-4 sm:p-6 md:p-8">
               <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-                <motion.div 
+                <motion.div
                   className="p-2 sm:p-3 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl sm:rounded-2xl shadow-lg shadow-emerald-200/50"
                   whileHover={{ rotate: 360, scale: 1.1 }}
                   transition={{ duration: 0.5 }}
@@ -747,16 +747,16 @@ export default function DashboardPage() {
                   Dampak Lingkungan Anda
                 </h2>
               </div>
-              
+
               <div className="space-y-4 sm:space-y-5">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.02, x: 5 }}
                   className="group/card relative flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-5 bg-gradient-to-r from-emerald-50/80 via-green-50/80 to-teal-50/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-emerald-100 shadow-lg hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 gap-3 sm:gap-0"
                 >
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 sm:h-10 bg-gradient-to-b from-emerald-400 to-green-500 rounded-r-full" />
-                  <motion.div 
+                  <motion.div
                     className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gradient-to-br from-emerald-400 to-green-500 text-white rounded-xl sm:rounded-2xl shadow-lg shadow-emerald-200/50"
                     whileHover={{ rotate: 180 }}
                     transition={{ duration: 0.4 }}
@@ -774,8 +774,8 @@ export default function DashboardPage() {
                     <span className="text-sm sm:text-lg font-bold text-gray-400 ml-1">kg</span>
                   </div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
@@ -783,7 +783,7 @@ export default function DashboardPage() {
                   className="group/card relative flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-5 bg-gradient-to-r from-cyan-50/80 via-blue-50/80 to-sky-50/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-cyan-100 shadow-lg hover:shadow-xl hover:shadow-cyan-100/50 transition-all duration-300 gap-3 sm:gap-0"
                 >
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 sm:h-10 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full" />
-                  <motion.div 
+                  <motion.div
                     className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gradient-to-br from-cyan-400 to-blue-500 text-white rounded-xl sm:rounded-2xl shadow-lg shadow-cyan-200/50"
                     whileHover={{ rotate: 180 }}
                     transition={{ duration: 0.4 }}
@@ -800,8 +800,8 @@ export default function DashboardPage() {
                     </span>
                   </div>
                 </motion.div>
-                
-                <motion.div 
+
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -809,7 +809,7 @@ export default function DashboardPage() {
                   className="group/card relative flex flex-col sm:flex-row items-start sm:items-center p-4 sm:p-5 bg-gradient-to-r from-violet-50/80 via-purple-50/80 to-fuchsia-50/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-violet-100 shadow-lg hover:shadow-xl hover:shadow-violet-100/50 transition-all duration-300 gap-3 sm:gap-0"
                 >
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 sm:h-10 bg-gradient-to-b from-violet-400 to-purple-500 rounded-r-full" />
-                  <motion.div 
+                  <motion.div
                     className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-gradient-to-br from-violet-400 to-purple-500 text-white rounded-xl sm:rounded-2xl shadow-lg shadow-violet-200/50"
                     whileHover={{ rotate: 180 }}
                     transition={{ duration: 0.4 }}
@@ -908,9 +908,8 @@ export default function DashboardPage() {
                         >
                           <div className="flex items-start">
                             <div
-                              className={`flex-shrink-0 w-8 h-8 rounded-full ${
-                                currentStep === i ? "bg-green-500" : "bg-gray-200"
-                              } flex items-center justify-center mr-3 mt-1`}
+                              className={`flex-shrink-0 w-8 h-8 rounded-full ${currentStep === i ? "bg-green-500" : "bg-gray-200"
+                                } flex items-center justify-center mr-3 mt-1`}
                             >
                               {currentStep === i && (
                                 <Check className="text-white" size={20} />
@@ -1010,25 +1009,24 @@ export default function DashboardPage() {
                 key={key}
                 initial={{ opacity: 0, y: 40, rotateX: -10 }}
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                whileHover={{ 
-                  y: -12, 
+                whileHover={{
+                  y: -12,
                   scale: 1.05,
                   rotateY: 2,
                   transition: { duration: 0.3 }
                 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.5, delay: index * 0.15, ease: "easeOut" }}
-                className={`group relative bg-gradient-to-br from-white via-white to-green-50/50 rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ${
-                  expandedItem === key 
-                    ? 'ring-4 ring-green-400 ring-offset-4 shadow-[0_20px_50px_rgba(34,197,94,0.3)]' 
-                    : 'shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(34,197,94,0.25)]'
-                }`}
+                className={`group relative bg-gradient-to-br from-white via-white to-green-50/50 rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 ${expandedItem === key
+                  ? 'ring-4 ring-green-400 ring-offset-4 shadow-[0_20px_50px_rgba(34,197,94,0.3)]'
+                  : 'shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(34,197,94,0.25)]'
+                  }`}
                 style={{ transformStyle: 'preserve-3d' }}
                 onClick={() => handleCardClick(key)}
               >
                 {/* Animated background glow */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500" />
-                
+
                 {/* Image section with parallax effect */}
                 <div className="relative h-32 sm:h-48 overflow-hidden">
                   <motion.img
@@ -1038,13 +1036,13 @@ export default function DashboardPage() {
                     whileHover={{ scale: 1.15 }}
                     transition={{ duration: 0.6 }}
                   />
-                  
+
                   {/* Multi-layer gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
+
                   {/* Floating category badge */}
-                  <motion.div 
+                  <motion.div
                     className="absolute top-2 sm:top-4 left-2 sm:left-4"
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -1055,13 +1053,13 @@ export default function DashboardPage() {
                       Daur Ulang
                     </span>
                   </motion.div>
-                  
+
                   {/* Animated corner accent */}
                   <div className="absolute top-0 right-0 w-12 sm:w-20 h-12 sm:h-20 bg-gradient-to-bl from-green-400/30 to-transparent" />
-                  
+
                   {/* Title overlay with glass effect */}
                   <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5 bg-gradient-to-t from-black/80 to-transparent">
-                    <motion.h3 
+                    <motion.h3
                       className="text-lg sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight"
                       style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
                     >
@@ -1069,12 +1067,12 @@ export default function DashboardPage() {
                     </motion.h3>
                   </div>
                 </div>
-                
+
                 {/* Content section with premium styling */}
                 <div className="relative p-4 sm:p-6">
                   {/* Decorative top border */}
                   <div className="absolute top-0 left-4 sm:left-6 right-4 sm:right-6 h-px bg-gradient-to-r from-transparent via-green-300 to-transparent" />
-                  
+
                   <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <div className="flex items-center gap-1.5 sm:gap-2">
                       <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 group-hover:from-green-200 group-hover:to-emerald-200 transition-colors duration-300">
@@ -1085,7 +1083,7 @@ export default function DashboardPage() {
                       </span>
                     </div>
                     <motion.div
-                      animate={{ 
+                      animate={{
                         rotate: expandedItem === key ? 180 : 0,
                         scale: expandedItem === key ? 1.1 : 1
                       }}
@@ -1095,13 +1093,13 @@ export default function DashboardPage() {
                       <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 group-hover:text-white transition-colors" />
                     </motion.div>
                   </div>
-                  
+
                   <p className="text-xs sm:text-sm text-gray-600 leading-relaxed line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-4">
                     {item.description}
                   </p>
-                  
+
                   {/* Interactive hint with animation */}
-                  <motion.div 
+                  <motion.div
                     className="hidden sm:flex items-center justify-between pt-3 sm:pt-4 border-t border-green-100"
                     initial={{ opacity: 0.5 }}
                     whileHover={{ opacity: 1 }}
@@ -1128,7 +1126,7 @@ export default function DashboardPage() {
                     </div>
                   </motion.div>
                 </div>
-                
+
                 {/* Premium bottom accent bar */}
                 <div className="h-1.5 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-400 group-hover:h-2 transition-all duration-300" />
               </motion.div>
@@ -1150,10 +1148,10 @@ export default function DashboardPage() {
                   {/* Decorative background elements */}
                   <div className="absolute top-0 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-gradient-to-bl from-green-100/50 to-transparent rounded-full blur-3xl hidden sm:block" />
                   <div className="absolute bottom-0 left-0 w-32 sm:w-64 h-32 sm:h-64 bg-gradient-to-tr from-blue-100/50 to-transparent rounded-full blur-3xl hidden sm:block" />
-                  
+
                   {/* Top gradient bar */}
                   <div className="h-1 sm:h-2 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-400" />
-                  
+
                   <div className="relative p-4 sm:p-8 md:p-10">
                     {/* Header */}
                     <div className="flex justify-between items-start mb-4 sm:mb-8">
@@ -1232,8 +1230,8 @@ export default function DashboardPage() {
                           </div>
                           <ul className="space-y-2 sm:space-y-3">
                             {recyclingItems[expandedItem as keyof typeof recyclingItems].tips.map((tip, i) => (
-                              <motion.li 
-                                key={i} 
+                              <motion.li
+                                key={i}
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.4 + i * 0.1 }}
@@ -1265,7 +1263,7 @@ export default function DashboardPage() {
                         </h4>
                         <div className="flex-1 h-px bg-gradient-to-r from-green-200 to-transparent hidden sm:block" />
                       </div>
-                      
+
                       <div className="grid md:grid-cols-2 gap-3 sm:gap-6">
                         {recyclingItems[expandedItem as keyof typeof recyclingItems].steps.map((step, i) => (
                           <motion.div
@@ -1277,19 +1275,17 @@ export default function DashboardPage() {
                               scale: currentStep === i ? 1 : 0.98,
                             }}
                             transition={{ duration: 0.5, delay: 0.5 + i * 0.1 }}
-                            className={`group relative rounded-2xl overflow-hidden transition-all duration-500 ${
-                              currentStep === i 
-                                ? 'bg-gradient-to-br from-green-50 to-emerald-100/50 shadow-[0_10px_40px_rgba(34,197,94,0.2)] ring-2 ring-green-400 ring-offset-2' 
-                                : 'bg-gradient-to-br from-gray-50 to-gray-100/50 shadow-lg hover:shadow-xl'
-                            }`}
+                            className={`group relative rounded-2xl overflow-hidden transition-all duration-500 ${currentStep === i
+                              ? 'bg-gradient-to-br from-green-50 to-emerald-100/50 shadow-[0_10px_40px_rgba(34,197,94,0.2)] ring-2 ring-green-400 ring-offset-2'
+                              : 'bg-gradient-to-br from-gray-50 to-gray-100/50 shadow-lg hover:shadow-xl'
+                              }`}
                           >
                             {/* Step indicator bar */}
-                            <div className={`h-0.5 sm:h-1 transition-all duration-500 ${
-                              currentStep === i 
-                                ? 'bg-gradient-to-r from-green-400 via-emerald-500 to-teal-400' 
-                                : 'bg-gradient-to-r from-gray-200 to-gray-300'
-                            }`} />
-                            
+                            <div className={`h-0.5 sm:h-1 transition-all duration-500 ${currentStep === i
+                              ? 'bg-gradient-to-r from-green-400 via-emerald-500 to-teal-400'
+                              : 'bg-gradient-to-r from-gray-200 to-gray-300'
+                              }`} />
+
                             <div className="p-3 sm:p-5">
                               <div className="flex gap-3 sm:gap-4">
                                 {/* Step number/check */}
@@ -1298,11 +1294,10 @@ export default function DashboardPage() {
                                     scale: currentStep === i ? [1, 1.2, 1] : 1,
                                   }}
                                   transition={{ duration: 0.5 }}
-                                  className={`flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-sm sm:text-lg shadow-md sm:shadow-lg transition-all duration-500 ${
-                                    currentStep === i
-                                      ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white'
-                                      : 'bg-gradient-to-br from-gray-200 to-gray-300 text-gray-600'
-                                  }`}
+                                  className={`flex-shrink-0 w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-sm sm:text-lg shadow-md sm:shadow-lg transition-all duration-500 ${currentStep === i
+                                    ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white'
+                                    : 'bg-gradient-to-br from-gray-200 to-gray-300 text-gray-600'
+                                    }`}
                                 >
                                   {currentStep === i ? (
                                     <motion.div
@@ -1316,39 +1311,35 @@ export default function DashboardPage() {
                                     <span>{i + 1}</span>
                                   )}
                                 </motion.div>
-                                
+
                                 {/* Content */}
                                 <div className="flex-1 min-w-0">
-                                  <h5 className={`font-bold text-sm sm:text-lg mb-1 sm:mb-2 transition-colors duration-300 ${
-                                    currentStep === i 
-                                      ? 'bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent' 
-                                      : 'text-gray-800'
-                                  }`}>
+                                  <h5 className={`font-bold text-sm sm:text-lg mb-1 sm:mb-2 transition-colors duration-300 ${currentStep === i
+                                    ? 'bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent'
+                                    : 'text-gray-800'
+                                    }`}>
                                     {step.title}
                                   </h5>
-                                  <p className={`text-xs sm:text-sm leading-relaxed mb-2 sm:mb-4 transition-colors duration-300 ${
-                                    currentStep === i ? 'text-gray-700' : 'text-gray-500'
-                                  }`}>
+                                  <p className={`text-xs sm:text-sm leading-relaxed mb-2 sm:mb-4 transition-colors duration-300 ${currentStep === i ? 'text-gray-700' : 'text-gray-500'
+                                    }`}>
                                     {step.detail}
                                   </p>
-                                  
+
                                   {/* Image with overlay */}
-                                  <div className={`relative w-full h-24 sm:h-36 rounded-lg sm:rounded-xl overflow-hidden transition-all duration-500 ${
-                                    currentStep === i 
-                                      ? 'ring-2 sm:ring-3 ring-green-400 shadow-md sm:shadow-lg' 
-                                      : 'ring-1 ring-gray-200'
-                                  }`}>
+                                  <div className={`relative w-full h-24 sm:h-36 rounded-lg sm:rounded-xl overflow-hidden transition-all duration-500 ${currentStep === i
+                                    ? 'ring-2 sm:ring-3 ring-green-400 shadow-md sm:shadow-lg'
+                                    : 'ring-1 ring-gray-200'
+                                    }`}>
                                     <img
                                       src={step.image}
                                       alt={step.title}
                                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
-                                    <div className={`absolute inset-0 transition-opacity duration-300 ${
-                                      currentStep === i 
-                                        ? 'bg-gradient-to-t from-green-500/20 to-transparent' 
-                                        : 'bg-gradient-to-t from-gray-500/10 to-transparent'
-                                    }`} />
-                                    
+                                    <div className={`absolute inset-0 transition-opacity duration-300 ${currentStep === i
+                                      ? 'bg-gradient-to-t from-green-500/20 to-transparent'
+                                      : 'bg-gradient-to-t from-gray-500/10 to-transparent'
+                                      }`} />
+
                                     {/* Active indicator */}
                                     {currentStep === i && (
                                       <motion.div
@@ -1373,7 +1364,7 @@ export default function DashboardPage() {
                       </div>
                     </motion.div>
                   </div>
-                  
+
                   {/* Bottom gradient bar */}
                   <div className="h-1 sm:h-2 bg-gradient-to-r from-green-400 via-emerald-500 to-teal-400" />
                 </div>
@@ -1401,7 +1392,7 @@ export default function DashboardPage() {
 
 // Baris 42-105: Object recyclingItems berisi data panduan daur ulang untuk 4 kategori:
 //               - plastic: Panduan daur ulang plastik
-//               - electronics: Panduan daur ulang elektronik  
+//               - electronics: Panduan daur ulang elektronik
 //               - paper: Panduan daur ulang kertas
 //               - organic: Panduan daur ulang organik
 //               Setiap kategori punya: name, image, description, steps (langkah-langkah), impact, tips
@@ -1451,7 +1442,7 @@ export default function DashboardPage() {
 //                Baris 225: Fetch ke endpoint `/api/users/${user.id}/stats`
 //                Baris 226-233: Jika berhasil, UPDATE userStats state dengan data dari API:
 //                               - points dari database
-//                               - reportsCount dari database  
+//                               - reportsCount dari database
 //                               - rank dari database
 //                               - impact dari database
 //                ⚠️ INI HARUSNYA OVERRIDE default values "Elite" dan "Positif"!

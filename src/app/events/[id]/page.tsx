@@ -99,7 +99,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'register', eventId: parseInt(id) }),
       });
-      
+
       if (res.ok) {
         const registration = await res.json();
         // Refresh event data
@@ -121,7 +121,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       const res = await fetch(`/api/events/${id}`, {
         method: 'DELETE',
       });
-      
+
       if (res.ok) {
         // Refresh event data
         const eventRes = await fetch(`/api/events/${id}`);
@@ -163,8 +163,8 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-8 px-6">
       <div className="max-w-5xl mx-auto">
-        <button 
-          onClick={() => router.back()} 
+        <button
+          onClick={() => router.back()}
           className="mb-6 flex items-center gap-2 text-green-700 hover:text-green-800 font-medium transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,10 +197,21 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
           <div className="p-8">
             {/* Description */}
-            {ev.description && (
+            {/* Description */}
+            {(ev.description || (ev.videos && ev.videos.length > 0)) && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Deskripsi Acara</h3>
-                <p className="text-gray-700 leading-relaxed">{ev.description}</p>
+                {ev.description && <p className="text-gray-700 leading-relaxed mb-4">{ev.description}</p>}
+
+                {ev.videos && ev.videos.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {ev.videos.map((vid, idx) => (
+                      <div key={idx} className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-md border border-gray-200">
+                        <video src={vid} controls className="w-full h-full" />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -247,7 +258,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                   {ev.contactPersonPhone && (
                     <a href={`https://wa.me/${ev.contactPersonPhone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                       </svg>
                       {ev.contactPersonPhone}
                     </a>
@@ -359,10 +370,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               </div>
               <h3 className="font-bold text-gray-900">Lokasi Acara</h3>
             </div>
-            <a 
-              href={ev.location} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href={ev.location}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -381,7 +392,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             {!user ? (
               <p className="text-gray-600">Silakan login untuk mendaftar</p>
             ) : !isRegistered && !isOrganizer ? (
-              <button 
+              <button
                 onClick={handleRegister}
                 disabled={registering}
                 className="flex-1 px-6 py-4 text-white bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-bold hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
@@ -392,7 +403,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                 {registering ? 'Mendaftar...' : 'Gabung Acara'}
               </button>
             ) : isRegistered ? (
-              <button 
+              <button
                 onClick={() => setShowQR(!showQR)}
                 className="flex-1 px-6 py-4 text-white bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-bold hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
               >
@@ -401,7 +412,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               </button>
             ) : null}
             {isRegistered && (
-              <button 
+              <button
                 onClick={handleCancelRegistration}
                 disabled={cancelling}
                 className="px-6 py-4 text-red-600 bg-red-50 rounded-xl border-2 border-red-200 font-bold hover:bg-red-100 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
@@ -413,7 +424,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               </button>
             )}
             {isOrganizer && (
-              <button 
+              <button
                 onClick={() => setShowScanner(!showScanner)}
                 className="flex-1 px-6 py-4 text-purple-700 bg-purple-50 rounded-xl border-2 border-purple-200 font-bold hover:bg-purple-100 transition-all flex items-center justify-center gap-2"
               >
@@ -465,8 +476,8 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                 </div>
               </div>
             </div>
-            <QRScanner 
-              eventId={id} 
+            <QRScanner
+              eventId={id}
               onVerified={(userId) => console.log('Verified:', userId)}
             />
           </div>
@@ -486,7 +497,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                 {showParticipants ? 'Sembunyikan' : 'Tampilkan'}
               </button>
             </div>
-            
+
             {showParticipants && (
               <div className="space-y-3">
                 {eventData.registrations.filter(r => r.registration.status === 'registered').length === 0 ? (
@@ -514,32 +525,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           </div>
         )}
 
-        {/* Media Section */}
-        <div className="bg-white rounded-2xl shadow-md p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Media Acara</h3>
-          {(ev.images && ev.images.length > 0) || (ev.videos && ev.videos.length > 0) ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {ev.images?.map((img, idx) => (
-                <div key={idx} className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-md border border-gray-200 hover:shadow-xl transition-shadow">
-                  <img src={img} alt={`Event ${idx + 1}`} className="w-full h-full object-cover" />
-                </div>
-              ))}
-              {ev.videos?.map((vid, idx) => (
-                <div key={idx} className="relative aspect-video bg-gray-100 rounded-xl overflow-hidden shadow-md border border-gray-200">
-                  <video src={vid} controls className="w-full h-full" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl text-center border-2 border-dashed border-gray-300">
-              <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p className="text-gray-500 font-medium">Belum ada foto atau video yang diunggah</p>
-              <p className="text-sm text-gray-400 mt-2">Panitia akan mengunggah dokumentasi acara setelah acara berlangsung</p>
-            </div>
-          )}
-        </div>
+
       </div>
     </div>
   );

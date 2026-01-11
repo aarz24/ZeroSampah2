@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Leaf, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { UserButton, useClerk, useUser } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
 
 // Define a specific interface for user data
 interface UserData {
@@ -18,8 +18,14 @@ interface UserData {
 export default function Header() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { isSignedIn, user, isLoaded } = useUser();
-  const { openSignIn } = useClerk();
+  const router = useRouter();
+
+  // Prevent hydration mismatch by only rendering auth UI after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // Only access localStorage on the client side
@@ -46,15 +52,7 @@ export default function Header() {
   }, [isSignedIn, user]);
 
   const handleLogin = () => {
-    openSignIn({
-      appearance: {
-        elements: {
-          rootBox: "rounded-xl",
-          card: "rounded-xl",
-        },
-      },
-      afterSignInUrl: "/",
-    });
+    router.push('/sign-in');
   };
 
   return (
@@ -67,7 +65,7 @@ export default function Header() {
               {/* Outer pulsing ring */}
               <motion.div
                 className="absolute -inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-400 to-green-500 opacity-60"
-                animate={{ 
+                animate={{
                   scale: [1, 1.15, 1],
                   opacity: [0.6, 0.2, 0.6]
                 }}
@@ -76,13 +74,13 @@ export default function Header() {
               {/* Secondary pulsing ring for enhanced effect */}
               <motion.div
                 className="absolute -inset-0.5 rounded-xl sm:rounded-2xl border-2 border-emerald-400/50"
-                animate={{ 
+                animate={{
                   scale: [1, 1.1, 1],
                   opacity: [0.8, 0.3, 0.8]
                 }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
               />
-              <motion.div 
+              <motion.div
                 className="relative p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-300/60 transition-transform duration-300 group-hover:-translate-y-0.5 overflow-hidden"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -121,7 +119,7 @@ export default function Header() {
               {userData && <NavLink href="/events">Event</NavLink>}
             </div>
 
-            {!isLoaded ? (
+            {!mounted || !isLoaded ? (
               <div className="w-10 h-10 rounded-full bg-emerald-100 animate-pulse" />
             ) : !isSignedIn ? (
               <button
@@ -208,11 +206,10 @@ function NavLink({
   return (
     <Link
       href={href}
-      className={`relative px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 ${
-        isActive
-          ? "text-emerald-900 bg-white shadow-md shadow-emerald-100"
-          : "text-slate-500 hover:text-emerald-700 hover:bg-white/70"
-      }`}
+      className={`relative px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 ${isActive
+        ? "text-emerald-900 bg-white shadow-md shadow-emerald-100"
+        : "text-slate-500 hover:text-emerald-700 hover:bg-white/70"
+        }`}
     >
       {children}
       {isActive && (
@@ -235,11 +232,10 @@ function MobileNavLink({
   return (
     <Link
       href={href}
-      className={`block px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl border transition-all ${
-        isActive
-          ? "text-emerald-800 bg-emerald-50 border-emerald-100"
-          : "text-gray-800 border-transparent hover:bg-emerald-50/70 hover:border-emerald-100"
-      }`}
+      className={`block px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base font-semibold rounded-lg sm:rounded-xl border transition-all ${isActive
+        ? "text-emerald-800 bg-emerald-50 border-emerald-100"
+        : "text-gray-800 border-transparent hover:bg-emerald-50/70 hover:border-emerald-100"
+        }`}
     >
       {children}
     </Link>
