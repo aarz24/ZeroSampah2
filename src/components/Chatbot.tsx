@@ -72,7 +72,7 @@ export function Chatbot() {
     try {
       const response = await callGeminiAPI(input, selectedImage || undefined);
       const sanitizedResponse = sanitizeResponse(response);
-      
+
       setMessages((prev) => [
         ...prev,
         {
@@ -113,7 +113,7 @@ export function Chatbot() {
   };
 
   return (
-    <div className="fixed right-4 bottom-4 z-50">
+    <div className="fixed right-4 bottom-4 z-[100]">
       <AnimatePresence>
         {!isOpen ? (
           <motion.button
@@ -123,8 +123,8 @@ export function Chatbot() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-              className="p-4 text-white bg-green-700 rounded-full shadow-lg transition-all cursor-pointer hover:shadow-xl hover:from-green-700 hover:to-green-600"
-              aria-label="Buka obrolan"
+            className="p-4 text-white bg-green-700 rounded-full shadow-lg transition-all cursor-pointer hover:shadow-xl hover:from-green-700 hover:to-green-600"
+            aria-label="Buka obrolan"
           >
             <MessageSquare className="w-6 h-6" />
           </motion.button>
@@ -133,9 +133,9 @@ export function Chatbot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="w-[380px] h-[600px] flex flex-col shadow-2xl bg-white rounded-2xl border border-gray-200 overflow-hidden"
+            className="w-[380px] h-[450px] flex flex-col shadow-2xl bg-white rounded-2xl border border-gray-200 overflow-hidden"
           >
-              <div className="flex justify-between items-center p-4 text-white bg-gradient-to-r from-green-600 to-green-500">
+            <div className="flex justify-between items-center p-4 text-white bg-gradient-to-r from-green-600 to-green-500">
               <h3 className="text-lg font-semibold">Chatbot ZeroSampah</h3>
               <div className="flex gap-2">
                 <button
@@ -181,16 +181,14 @@ export function Chatbot() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`flex ${
-                    message.role === 'user' ? 'justify-end' : 'justify-start'
-                  }`}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'
+                    }`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.role === 'user'
+                    className={`max-w-[80%] rounded-lg p-3 ${message.role === 'user'
                         ? 'bg-gray-100 text-gray-800'
                         : 'bg-gray-100 text-gray-800'
-                    }`}
+                      }`}
                   >
                     <p className="text-sm">{message.content}</p>
                     <span className="block mt-1 text-xs text-gray-500">
