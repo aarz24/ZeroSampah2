@@ -33,16 +33,16 @@ export default async function RootLayout({
   }
 
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={inter.className} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
+        <ClerkProvider>
           <Toaster />
           <Header />
           <Sidebar>
             {children}
           </Sidebar>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

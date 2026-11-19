@@ -134,12 +134,12 @@ export default function SignInPage() {
                                 logoBox: "hidden",
                                 footer: "hidden",
                             },
-                            layout: {
+                            options: {
                                 socialButtonsPlacement: "top",
                                 showOptionalFields: false,
                             },
                         }}
-                        redirectUrl="/dashboard"
+                        fallbackRedirectUrl="/dashboard"
                         signUpUrl="/sign-up"
                     />
                 </div>

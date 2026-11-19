@@ -146,12 +146,12 @@ export default function SignUpPage() {
                                 logoBox: "hidden",
                                 footer: "hidden",
                             },
-                            layout: {
+                            options: {
                                 socialButtonsPlacement: "top",
                                 showOptionalFields: false,
                             },
                         }}
-                        redirectUrl="/dashboard"
+                        fallbackRedirectUrl="/dashboard"
                         signInUrl="/sign-in"
                     />
                 </div>
